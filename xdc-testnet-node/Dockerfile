@@ -4,11 +4,11 @@ WORKDIR /work
 
 RUN \
     apt-get update && apt-get install -y git build-essential && \
-    git clone https://github.com/XinFinOrg/XDCChain.git xdcchain && \
-    (cd xdcchain && git checkout --detach a973741234efe7253db727b2c2cd55fd48d35d3e &&  make xdc)
+    git clone -b "testnet" https://github.com/XinFinOrg/XDCChain.git gxdcchain && \
+    (cd gxdcchain && make gxdc)
 
-RUN cp xdcchain/work/bin/xdc /usr/bin && chmod +x /usr/bin/xdc && \
-    rm -rf xdcchain
+RUN cp gxdcchain/work/bin/gxdc /usr/bin && chmod +x /usr/bin/gxdc && \
+    rm -rf gxdcchain
 
 COPY ./genesis.json /work/genesis.json
 COPY ./start-node.sh /work/start-node.sh
