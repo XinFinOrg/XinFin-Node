@@ -1,0 +1,22 @@
+[
+  {
+    "name"              : "node-apis",
+    "script"            : "app.js",
+    "log_date_format"   : "YYYY-MM-DD HH:mm Z",
+    "merge_logs"        : false,
+    "watch"             : false,
+    "max_restarts"      : 10,
+    "exec_interpreter"  : "node",
+    "exec_mode"         : "fork_mode",
+    "env":
+    {
+      "NODE_ENV"        : "production",
+      "RPC_HOST"        : "xdcchain",
+      "RPC_PORT"        : "8545",
+      "LISTENING_PORT"  : "30303",
+      "WS_SERVER"       : "ws://stats.testnet.xinfin.network:3001",
+      "WS_SECRET" 	: "xinfin_network_stats",
+      "VERBOSITY"       : 2
+    }
+  }
+]
