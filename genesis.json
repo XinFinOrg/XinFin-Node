@@ -7,8 +7,8 @@
       "eip155Block": 3,
       "eip158Block": 3,
       "byzantiumBlock": 4,
-      "posv": {
-        "period": 10,
+      "XDPoS": {
+        "period": 2,
         "epoch": 900,
         "reward": 121,
         "rewardCheckpoint": 900,
@@ -88,3 +88,4 @@
     "number": "0x0",
     "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
   }
+
