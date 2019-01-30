@@ -54,7 +54,7 @@ You should be able to see your node listed on this page: [https://xinfin.network
 
 Your coinbase address can be found in xdcchain/coinbase.txt file.
 
-**Developer Community**
+**Troubleshooting**
 
 Public discussions on the technical issues, post articles and request for Enhancements and Technical Contributions. 
 
@@ -65,4 +65,5 @@ Public discussions on the technical issues, post articles and request for Enhanc
 [Forum](https://xinfin.net), 
 
 [GitHub](https://github.com/XinFinorg)
+
 
