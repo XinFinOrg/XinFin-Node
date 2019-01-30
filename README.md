@@ -1,7 +1,8 @@
 
-## XinFin XDC Testnet
+## How to Setup XinFin-XDC Masternet on Testnet
 
 ## Prerequisite
+
 **Operating System**: Ubuntu 16.04 64-bit or higher
 
 Should be facing internet directly with **public IP** & **without NAT**
