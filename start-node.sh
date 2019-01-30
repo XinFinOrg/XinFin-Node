@@ -29,4 +29,4 @@ do
 done < "$input"
 
 echo "Starting nodes with $bootnodes ..."
-XDC --bootnodes ${bootnodes} --syncmode "full" --datadir /work/xdcchain --networkid 89 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
+XDC --bootnodes ${bootnodes} --syncmode "full" --datadir /work/xdcchain --networkid 89 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
