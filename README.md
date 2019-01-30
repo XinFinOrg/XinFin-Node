@@ -1,5 +1,5 @@
 
-## How to Setup XinFin-XDC Masternet on Testnet
+## How to Setup XinFin-XDC Masternode on Testnet
 
 ## Prerequisite
 
