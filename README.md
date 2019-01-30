@@ -59,6 +59,17 @@ To stop the node or if you encounter any issues use::
 sudo docker-compose -f docker-services.yml down
 ```
 
+## Upgrade
+To upgrade please use the following commands
+
+```
+sudo docker-compose -f docker-services.yml down
+sudo ./upgrade.sh
+sudo docker-compose -f docker-services.yml up -d
+```
+
+
+
 **Troubleshooting**
 
 Public discussions on the technical issues, post articles and request for Enhancements and Technical Contributions. 
