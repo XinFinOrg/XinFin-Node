@@ -70,6 +70,8 @@ Vagrant.configure("2") do |config|
      sudo apt install dos2unix -y
      cp -r /vagrant/* /home/vagrant
      find /home/vagrant -type f -print0 | xargs -0 dos2unix
+     rm -rf .pwd/
+     touch .pwd
      echo "The XDC vagrant instance has been provisioned."
      echo "Use 'vagrant ssh' to remotely connect to the XDC vagrant instance"
    SHELL
