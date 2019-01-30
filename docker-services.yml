@@ -2,7 +2,6 @@ version: "3.4"
 
 services:
   xinfin-testnet-node:
-    build: ./
     image: xinfinorg/xinfin-testnet-node:1130199b95301c8696e1fc94eccb7e0549c8b262
     volumes:
       - "./xdcchain:/work/xdcchain"
@@ -18,7 +17,6 @@ services:
       - "8545:8545"
 
   netapis:
-    build: ./netapis
     image: xinfinorg/netapis
     restart: "on-failure:10"
     volumes:
