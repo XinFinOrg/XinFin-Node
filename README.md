@@ -7,7 +7,7 @@
 
 Should be facing internet directly with **public IP** & **without NAT**
 
-**Tools**: Docker, Docker Compose
+**Tools**: Docker, Docker Compose(1.21.2+)
 
 
 ## Network Ports
