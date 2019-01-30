@@ -38,7 +38,7 @@ cd XinFin-Node
 ## Step: 2 Update .env file with details
 Create `.env` file by using the sample - `.env.example`
 
-Enter your node name in the INSTANCE_NAME field.
+Enter either your company or product name in the INSTANCE_NAME field.
 
 Enter your email address in CONTACT_DETAILS field.
 
