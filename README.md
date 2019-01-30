@@ -68,6 +68,19 @@ sudo ./upgrade.sh
 sudo docker-compose -f docker-services.yml up -d
 ```
 
+# Windows/macOS support using Vagrant
+1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
+3. Install [GIT](https://gitforwindows.org/)
+4. Launch command prompt & follow the commands below  
+   ```sh
+    git clone https://github.com/XinFinOrg/XinFin-Node.git
+    cd XinFin-Node
+    vagrant up
+    vagrant ssh
+    ```
+5. XinFin-Node is automatically copied to /home/vagrant/ follow Step 1, 2 & 3 as explained before in this document to complete the node setup.
+6. To shutdown the vagrant instance, run vagrant suspend. To delete it, run vagrant destroy.
 
 
 **Troubleshooting**
