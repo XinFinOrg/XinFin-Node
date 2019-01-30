@@ -68,11 +68,13 @@ sudo ./upgrade.sh
 sudo docker-compose -f docker-services.yml up -d
 ```
 
-# Windows/macOS support using Vagrant
+# Windows/macOS Setup support using Vagrant.
+You need to download install below mention 3 Software:
 1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
 3. Install [GIT](https://gitforwindows.org/)
-4. Launch command prompt & follow the commands below  
+    After installation of above 3 Software (this may also need restart of your machine.)
+4. Launch "command prompt" & follow the commands below  
    ```sh
     git clone https://github.com/XinFinOrg/XinFin-Node.git
     cd XinFin-Node
