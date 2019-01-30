@@ -54,6 +54,11 @@ You should be able to see your node listed on this page: [https://xinfin.network
 
 Your coinbase address can be found in xdcchain/coinbase.txt file.
 
+To stop the node or if you encounter any issues use::
+```
+sudo docker-compose -f docker-services.yml down
+```
+
 **Troubleshooting**
 
 Public discussions on the technical issues, post articles and request for Enhancements and Technical Contributions. 
