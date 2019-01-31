@@ -42,6 +42,10 @@ Enter either your company or product name in the INSTANCE_NAME field.
 
 Enter your email address in CONTACT_DETAILS field.
 
+```
+cp env.example .env
+nano .env
+```
 
 ## Step: 3 Start your Node
 
