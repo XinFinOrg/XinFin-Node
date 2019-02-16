@@ -28,7 +28,7 @@ do
     fi
 done < "$input"
 
-netstats="$INSTANCE_NAME:xinfin_network_stats@stats.testnet.xinfin.network:3001"
+netstats="$INSTANCE_NAME:xinfin_network_stats@stats.testnet.xinfin.network:3000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 1993 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
+XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 853 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
