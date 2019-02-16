@@ -1,5 +1,9 @@
 ## How to Setup XinFin-XDC Masternode on Windows
 
+## Quick Launch
+
+- Execute xdc-start.bat script to start masternode.
+
 ## Build Instructions
 
 - Launch Powershell as administrator
@@ -9,4 +13,5 @@
 
 This will download & install the necessary packages & will build XDC CLI to launch masternodes natively on Windows. 
 
-## Alternately you can try out the prebuilt XDC.exe for Windows 64-bit
+
+
