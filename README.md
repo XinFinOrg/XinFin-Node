@@ -79,13 +79,17 @@ git clone https://github.com/XinFinOrg/XinFin-Node.git
 
 Enter `win64` directory
 ```
-cd XinFin-Node/win64/
+cd XinFin-Node/win64/one-click-installer
 ```
 
 Run
 ```
-xdc-start.bat
+setup.exe
 ```
+
+This will install the XDC binary in C:\Program Files (x86)\XinFin with all the start-menu, desktop icons & uninstaller.
+
+Righ-click on the XinFin-XDC Masternode icon on desktop & click on "Run as administrator" to launch your masternode.
 
 
 ##  Setup For MAC Operating System (using Vagrant Environments).
