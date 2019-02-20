@@ -19,7 +19,7 @@ Following network ports need to be open for the nodes to communicate
 |8545| TCP | RPC |
 |30303| TCP/UDP | XDC |
 
-### Setup
+### Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
@@ -72,7 +72,7 @@ sudo ./upgrade.sh
 sudo docker-compose -f docker-services.yml up -d
 ```
 
-## Windows 64-bit
+## Setup For Windows 64-bit Operating System
 ```
 git clone https://github.com/XinFinOrg/XinFin-Node.git
 ```
@@ -88,7 +88,7 @@ xdc-start.bat
 ```
 
 
-## macOS Setup support using Vagrant.
+##  Setup For MAC Operating System (using Vagrant Environments).
 You need to download install below mention 3 Software:
 1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
