@@ -3,7 +3,7 @@
 
 ## Prerequisite
 
-**Operating System**: Ubuntu 16.04 64-bit or higher
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
 Should be facing internet directly with **public IP** & **without NAT**
 
