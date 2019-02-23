@@ -1,4 +1,4 @@
-class XDC < Formula
+class Xdc < Formula
   desc "XinFin Hybrid Blockchain"
   homepage "https://github.com/XinFinOrg/XDPoS-TestNet-Apothem"
   url "https://github.com/XinFinOrg/XDPoS-TestNet-Apothem.git"
