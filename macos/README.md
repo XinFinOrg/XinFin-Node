@@ -1,5 +1,11 @@
 ## How to Setup XinFin-XDC Masternode on macOS
 
+## Prerequisite
+
+**Version**: macOS 10.11+
+
+**Tools**: XCode 10.1+
+
 ## Quick Launch
 
 ### Step: 1 Install XDC package using homebrew
