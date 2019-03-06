@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfin-testnet-node:
-    image: xinfinorg/xinfin-testnet-node:6deae321660ace6242c367e6655e94070f87702a
+    build: dockerfiles/xdc-testnet-node/
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
