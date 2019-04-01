@@ -3,7 +3,7 @@
 
 ## Prerequisite
 
-**Operating System**: Ubuntu 16.04 64-bit or higher
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
 Should be facing internet directly with **public IP** & **without NAT**
 
@@ -19,7 +19,7 @@ Following network ports need to be open for the nodes to communicate
 |8545| TCP | RPC |
 |30303| TCP/UDP | XDC |
 
-### Setup
+### Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
@@ -72,23 +72,27 @@ sudo ./upgrade.sh
 sudo docker-compose -f docker-services.yml up -d
 ```
 
-## Windows 64-bit
+## Setup For Windows 64-bit Operating System
 ```
 git clone https://github.com/XinFinOrg/XinFin-Node.git
 ```
 
 Enter `win64` directory
 ```
-cd XinFin-Node/win64/
+cd XinFin-Node/win64/one-click-installer
 ```
 
 Run
 ```
-xdc-start.bat
+setup.exe
 ```
 
+This will install the XDC binary in C:\Program Files (x86)\XinFin with all the start-menu, desktop icons & uninstaller.
 
-## macOS Setup support using Vagrant.
+Righ-click on the XinFin-XDC Masternode icon on desktop & click on "Run as administrator" to launch your masternode.
+
+
+##  Setup For MAC Operating System (using Vagrant Environments).
 You need to download install below mention 3 Software:
 1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
