@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  xinfin-testnet-node:
+    image: xinfinorg/xinfin-testnet-node:apothemnetwork
+    volumes:
+      - "./xdcchain:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
+      - "./start-node.sh:/work/start-node.sh"
+      - "./bootnodes.list:/work/bootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: .env
+    ports:
+      - "30303:30303"
+      - "8545:8545"
