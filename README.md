@@ -1,5 +1,5 @@
 
-## How to Setup XinFin-XDC Masternode
+## How to Setup XinFin-XDC Masternode (One click Installer)
 
 **Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
@@ -15,7 +15,7 @@ Following network ports need to be open for the nodes to communicate
 |30303| TCP/UDP | XDC |
 
 
-###  Download XinFin One Click Installer (to setup Masternode) for Windows, Linux and macOS - Release Notes ###
+###  Download XinFin One Click Installer (to setup Masternode) for Windows, Linux and mac OS ###
 
 [One Click Masternode Installer for Windows OS (64-bit)](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
 
