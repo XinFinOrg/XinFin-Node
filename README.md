@@ -19,7 +19,26 @@ Following network ports need to be open for the nodes to communicate
 |8545| TCP | RPC |
 |30303| TCP/UDP | XDC |
 
-### Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
+
+###  Download XinFin One Click Installer (to setup Masternode) for Windows, Linux and macOS - Release Notes ###
+
+[One Click Masternode Installer for Windows OS (64-bit)](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
+
+[One Click Masternode Installer for Linux OS](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
+
+[One Click Masternode Installer for macOS](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
+
+
+# Masternode Tools and Public Community Channel #
+
+Community Forum update link: http://xinfin.net
+
+Telegram Development Community: https://t.me/XinFinDevelopers
+
+Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
+
+
+Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
