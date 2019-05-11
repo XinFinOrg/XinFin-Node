@@ -34,7 +34,7 @@ Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
 
 
 
-## Prerequisite Method 2 ##
+## Setup XinFin Masternode Method 2 ##
 
 **Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
