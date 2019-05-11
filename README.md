@@ -1,14 +1,9 @@
 
 ## How to Setup XinFin-XDC Masternode
 
-## Prerequisite
-
 **Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
 Should be facing internet directly with **public IP** & **without NAT**
-
-**Tools**: Docker, Docker Compose(1.21.2+)
-
 
 ## Network Ports
 
@@ -37,6 +32,15 @@ Telegram Development Community: https://t.me/XinFinDevelopers
 
 Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
 
+
+
+## Prerequisite Method 2 ##
+
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
+
+Should be facing internet directly with **public IP** & **without NAT**
+
+**Tools**: Docker, Docker Compose(1.21.2+)
 
 Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
