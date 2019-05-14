@@ -74,7 +74,7 @@ nano .env
 
 Run:
 ```
-sudo docker-compose -f docker-services.yml up -d
+sudo docker-compose -f docker-apothem-network.yml up -d
 ```
 
 You should be able to see your node listed on this page: [https://xinfin.network](https://XinFin.network/) Select Menu "Switch to TestNet" for TestNetwork and Select "Switch to LiveNet" to check LiveNetwork Stats. 
