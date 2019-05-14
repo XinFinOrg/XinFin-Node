@@ -1,14 +1,9 @@
 
-## How to Setup XinFin-XDC Masternode
-
-## Prerequisite
+## How to Setup XinFin-XDC Masternode (One click Installer)
 
 **Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
 Should be facing internet directly with **public IP** & **without NAT**
-
-**Tools**: Docker, Docker Compose(1.21.2+)
-
 
 ## Network Ports
 
@@ -19,7 +14,35 @@ Following network ports need to be open for the nodes to communicate
 |8545| TCP | RPC |
 |30303| TCP/UDP | XDC |
 
-### Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
+
+###  Download XinFin One Click Installer (to setup Masternode) for Windows, Linux and mac OS ###
+
+[One Click Masternode Installer for Windows OS (64-bit)](http://download.xinfin.network/XinFin-Network-installer-0-12-0.exe)
+
+[One Click Masternode Installer for Linux OS](http://download.xinfin.network/XinFin-Network-linux64-0-12-0.deb)
+
+[One Click Masternode Installer for macOS](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
+
+
+# Masternode Tools and Public Community Channel #
+
+Community Forum update link: http://xinfin.net
+
+Telegram Development Community: https://t.me/XinFinDevelopers
+
+Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
+
+
+
+## Setup XinFin Masternode Method 2 ##
+
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
+
+Should be facing internet directly with **public IP** & **without NAT**
+
+**Tools**: Docker, Docker Compose(1.21.2+)
+
+Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
