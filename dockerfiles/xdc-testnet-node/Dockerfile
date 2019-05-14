@@ -5,7 +5,7 @@ WORKDIR /work
 RUN \
     apt-get update && apt-get install -y git build-essential && \
     git clone https://github.com/XinFinOrg/XDPoS-TestNet-Apothem.git xdcchain && \
-	(cd xdcchain && git checkout --detach f4bdcb1238a683e5fbedf13c89e41375f23487f2 && make)
+	(cd xdcchain && git checkout --detach 8c85c288a9f1b478c0a68b33421e8f4c6cccaccc && make)
 
 RUN cp /work/xdcchain/build/bin/XDC /usr/bin && chmod +x /usr/bin/XDC && \
     rm -rf xdcchain
