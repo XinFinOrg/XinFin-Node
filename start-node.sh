@@ -31,4 +31,4 @@ done < "$input"
 netstats="$INSTANCE_NAME:xinfin_apothem_network_stats@stats.apothem.network:4000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 51 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
+XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 51 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*" --ws --wsaddr=0.0.0.0 --wsorigins * --wsport 8555 --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
