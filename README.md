@@ -72,9 +72,10 @@ nano .env
 
 ## Step: 3 Start your Node
 
+**For Mainnet**
 Run:
 ```
-sudo docker-compose -f apothem-network.yml up -d
+sudo docker-compose -f docker-services.yml up -d
 ```
 
 You should be able to see your node listed on this page: [https://xinfin.network](https://XinFin.network/) Select Menu "Switch to TestNet" for TestNetwork and Select "Switch to LiveNet" to check LiveNetwork Stats. 
@@ -83,54 +84,23 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 
 To stop the node or if you encounter any issues use::
 ```
-sudo docker-compose -f apothem-network.yml down
+sudo docker-compose -f docker-services.yml down
 ```
 
-## Upgrade
-To upgrade please use the following commands
-
+**For Testnet**
+Run:
 ```
-sudo docker-compose -f apothem-network.yml down
-sudo ./upgrade.sh
 sudo docker-compose -f apothem-network.yml up -d
 ```
 
-## Setup For Windows 64-bit Operating System
+You should be able to see your node listed on this page: [https://apothem.network] Select "Switch to LiveNet" to check LiveNetwork Stats and Select "Switch to TestNet" for TestNetwork.
+
+Your coinbase address can be found in xdcchain/coinbase.txt file.
+
+To stop the node or if you encounter any issues use::
 ```
-git clone https://github.com/XinFinOrg/XinFin-Node.git
+sudo docker-compose -f apothem-network.yml down
 ```
-
-Enter `win64` directory
-```
-cd XinFin-Node/win64/one-click-installer
-```
-
-Run
-```
-setup.exe
-```
-
-This will install the XDC binary in C:\Program Files (x86)\XinFin with all the start-menu, desktop icons & uninstaller.
-
-Righ-click on the XinFin-XDC Masternode icon on desktop & click on "Run as administrator" to launch your masternode.
-
-
-##  Setup For MAC Operating System (using Vagrant Environments).
-You need to download install below mention 3 Software:
-1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
-3. Install [GIT](https://gitforwindows.org/)
-    After installation of above 3 Software (this may also need restart of your machine.)
-4. Launch "command prompt" & follow the commands below  
-   ```sh
-    git clone https://github.com/XinFinOrg/XinFin-Node.git
-    cd XinFin-Node
-    vagrant up
-    vagrant ssh
-    ```
-5. XinFin-Node is automatically copied to /home/vagrant/ follow Step 1, 2 & 3 as explained before in this document to complete the node setup.
-6. To shutdown the vagrant instance, run vagrant suspend. To delete it, run vagrant destroy.
-
 
 **Troubleshooting**
 
