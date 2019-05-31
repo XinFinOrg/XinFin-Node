@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfin-testnet-node:
-    image: xinfinorg/xinfin-testnet-node:apothemnetwork
+    image: xinfinorg/xinfin-testnet-node:mainnetv1.0
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
