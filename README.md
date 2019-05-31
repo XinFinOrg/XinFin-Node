@@ -74,7 +74,7 @@ nano .env
 
 Run:
 ```
-sudo docker-compose -f docker-services.yml up -d
+sudo docker-compose -f apothem-network.yml up -d
 ```
 
 You should be able to see your node listed on this page: [https://xinfin.network](https://XinFin.network/) Select Menu "Switch to TestNet" for TestNetwork and Select "Switch to LiveNet" to check LiveNetwork Stats. 
@@ -83,16 +83,16 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 
 To stop the node or if you encounter any issues use::
 ```
-sudo docker-compose -f docker-services.yml down
+sudo docker-compose -f apothem-network.yml down
 ```
 
 ## Upgrade
 To upgrade please use the following commands
 
 ```
-sudo docker-compose -f docker-services.yml down
+sudo docker-compose -f apothem-network.yml down
 sudo ./upgrade.sh
-sudo docker-compose -f docker-services.yml up -d
+sudo docker-compose -f apothem-network.yml up -d
 ```
 
 ## Setup For Windows 64-bit Operating System
