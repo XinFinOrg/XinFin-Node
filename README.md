@@ -73,6 +73,7 @@ nano .env
 ## Step: 3 Start your Node
 
 **For Mainnet**
+
 Run:
 ```
 sudo docker-compose -f docker-services.yml up -d
@@ -88,6 +89,7 @@ sudo docker-compose -f docker-services.yml down
 ```
 
 **For Testnet**
+
 Run:
 ```
 sudo docker-compose -f apothem-network.yml up -d
