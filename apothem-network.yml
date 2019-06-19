@@ -2,12 +2,12 @@ version: "3.4"
 
 services:
   xinfin-testnet-node:
-    image: xinfinorg/xinfin-testnet-node:apothemnetwork
+    image: xinfinorg/xinfin-testnet-node:apothem_network
     volumes:
-      - "./xdcchain:/work/xdcchain"
-      - "./genesis.json:/work/genesis.json"
-      - "./start-node.sh:/work/start-node.sh"
-      - "./bootnodes.list:/work/bootnodes.list"
+      - "./xdcchain-testnet:/work/xdcchain-testnet"
+      - "./testnetgenesis.json:/work/testnetgenesis.json"
+      - "./start-testnetnode.sh:/work/start-testnetnode.sh"
+      - "./testnetbootnodes.list:/work/testnetbootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
     restart: "always"
