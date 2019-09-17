@@ -1,8 +1,8 @@
 version: "3.4"
 
 services:
-  xinfin-testnet-node:
-    image: xinfinorg/xinfin-testnet-node:mainnetv1.0
+  xinfinnetwork:
+    image: xinfinorg/xinfinnetwork:xdc_mainnet_v1.0.1
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
