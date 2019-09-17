@@ -5,7 +5,7 @@
 
 Should be facing internet directly with **public IP** & **without NAT**
 
-## Network Ports
+### Network Ports
 
 Following network ports need to be open for the nodes to communicate
 
@@ -15,14 +15,7 @@ Following network ports need to be open for the nodes to communicate
 |30303| TCP/UDP | XDC |
 
 
-###  Download XinFin One Click Installer (to setup Masternode) for Windows, Linux and mac OS ###
-
-[One Click Masternode Installer for Windows OS (64-bit)](http://download.xinfin.network/XinFin-Network-installer-0-12-0.exe)
-
-[One Click Masternode Installer for Linux OS](http://download.xinfin.network/XinFin-Network-linux64-0-12-0.deb)
-
-[One Click Masternode Installer for macOS](http://download.xinfin.network/XinFin-Network-installer-0-12-0.rar)
-
+###  Download [XinFin One Click Installer](https://xinfin.org/setup-masternode.php) (to setup Masternode) for Windows, Linux and mac OS ### 
 
 # Masternode Tools and Public Community Channel #
 
