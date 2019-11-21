@@ -1,16 +1,11 @@
 
-## How to Setup XinFin-XDC Masternode
+## How to Setup XinFin-XDC Masternode (One click Installer)
 
-## Prerequisite
-
-**Operating System**: Ubuntu 16.04 64-bit or higher
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
 
 Should be facing internet directly with **public IP** & **without NAT**
 
-**Tools**: Docker, Docker Compose(1.21.2+)
-
-
-## Network Ports
+### Network Ports
 
 Following network ports need to be open for the nodes to communicate
 
@@ -19,7 +14,28 @@ Following network ports need to be open for the nodes to communicate
 |8545| TCP | RPC |
 |30303| TCP/UDP | XDC |
 
-### Setup
+
+###  Download [XinFin One Click Installer](https://xinfin.org/setup-masternode.php) (to setup Masternode) for Windows, Linux and mac OS ### 
+
+# Masternode Tools and Public Community Channel #
+
+Community Forum update link: http://xinfin.net
+
+Telegram Development Community: https://t.me/XinFinDevelopers
+
+Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
+
+
+
+## Setup XinFin Masternode Method 2 ##
+
+**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
+
+Should be facing internet directly with **public IP** & **without NAT**
+
+**Tools**: Docker, Docker Compose(1.21.2+)
+
+Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
@@ -49,6 +65,8 @@ nano .env
 
 ## Step: 3 Start your Node
 
+**For Mainnet**
+
 Run:
 ```
 sudo docker-compose -f docker-services.yml up -d
@@ -63,31 +81,21 @@ To stop the node or if you encounter any issues use::
 sudo docker-compose -f docker-services.yml down
 ```
 
-## Upgrade
-To upgrade please use the following commands
+**For Testnet**
 
+Run:
 ```
-sudo docker-compose -f docker-services.yml down
-sudo ./upgrade.sh
-sudo docker-compose -f docker-services.yml up -d
+sudo docker-compose -f apothem-network.yml up -d
 ```
 
-# Windows/macOS Setup support using Vagrant.
-You need to download install below mention 3 Software:
-1. Install Oracle [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-2. Install [Vagrant](https://www.vagrantup.com/downloads.html)
-3. Install [GIT](https://gitforwindows.org/)
-    After installation of above 3 Software (this may also need restart of your machine.)
-4. Launch "command prompt" & follow the commands below  
-   ```sh
-    git clone https://github.com/XinFinOrg/XinFin-Node.git
-    cd XinFin-Node
-    vagrant up
-    vagrant ssh
-    ```
-5. XinFin-Node is automatically copied to /home/vagrant/ follow Step 1, 2 & 3 as explained before in this document to complete the node setup.
-6. To shutdown the vagrant instance, run vagrant suspend. To delete it, run vagrant destroy.
+You should be able to see your node listed on this page: [https://apothem.network] Select "Switch to LiveNet" to check LiveNetwork Stats and Select "Switch to TestNet" for TestNetwork.
 
+Your coinbase address can be found in xdcchain/coinbase.txt file.
+
+To stop the node or if you encounter any issues use::
+```
+sudo docker-compose -f apothem-network.yml down
+```
 
 **Troubleshooting**
 

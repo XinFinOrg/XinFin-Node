@@ -1,8 +1,8 @@
 version: "3.4"
 
 services:
-  xinfin-testnet-node:
-    image: xinfinorg/xinfin-testnet-node:1130199b95301c8696e1fc94eccb7e0549c8b262
+  xinfinnetwork:
+    image: xinfinorg/xinfinnetwork:xdc_mainnet_v1.0.1
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
@@ -15,13 +15,3 @@ services:
     ports:
       - "30303:30303"
       - "8545:8545"
-
-  netapis:
-    image: xinfinorg/netapis
-    restart: "on-failure:10"
-    volumes:
-      - "./netapis/app.json:/netapis/app.json"
-      - "/etc/localtime:/etc/localtime:ro"
-    env_file: .env
-    depends_on:
-      - xinfin-testnet-node 

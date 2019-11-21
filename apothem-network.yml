@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  xinfinnetwork:
+    image: xinfinorg/xinfinnetwork:xdc_testnet_v1.0.1
+    volumes:
+      - "./xdcchain-testnet:/work/xdcchain-testnet"
+      - "./testnetgenesis.json:/work/testnetgenesis.json"
+      - "./start-testnetnode.sh:/work/start-testnetnode.sh"
+      - "./testnetbootnodes.list:/work/testnetbootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: .env
+    ports:
+      - "30303:30303"
+      - "8545:8545"
