@@ -23,7 +23,7 @@ function installDocker(){
     sudo apt-get install docker-ce -y
     
     curl -o /usr/local/bin/docker-compose -L \
-         "https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m)"         
+         "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)"         
 
     chmod +x /usr/local/bin/docker-compose
     sleep 5
