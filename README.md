@@ -1,35 +1,42 @@
 
-## How to Setup XinFin-XDC Masternode (One click Installer)
+## How to Setup XinFin Masternode 
 
-**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
+## Method 1 :- Setup XinFin Masternode One click Installer  ##
 
-Should be facing internet directly with **public IP** & **without NAT**
+**Operating System**: 
 
-### Network Ports
-
-Following network ports need to be open for the nodes to communicate
-
-| Port | Type | Definition |
-|:------:|:-----:|:---------- |
-|8545| TCP | RPC |
-|30303| TCP/UDP | XDC |
-
+* Apple Mac
+* Windows 
+* Linux - Ubuntu
 
 ###  Download [XinFin One Click Installer](https://xinfin.org/setup-masternode.php) (to setup Masternode) for Windows, Linux and mac OS ### 
 
-# Masternode Tools and Public Community Channel #
+---------------------------------
 
-Community Forum update link: http://xinfin.net
+## Method 2 :- Setup XinFin Masternode Bootstrap Script  ##
 
-Telegram Development Community: https://t.me/XinFinDevelopers
+Bootstrap Command XinFin Node Setup :- 
 
-Slack Public Channel: https://xinfin-public.slack.com/messages/CELR2M831/
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/cloud/bootstrap.sh)" root
+```
+
+Examples :- 
+```
+$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/cloud/bootstrap.sh)" root
+[sudo] password for user: 
+Please enter your XinFin MasterNode Name :- Demo_Server 
+Your Masternode Name is Demo_Server
+
+```
 
 
 
-## Setup XinFin Masternode Method 2 ##
+---------------------------------
 
-**Operating System**: Ubuntu 16.04 64-bit or higher (Scroll Down for Windows and MAC Operating System)
+## Method 3 :- Setup XinFin Masternode Docker ##
+
+**Operating System**: Ubuntu 16.04 64-bit or higher 
 
 Should be facing internet directly with **public IP** & **without NAT**
 
@@ -96,6 +103,15 @@ To stop the node or if you encounter any issues use::
 ```
 sudo docker-compose -f apothem-network.yml down
 ```
+
+## Masternode Tools and Public Community Channel #
+
+Community Forum update link: http://xinfin.net
+
+Telegram Development Community: https://t.me/XinFinDevelopers
+
+Slack Public Channel Invitation : https://launchpass.com/xinfin-public
+
 
 **Troubleshooting**
 
