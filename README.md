@@ -18,12 +18,12 @@
 Bootstrap Command XinFin Node Setup :- 
 
 ```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/cloud/bootstrap.sh)" root
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/bootstrap.sh)" root
 ```
 
 Examples :- 
 ```
-$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/cloud/bootstrap.sh)" root
+$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/bootstrap.sh)" root
 [sudo] password for user: 
 Please enter your XinFin MasterNode Name :- Demo_Server 
 Your Masternode Name is Demo_Server
