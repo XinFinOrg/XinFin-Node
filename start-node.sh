@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d /work/xdcchain/keystore ]
+if [ ! -d /work/xdcchain/keystore/UTC* ]
 then
   wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -v FS="({|})" '{print $2}')
   echo "Initalizing Genesis Block"
