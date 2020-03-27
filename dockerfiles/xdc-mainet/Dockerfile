@@ -1,11 +1,11 @@
-FROM golang:1.12
+FROM golang:1.14
 
 WORKDIR /work
 
 RUN \
     apt-get update && apt-get install -y git build-essential && \
     git clone https://github.com/XinFinOrg/XDPoS-TestNet-Apothem.git xdcchain && \
-	(cd xdcchain && git checkout --detach 72138a0bd20a81a377f42bd38cd536d68fe730a1 && make)
+	(cd xdcchain && git checkout --detach d3963c816b5b1655b5a608e1d81329b4716c41aa && make)
 
 RUN cp /work/xdcchain/build/bin/XDC /usr/bin && chmod +x /usr/bin/XDC && \
     rm -rf xdcchain
