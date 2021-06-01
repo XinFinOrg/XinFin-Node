@@ -13,4 +13,4 @@ RUN cp /work/xdcchain/build/bin/XDC /usr/bin && chmod +x /usr/bin/XDC && \
 EXPOSE 8545
 EXPOSE 30303
 
-ENTRYPOINT ["/work/start-apothem.sh"]
+ENTRYPOINT ["bash","/work/start-apothem.sh"]

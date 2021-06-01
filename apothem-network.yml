@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xinfinnetwork:xdc_mainnet_rpc_v1.0.1
+    image: xinfinorg/xinfinnetwork:xdc_apothem_rpc_v1.0.1
     volumes:
       - "./xdcchain-testnet:/work/xdcchain-testnet"
       - "./testnetgenesis.json:/work/testnetgenesis.json"
