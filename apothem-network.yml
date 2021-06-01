@@ -6,7 +6,7 @@ services:
     volumes:
       - "./xdcchain-testnet:/work/xdcchain-testnet"
       - "./testnetgenesis.json:/work/testnetgenesis.json"
-      - "./start-testnetnode.sh:/work/start-testnetnode.sh"
+      - "./start-apothem.sh:/work/start-apothem.sh"
       - "./testnetbootnodes.list:/work/testnetbootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
