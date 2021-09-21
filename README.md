@@ -36,13 +36,13 @@ Your Masternode Name is Demo_Server
 
 ## Method 3 :- Setup XinFin Masternode Docker ##
 
-**Operating System**: Ubuntu 16.04 64-bit or higher 
+**Operating System**: Ubuntu 20.04 64-bit or higher 
 
 Should be facing internet directly with **public IP** & **without NAT**
 
-**Tools**: Docker, Docker Compose(1.21.2+)
+**Tools**: Docker, Docker Compose(1.27.4+)
 
-Setup (For Ubuntu 16.04 64-bit or higher Operating System) 
+Setup (For Ubuntu 20.04 64-bit or higher Operating System) 
 
 ## Clone repository
 ```
@@ -87,6 +87,11 @@ To stop the node or if you encounter any issues use::
 ```
 sudo docker-compose -f docker-services.yml down
 ```
+Attach XDC Console:
+```
+sudo bash xdc-attach.sh
+```
+
 
 **For Testnet**
 
