@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xinfinnetwork:xdc_mainnet_ignoreBlock
+    image: xinfinorg/xinfinnetwork:1.4.3
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
