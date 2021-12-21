@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xinfinnetwork:1.4.3_Fix_AddressPrefix
+    image: xinfinorg/xinfinnetwork:1.4.4
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
