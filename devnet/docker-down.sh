@@ -1,0 +1,1 @@
+HOSTIP=$(curl https://checkip.amazonaws.com)  docker-compose -f docker-compose-devnet.yml down

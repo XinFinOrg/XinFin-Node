@@ -1,0 +1,38 @@
+version: "3.4"
+
+services:
+  xinfinnetwork1:
+    build:
+        context: .
+        dockerfile: /root/XinFin/XinFin-Node/dockerfiles/xdc-testnet-node/Dockerfile
+    volumes:
+      - "./xdcchain-1:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
+      - "./start.sh:/work/start.sh"
+      - "./bootnodes.list:/work/bootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: "./envs/${HOSTIP}-1"
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+      - "8555:8555"
+
+  xinfinnetwork2:
+    build:
+        context: .
+        dockerfile: /root/XinFin/XinFin-Node/dockerfiles/xdc-testnet-node/Dockerfile
+    volumes:
+      - "./xdcchain-2:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
+      - "./start.sh:/work/start.sh"
+      - "./bootnodes.list:/work/bootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: "./envs/${HOSTIP}-2"
+    ports:
+      - "30304:30304"
+      - "8546:8546"
+      - "8556:8556"
