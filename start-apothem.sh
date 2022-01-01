@@ -1,19 +1,29 @@
 #!/bin/bash
+while getopts u:a:f: flag
+do
+    case "${flag}" in
+        p) PRIVATE_KEY=${OPTARG};;
+        private_key) PRIVATE_KEY=${OPTARG};;
+    esac
+done
 
 if [ ! -d /work/xdcchain-testnet/XDC/chaindata ]
 then
-  wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain-testnet | awk -v FS="({|})" '{print $2}')
-  echo "Initializing Testnet Genesis Block"
-  echo $wallet
-  coinbaseaddr="$wallet"
-  coinbasefile=/work/xdcchain-testnet/coinbase.txt
-  touch $coinbasefile
-  if [ -f "$coinbasefile" ]
-  then 
-      echo "$coinbaseaddr" > "$coinbasefile"
-  cat xdcchain-testnet/keystore/* >> "$coinbasefile"
-  fi
-  XDC --datadir /work/xdcchain-testnet init /work/testnetgenesis.json
+  echo $PRIVATE_KEY >> /tmp/key
+  wallet=$(${PROJECT_DIR}/build/bin/$Bin_NAME account import --password .pwd --datadir /work/xdcchain-testnet /tmp/key | awk -v FS="({|})" '{print $2}')
+  ${PROJECT_DIR}/build/bin/$Bin_NAME --datadir /work/xdcchain-testnet init ./genesis/genesis.json
+  #wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain-testnet | awk -v FS="({|})" '{print $2}')
+  #echo "Initializing Testnet Genesis Block"
+  #echo $wallet
+  #coinbaseaddr="$wallet"
+  #coinbasefile=/work/xdcchain-testnet/coinbase.txt
+  #touch $coinbasefile
+  #if [ -f "$coinbasefile" ]
+  #then 
+  #    echo "$coinbaseaddr" > "$coinbasefile"
+  #cat xdcchain-testnet/keystore/* >> "$coinbasefile"
+  #fi
+  #XDC --datadir /work/xdcchain-testnet init /work/testnetgenesis.json
 else
   wallet=$(XDC account list --datadir /work/xdcchain-testnet| head -n 1 | awk -v FS="({|})" '{print $2}')
 fi

@@ -1,10 +1,10 @@
 version: "3.4"
 
 services:
-  xinfinnetwork:
-    image: xinfinorg/xinfinnetwork:evm_upgrade_apothem
+  xinfinnetwork1:
+    build: ./dockerfiles/xdc-testnet-node/Dockerfile
     volumes:
-      - "./xdcchain-testnet:/work/xdcchain-testnet"
+      - "./xdcchain-testnet-1:/work/xdcchain-testnet"
       - "./testnetgenesis.json:/work/testnetgenesis.json"
       - "./start-apothem.sh:/work/start-apothem.sh"
       - "./testnetbootnodes.list:/work/testnetbootnodes.list"
@@ -12,7 +12,27 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     restart: "always"
     env_file: .env
+    environment:
+      - PRIVATE_KEY="bde24b587c04ab8d8cc2acc176a4b85e646d3c89f4d98d570629d756aea68303"
     ports:
       - "30304:30304"
       - "8999:8555"
       - "8898:8556"
+
+  xinfinnetwork2:
+    build: ./dockerfiles/xdc-testnet-node/Dockerfile
+    volumes:
+      - "./xdcchain-testnet-2:/work/xdcchain-testnet"
+      - "./testnetgenesis.json:/work/testnetgenesis.json"
+      - "./start-apothem.sh:/work/start-apothem.sh"
+      - "./testnetbootnodes.list:/work/testnetbootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: .env
+    environment:
+      - PRIVATE_KEY="3efdb44088929167487da052125162b48d8d54fe8f7b7db11b5d5cc3b9a1c14b"
+    ports:
+      - "30305:30304"
+      - "8998:8555"
+      - "8897:8556"
