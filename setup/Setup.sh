@@ -5,7 +5,7 @@ function configureXinFinNode(){
     read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
     echo "Your Masternode Name is ${MasterNodeName}"
     
-    echo "Installing Git      "
+    echo "Installing Git"
 
     sudo apt-get update
 
@@ -18,7 +18,7 @@ function configureXinFinNode(){
 
     echo "Clone Xinfin Node"
 
-    git clone https://github.com/xinfinorg/XinFin-Node && cd XinFin-Node
+    git clone -b cloud https://github.com/xinfinorg/XinFin-Node && cd XinFin-Node
     sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}_XF/g" .env
 
 
