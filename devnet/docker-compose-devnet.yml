@@ -4,7 +4,7 @@ services:
   xinfinnetwork1:
     build:
         context: .
-        dockerfile: /root/XinFin/XinFin-Node/dockerfiles/xdc-testnet-node/Dockerfile
+        dockerfile: . 
     volumes:
       - "./xdcchain-1:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
@@ -22,7 +22,7 @@ services:
   xinfinnetwork2:
     build:
         context: .
-        dockerfile: /root/XinFin/XinFin-Node/dockerfiles/xdc-testnet-node/Dockerfile
+        dockerfile: .
     volumes:
       - "./xdcchain-2:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"

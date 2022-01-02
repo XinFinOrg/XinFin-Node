@@ -1,0 +1,18 @@
+version: "3.4"
+
+services:
+  xinfinnetwork:
+    image: xinfinorg/xinfinnetwork:evm_upgrade_apothem
+    volumes:
+      - "./xdcchain-testnet:/work/xdcchain-testnet"
+      - "./testnetgenesis.json:/work/testnetgenesis.json"
+      - "./start-apothem.sh:/work/start-apothem.sh"
+      - "./testnetbootnodes.list:/work/testnetbootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: "always"
+    env_file: .env
+    ports:
+      - "30304:30304"
+      - "8999:8555"
+      - "8898:8556"
