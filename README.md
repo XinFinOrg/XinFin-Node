@@ -71,12 +71,12 @@ https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-
 Bootstrap Command XinFin Node Setup:- 
 
 ```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/bootstrap.sh)" root
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
 ```
 
 Examples:- 
 ```
-$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/bootstrap.sh)" root
+$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
 [sudo] password for user: 
 Please enter your XinFin MasterNode Name :- Demo_Server 
 Your Masternode Name is Demo_Server
@@ -109,7 +109,7 @@ cd XinFin-Node
 
 
 **Step 1: Install docker & docker-compose**
-    sudo ./install_docker.sh
+    sudo ./setup/install_docker.sh
 
 **Step 2: Update .env file with details**
 Create `.env` file by using the sample - `.env.example`
@@ -119,6 +119,7 @@ Enter either your company or product name in the INSTANCE_NAME field.
 Enter your email address in CONTACT_DETAILS field.
 
 ```
+cd mainnet # testnet
 cp env.example .env
 nano .env
 ```
@@ -129,6 +130,7 @@ nano .env
 
 Run:
 ```
+cd mainnet
 sudo docker-compose -f docker-services.yml up -d
 ```
 
@@ -143,6 +145,7 @@ sudo docker-compose -f docker-services.yml down
 ```
 Attach XDC Console:
 ```
+cd mainnet
 sudo bash xdc-attach.sh
 ```
 
@@ -151,6 +154,7 @@ sudo bash xdc-attach.sh
 
 Run:
 ```
+cd testnet
 sudo docker-compose -f apothem-network.yml up -d
 ```
 
@@ -161,6 +165,7 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 
 To stop the node or if you encounter any issues use:
 ```
+cd testnet
 sudo docker-compose -f apothem-network.yml down
 ```
 
