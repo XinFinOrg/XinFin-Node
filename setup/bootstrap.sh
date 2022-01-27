@@ -2,6 +2,14 @@
 
 
 function configureXinFinNode(){
+    read -p "Please choose your XinFin Network (mainnet/testnet/devnet) :- " Network
+
+    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
+            echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
+            return
+    fi
+    echo "Your running network is ${Network}"
+
     read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
     echo "Your Masternode Name is ${MasterNodeName}"
     
@@ -18,7 +26,7 @@ function configureXinFinNode(){
 
     echo "Clone Xinfin Node"
 
-    git clone https://github.com/hash-laboratories-au/XinFin-Node && cd XinFin-Node/$1
+    git clone https://github.com/hash-laboratories-au/XinFin-Node && cd XinFin-Node/$Network
     sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}_XF/g" .env
 
 
@@ -50,9 +58,9 @@ function configureXinFinNode(){
 
 function main(){
 
-    configureXinFinNode $1
+    configureXinFinNode
     
 }
 
-main $1
+main
 
