@@ -1,1 +1,1 @@
-sudo docker-compose -f docker-services.yml down
+sudo docker-compose -f docker-compose.yml down

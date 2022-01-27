@@ -68,10 +68,12 @@ https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-
 
 ### Method 2 :- Setup XinFin Masternode Bootstrap Script ###
 
+**For Mainnet**
+
 Bootstrap Command XinFin Node Setup:- 
 
 ```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh) mainnet" root
 ```
 
 Examples:- 
@@ -84,6 +86,15 @@ Your Masternode Name is Demo_Server
 ```
 
 
+**For Testnet**
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh) testnet" root
+```
+
+**For Devnet**
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh) devnet" root
+```
 
 ---------------------------------
 
@@ -131,7 +142,7 @@ nano .env
 Run:
 ```
 cd mainnet
-sudo docker-compose -f docker-services.yml up -d
+sudo docker-compose -f docker-compose.yml up -d
 ```
 
 You should be able to see your node listed on the [XinFin Network](https://XinFin.network/) page.
@@ -141,7 +152,7 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 
 To stop the node or if you encounter any issues use:
 ```
-sudo docker-compose -f docker-services.yml down
+sudo docker-compose -f docker-compose.yml down
 ```
 Attach XDC Console:
 ```

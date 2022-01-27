@@ -18,7 +18,7 @@ function configureXinFinNode(){
 
     echo "Clone Xinfin Node"
 
-    git clone https://github.com/hash-laboratories-au/XinFin-Node && cd XinFin-Node/mainnet
+    git clone https://github.com/hash-laboratories-au/XinFin-Node && cd XinFin-Node/$1
     sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}_XF/g" .env
 
 
@@ -44,22 +44,15 @@ function configureXinFinNode(){
     sleep 5
     echo "Docker Compose Installed successfully"
 
-    sudo docker-compose -f docker-services.yml up -d
-
+    sudo docker-compose -f docker-compose.yml up -d
 
 }
-
-function init(){
-
-        configureXinFinNode
-}
-
 
 function main(){
 
-    init
+    configureXinFinNode $1
     
 }
 
-main
+main $1
 
