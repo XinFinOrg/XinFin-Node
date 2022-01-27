@@ -2,7 +2,7 @@
 
 
 function configureXinFinNode(){
-    read -p "Please choose your XinFin Network (mainnet/testnet/devnet) :- " Network
+    read -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
 
     if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
             echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
