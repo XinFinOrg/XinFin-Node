@@ -1,1 +1,0 @@
-sudo docker exec -it xinfin-node_xinfinnetwork_1  XDC attach /work/xdcchain/XDC.ipc

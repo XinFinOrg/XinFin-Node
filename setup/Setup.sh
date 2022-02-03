@@ -2,10 +2,7 @@
 
 
 function configureXinFinNode(){
-    read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
-    echo "Your Masternode Name is ${MasterNodeName}"
-    
-    echo "Installing Git      "
+    echo "Installing Git"
 
     sudo apt-get update
 
@@ -18,9 +15,7 @@ function configureXinFinNode(){
 
     echo "Clone Xinfin Node"
 
-    git clone https://github.com/xinfinorg/XinFin-Node && cd XinFin-Node
-    sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}_XF/g" .env
-
+    git clone https://github.com/XinFinOrg/XinFin-Node && cd XinFin-Node
 
     echo "Installing Docker"
 
@@ -39,27 +34,18 @@ function configureXinFinNode(){
     
     curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         
-
     chmod +x /usr/local/bin/docker-compose
     sleep 5
     echo "Docker Compose Installed successfully"
-
-    sudo docker-compose -f docker-services.yml up -d
-
-
 }
 
 function init(){
-
         configureXinFinNode
 }
 
 
 function main(){
-
     init
-    
 }
 
 main
-

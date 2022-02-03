@@ -2,6 +2,14 @@
 
 
 function configureXinFinNode(){
+    read -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
+
+    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
+            echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
+            return
+    fi
+    echo "Your running network is ${Network}"
+
     read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
     echo "Your Masternode Name is ${MasterNodeName}"
     
@@ -18,7 +26,7 @@ function configureXinFinNode(){
 
     echo "Clone Xinfin Node"
 
-    git clone -b cloud https://github.com/xinfinorg/XinFin-Node && cd XinFin-Node
+    git clone https://github.com/XinFinOrg/XinFin-Node && cd XinFin-Node/$Network
     sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}_XF/g" .env
 
 
@@ -44,20 +52,13 @@ function configureXinFinNode(){
     sleep 5
     echo "Docker Compose Installed successfully"
 
-    sudo docker-compose -f docker-services.yml up -d
-
+    sudo docker-compose -f docker-compose.yml up -d
 
 }
-
-function init(){
-
-        configureXinFinNode
-}
-
 
 function main(){
 
-    init
+    configureXinFinNode
     
 }
 
