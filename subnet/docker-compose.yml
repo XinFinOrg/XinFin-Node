@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  subnet:
+    image: xinfinorg/xdcsubnets:latest
+    volumes:
+      - "./xdcchain:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: ".env"
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+      - "8555:8555"

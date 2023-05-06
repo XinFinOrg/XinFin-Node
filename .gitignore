@@ -1,2 +1,4 @@
 xdcchain*
 NodeName
+subnet/bootnodes.list
+subnet/.env
