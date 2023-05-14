@@ -4,17 +4,28 @@ XDC subnet is a blockchain network tailored for private and consortium use cases
 For more information, see https://xinfinorg.github.io/xdc-subnet-docs/category/subnet-chain
 
 ## How to start your own XDC subnet
+### Bootnode
+1. Use the `.env.example` as a guideline to create a new `.env` file.
+2. Make sure below values are populated:
+  - EXTIP: Your host external IP address. This is useful if you want your bootnode to be discoveryed outside of your local network.
+  - NET_RESTRICTING (Optional): This restrict p2p connectivity to an IP subnet. It will further isolate the network and prevents cross-connecting with other blockchain networks in case the nodes are reachable from the Internet. example value `172.16.254.0/24`. With the this setting, bootnode will only allow connections from the 172.16.254.0/24 subnet, and will not attempt to connect to other nodes outside of the set IP range.
+3. Run `docker-compose up bootnode`. Copy the bootnode address which looks like `enode://blabla@[some-ip-address]:30301`
+
+### Subnet node
 1. Copy the `.env.example` and name it to `.env`
 2. Replace the environment variables in the `.env` with your own ones:
   - INSTANCE_NAME={{Name of the instance}}
-  - SYNC_MODE={{ The sync mode, either "full" or "fast"}}
-  - PRIVATE_KEY={{ Your private key}}
-  - NETWORK_ID={{ Your network ID, if not provided, default to 102}}
-  - BOOTNODES={{ Your bootnode address, or the address of other running subnet nodes. Seperated by ",". For example: enode://da90183ab23829bfbe1e83e24dca6d6119486d601ae6e5506f8870f2819d345e380626abc4c92b1ebd8ea7eee733ddf44a1ee66dc0af6a59e99d0a1763f36d40@66.94.121.151:30303,enode://162e09c682b42f85420191f9246155b3ecdd2aad51035cce94c864b968c7ba697d71d9776226483d598b64e8720285c6534040a994f9d9cf5826b74fb95aa624@66.94.121.151:30304 }}
-  - LOG_LEVEL= {{Log level, from 1 to 5 where 1 produce least logs. default to 3 if not provided}}
+  - BOOTNODES: Addresses of the bootnodes, seperated by ",". You should already have this value when you spin up the bootnode from the section above
+  - PRIVATE_KEY: Primary key of the wallet. Note, if not provided, the node will run on a random key
+  - NETWORK_ID: The subnet network id. This shall be unique in your local network. Default to 102 if not provided.
+  - RPC_API (Optional): The API that you would like to turn on. Supported values are "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS"
+  - EXTIP (Optional): NAT port mapping based on the external IP address.
+  - SYNC_MODE (Optional): The node syncing mode. Available values are full or fast. Default to full.
+  - LOG_LEVEL (Optional): {{Log level, from 1 to 5 where 1 produce least logs. default to 3 if not provided}}
 3. Provide your own `genesis.json` file
   - Follow WIP if you do not have genesis file yet (Working in progress) OR use the "genesis.json.example" as an example
-4. Run `docker-compose up`
+4. Run `docker-compose up subnet`
+
 
 ### Restart from fresh?
 If you have already ran the nodes before and would like to start from completely fresh, you will need to nuke the stored chain data first.

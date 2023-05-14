@@ -2,3 +2,4 @@ xdcchain*
 NodeName
 subnet/bootnodes.list
 subnet/.env
+subnet/genesis.json
