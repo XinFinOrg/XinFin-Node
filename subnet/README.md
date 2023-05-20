@@ -5,8 +5,8 @@ For more information, see https://xinfinorg.github.io/xdc-subnet-docs/category/s
 
 ## How to start your own XDC subnet
 ### Bootnode
-1. Use the `.env.example` as a guideline to create a new `.env` file.
-2. Make sure below values are populated:
+1. Create an file with name of `.env.bootnode`
+2. Make sure below values are populated in the .env.bootnode file:
   - EXTIP: Your host external IP address. This is useful if you want your bootnode to be discoveryed outside of your local network.
   - NET_RESTRICTING (Optional): This restrict p2p connectivity to an IP subnet. It will further isolate the network and prevents cross-connecting with other blockchain networks in case the nodes are reachable from the Internet. example value `172.16.254.0/24`. With the this setting, bootnode will only allow connections from the 172.16.254.0/24 subnet, and will not attempt to connect to other nodes outside of the set IP range.
 3. Run `docker-compose up bootnode`. Copy the bootnode address which looks like `enode://blabla@[some-ip-address]:30301`
