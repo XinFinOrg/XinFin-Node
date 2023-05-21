@@ -1,2 +1,7 @@
 xdcchain*
 NodeName
+subnet/bootnodes.list
+subnet/.env
+subnet/.env.bootnode
+subnet/genesis.json
+subnet/puppeth

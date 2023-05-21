@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  puppeth:
+    image: xinfinorg/xdcsubnets:latest
+    entrypoint: ["puppeth"]
+    volumes:
+      - "./puppeth:/root/.puppeth"
+  subnet:
+    image: xinfinorg/xdcsubnets:latest
+    volumes:
+      - "./xdcchain:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: ".env"
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+      - "8555:8555"
+  bootnode:
+    image: xinfinorg/xdcsubnets:latest
+    restart: "always"
+    env_file: ".env.bootnode"
+    entrypoint: ["bash","/work/start-bootnode.sh"]
+    command: ["-verbosity", "6", "-nodekey", "bootnode.key", "--addr", ":30301"]
+    ports:
+      - "30301:30301"
