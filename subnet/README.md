@@ -8,6 +8,7 @@ For more information, see https://xinfinorg.github.io/xdc-subnet-docs/category/s
 ## Pre-requisite
 - [Docker](https://docs.docker.com/get-docker/)
 - Several host machines (>=3)
+- Prepare your nodes private key and address from `address-creator` in this repository
 
 ## Step 1: Host your bootnode
 A subnet bootnode is a special node needed for the initialization and growth of the P2P network in a subnet. It does this by providing new nodes a list of active peers and their IP addresses. Bootnodes do not have any special privileges. They are responsible for network discovery rather than block validation or transaction processing.
