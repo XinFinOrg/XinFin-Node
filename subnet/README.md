@@ -19,7 +19,7 @@ A subnet bootnode is a special node needed for the initialization and growth of 
 4. Make sure below values are populated in the .env.bootnode file:
   - EXTIP: Your host external IP address. This is useful if you want your bootnode to be discoveryed outside of your local network.
   - NET_RESTRICTING (Optional): This restrict p2p connectivity to an IP subnet. It will further isolate the network and prevents cross-connecting with other blockchain networks in case the nodes are reachable from the Internet. example value `172.16.254.0/24`. With the this setting, bootnode will only allow connections from the 172.16.254.0/24 subnet, and will not attempt to connect to other nodes outside of the set IP range.
-5. Run `docker-compose up bootnode`. Copy the bootnode address which looks like `enode://blabla@[some-ip-address]:30301`
+5. Run `docker-compose up bootnode`. Copy the bootnode address which looks like `enode://blabla@[some-ip-address]:30301`. You can find this information under the file `bootnodes/bootnodes.list`
 
 ## Step 2: Generate your genesis file
 In the context of XinFin XDC (XinFin Digital Contract), the genesis file refers to a configuration file that contains the initial parameters and settings for the blockchain network. It is an essential component used during the initialization process when creating a new XinFin blockchain network.
@@ -38,7 +38,7 @@ The genesis file is crucial for establishing the network's foundation and provid
   - when seeing "Which consensus engine to use?", choose "3. XDPoS - delegated-proof-of-stake".
   - as for other options, choose the options as you wish.
   - after the last step which is "Specify your chain/network ID if you want an explicit one", your genesis file is generated in your home directory and you can push "Ctrl-C" to exit `puppeth`.
-4. Copy the genesis file from you host under the directory of `./puppeth` (Keep this file, you will need it later)
+4. Open the generated file under the `./puppeth` directory. Copy the value of key `genesis`. Keep it somewhere safe for later usage.
 
 ## Step 3: Host your subnet xdc-nodes
 1. Copy the `.env.example` and name it to `.env`
@@ -51,5 +51,5 @@ The genesis file is crucial for establishing the network's foundation and provid
   - EXTIP (Optional): NAT port mapping based on the external IP address.
   - SYNC_MODE (Optional): The node syncing mode. Available values are full or fast. Default to full.
   - LOG_LEVEL (Optional): {{Log level, from 1 to 5 where 1 produce least logs. default to 3 if not provided}}
-3. Provide your own `genesis.json` file under the current directory. (The file generated from Step 2)
+3. Provide your own `genesis.json` file under the current directory. (The value from Step 2.4)
 4. Run `docker-compose up subnet`

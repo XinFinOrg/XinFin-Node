@@ -21,6 +21,8 @@ services:
     image: xinfinorg/xdcsubnets:latest
     restart: "always"
     env_file: ".env.bootnode"
+    volumes:
+      - "./bootnodes:/work/bootnodes"
     entrypoint: ["bash","/work/start-bootnode.sh"]
     command: ["-verbosity", "6", "-nodekey", "bootnode.key", "--addr", ":30301"]
     ports:

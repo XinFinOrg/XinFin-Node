@@ -5,3 +5,4 @@ subnet/.env
 subnet/.env.bootnode
 subnet/genesis.json
 subnet/puppeth
+subnet/bootnodes/*
