@@ -3,6 +3,8 @@ NodeName
 subnet/bootnodes.list
 subnet/.env
 subnet/.env.bootnode
+subnet/.env.stats
 subnet/genesis.json
 subnet/puppeth
 subnet/bootnodes/*
+subnet/logs
