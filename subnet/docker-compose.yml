@@ -28,3 +28,11 @@ services:
     ports:
       - "30301:30301/tcp"
       - "30301:30301/udp"
+  stats:
+    image: xinfinorg/subnet-stats-service:latest
+    restart: "always"
+    env_file: ".env.stats"
+    volumes:
+      - "./logs:/app/logs"
+    ports:
+      - "3000:3000"
