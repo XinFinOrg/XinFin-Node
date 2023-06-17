@@ -62,3 +62,4 @@ The genesis file is crucial for establishing the network's foundation and provid
 2. Fill in the environment variables in the `.env.stats`:
   - STATS_SECRET: A secret that you used between your stats service and the subnet node. 
 3. Run `docker-compose up -d stats`
+4. [Optional verification step] Run `curl localhost:3000/health`, make sure you get an `OK` response
