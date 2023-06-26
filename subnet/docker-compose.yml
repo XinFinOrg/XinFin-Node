@@ -54,7 +54,3 @@ services:
       - "./genesis.mainnet.json:/work/genesis.json"
     restart: "always"
     env_file: ".env"
-    ports:
-      - "30313:30303"
-      - "8555:8545"
-      - "8565:8555"

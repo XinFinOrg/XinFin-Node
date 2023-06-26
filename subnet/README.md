@@ -89,8 +89,8 @@ The genesis file is crucial for establishing the network's foundation and provid
 1. Find the file with name of `.env.relayer`
 2. Fill in the environment variables in the `.env.relayer`:
     - SUBNET_URL : This is the URL to your subnet with RPC port specified. e.g http://66.94.121.151:8545
-    - PARENTCHAIN_URL : This is the XDC parent chain URL with RPC port specified.
     - SC_ADDRESS : This is the smart contract address for this subnet that has been uploaded in the parent chain.
+    - PARENTCHAIN_URL : This is the XDC parent chain URL with RPC port specified.
     - PARENTCHAIN_WALLET_PK : This is the wallet key that will be used for submit subnet data into parent chain. You will need to have credits in it first.
     - SLACK_WEBHOOK : (Optional) If relayer detected forking of your subnet, this is the URL where we will push alerting message to. You are required to set up slack bot and install it in the relevant channel first. For details, see slack doc: https://api.slack.com/messaging/webhooks Once you are done with the slack setup, find the slack webhook url and put it here. It shall look like `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`  We only need the ones after `https://hooks.slack.com/services/`
 3. Run `docker-compose up -d relayer`
