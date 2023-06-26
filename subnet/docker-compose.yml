@@ -49,8 +49,5 @@ services:
       - "8565:8555"
   relayer:
     image: xinfinorg/xdc-relayer:latest
-    volumes:
-      - "./xdcchain_mainnet:/work/xdcchain"
-      - "./genesis.mainnet.json:/work/genesis.json"
     restart: "always"
     env_file: ".env"
