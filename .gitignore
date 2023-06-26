@@ -6,3 +6,8 @@ subnet/.env.bootnode
 subnet/genesis.json
 subnet/puppeth
 subnet/bootnodes/*
+XDC-Subnet
+.env
+.env.2
+.env.3
+.env.bootnode
