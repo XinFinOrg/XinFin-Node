@@ -65,7 +65,7 @@ The genesis file is crucial for establishing the network's foundation and provid
     - devnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/devnet/bootnodes.list
     - testnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/testnet/testnetbootnodes.list
     - mainnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/mainnet/bootnodes.list
-  - PRIVATE_KEY (Optional): Primary key of the wallet. Note, if not provided, the node will run on a random key
+  - PRIVATE_KEYS (Optional): Primary key of the wallet. Note, if not provided, the node will run on a random key
   - NETWORK_ID: The public network id. This shall be same as mention in `genesis.mainnet.json` file.
   - STATS_SERVICE_ADDRESS: Public Blockchain explore address.
     - devnet: `xinfin_xdpos_hybrid_network_stats@devnetstats.apothem.network:2000`

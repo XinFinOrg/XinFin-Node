@@ -40,13 +40,12 @@ services:
     image: xinfinorg/devnet:latest
     volumes:
       - "./xdcchain_mainnet:/work/xdcchain"
-      - "./genesis.mainnet.json:/work/genesis.json"
     restart: "always"
     env_file: ".env.mainnet"
     ports:
-      - "30313:30303"
-      - "8555:8545"
-      - "8565:8555"
+      - "40313:30303"
+      - "9555:8545"
+      - "9565:8555"
   relayer:
     image: xinfinorg/xdc-relayer:latest
     restart: "always"
