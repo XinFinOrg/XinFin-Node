@@ -48,7 +48,7 @@ The genesis file is crucial for establishing the network's foundation and provid
   - BOOTNODES: Addresses of the bootnodes, seperated by ",". You should already have this value when you spin up the bootnode from the section above
   - PRIVATE_KEY: Primary key of the wallet. Note, if not provided, the node will run on a random key
   - NETWORK_ID: The subnet network id. This shall be unique in your local network. Default to 102 if not provided.
-  - STATS_SECRET: A secret that you used between your stats service and the subnet node. (This value need to match with Step 4 STATS_SECRET)
+  - STATS_SECRET: A secret that you used between your stats service and the subnet node. (This value need to match with Step 5 STATS_SECRET)
   - STATS_SERVICE_ADDRESS: The backend service that was created at step 1 for the UI representation of the subnet blockchain.
   - RPC_API (Optional): The API that you would like to turn on. Supported values are "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS"
   - EXTIP (Optional): NAT port mapping based on the external IP address.

@@ -42,7 +42,7 @@ services:
       - "./xdcchain_mainnet:/work/xdcchain"
       - "./genesis.mainnet.json:/work/genesis.json"
     restart: "always"
-    env_file: ".env"
+    env_file: ".env.mainnet"
     ports:
       - "30313:30303"
       - "8555:8545"
