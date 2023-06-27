@@ -17,4 +17,4 @@ if [[ "$OSTYPE" == "darwin"* ]]
         sep_char='-'
 fi
 
-docker exec -i subnet${sep_char}subnet${sep_char}1 XDC attach /work/xdcchain/XDC.ipc < command.sh
+docker exec -i local${sep_char}subnet${sep_char}1 XDC attach /work/xdcchain/XDC.ipc < command.sh
