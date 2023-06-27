@@ -9,7 +9,3 @@ subnet/puppeth
 subnet/bootnodes/*
 subnet/logs
 XDC-Subnet
-.env
-.env.2
-.env.3
-.env.bootnode
