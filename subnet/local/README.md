@@ -13,4 +13,7 @@ The purpose of this directory is for locally hosting subnet with multiple nodes.
 
 5. `docker-compose up` start the rest of the services.
 
-6. Additionally `./debug/attach` is for troubleshooting node state(of subnet node 1). The default is `XDPoS.getV2Block()`. If followed by a number like `./debug/attach 100` then it is `XDPoS.getV2Block(100)` returning contents of the 100th block. If followed by words then it will issue that command, for example `./debug/attach admin.peers` return peers of that node.
+6. Additionally `./debug/attach` is for troubleshooting node state(of subnet node 1). 
+   - The default is `XDPoS.getV2Block()`. If followed by a number like `./debug/attach 100` then it is `XDPoS.getV2Block(100)` returning contents of the 100th block. 
+   - If followed by words then it will issue that command, for example `./debug/attach admin.peers` return peers of that node. 
+   - Use singe quotes `'` to wrap over commands with brackets `(`, `)` eg `./debug/attach 'XDPoS.getV2Block("committed")'`
