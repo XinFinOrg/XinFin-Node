@@ -3,7 +3,7 @@
 This README is an extension of the README in the upper /subnet directory.
 The purpose of this directory is for locally hosting subnet with multiple nodes.
 
-1. Build a local docker image with `./build_local_img.sh`. You can edit the script to build from a differrent subnet branch. 
+1. Build a local docker image with `./build_local_img.sh`. You can use `./build_local_img.sh <branch name>` to build from a differrent subnet branch. 
 
 2. In `docker-compose.yml` you can specify the image you require. For example, `localbuild-subnet:latest` - from step 1, `xinfinorg/xdcsubnets:latest` - latest master build, or another local build image.
 
