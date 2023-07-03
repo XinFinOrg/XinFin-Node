@@ -1,0 +1,20 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+if [ -z "$1" ]
+  then
+    echo "XDPoS.getV2Block()" > command.sh
+  else
+    if [ -n "$1" ] && [ "$1" -eq "$1" ] 2>/dev/null; then   #check if number
+      echo "XDPoS.getV2Block($1)" > command.sh
+    else
+      echo $1 > command.sh
+    fi
+fi
+
+sep_char='_'
+if [[ "$OSTYPE" == "darwin"* ]]
+    then
+        sep_char='-'
+fi
+
+docker exec -i local${sep_char}subnet${sep_char}1 XDC attach /work/xdcchain/XDC.ipc < command.sh

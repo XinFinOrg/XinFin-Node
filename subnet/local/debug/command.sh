@@ -1,0 +1,1 @@
+XDPoS.getV2Block()
