@@ -48,7 +48,7 @@ The genesis file is crucial for establishing the network's foundation and provid
   - BOOTNODES: Addresses of the bootnodes, seperated by ",". You should already have this value when you spin up the bootnode from the section above
   - PRIVATE_KEY: Primary key of the wallet. Note, if not provided, the node will run on a random key
   - NETWORK_ID: The subnet network id. This shall be unique in your local network. Default to 102 if not provided.
-  - STATS_SECRET: A secret that you used between your stats service and the subnet node. (This value need to match with Step 4 STATS_SECRET)
+  - STATS_SECRET: A secret that you used between your stats service and the subnet node. (This value need to match with Step 5 STATS_SECRET)
   - STATS_SERVICE_ADDRESS: The backend service that was created at step 1 for the UI representation of the subnet blockchain.
   - RPC_API (Optional): The API that you would like to turn on. Supported values are "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS"
   - EXTIP (Optional): NAT port mapping based on the external IP address.
@@ -57,9 +57,40 @@ The genesis file is crucial for establishing the network's foundation and provid
 3. Provide your own `genesis.json` file under the current directory. (The value from Step 2.4)
 4. Run `docker-compose up -d subnet`
 
-### Step 4: Host your stats service (Working In Progress)
+### Step 4: Host your mainnet xdc chain full node
+1. Find the file with name of `.env.mainnet`
+2. Fill in the environment variables in the `.env.mainnet`:
+  - INSTANCE_NAME: Name of the instance
+  - BOOTNODES: Addresses of the bootnodes, seperated by ",". You should get thie value from xdc website or community
+    - devnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/devnet/bootnodes.list
+    - testnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/testnet/testnetbootnodes.list
+    - mainnet: https://github.com/XinFinOrg/XinFin-Node/blob/master/mainnet/bootnodes.list
+  - PRIVATE_KEYS (Optional): Primary key of the wallet. Note, if not provided, the node will run on a random key
+  - NETWORK_ID: The public network id. This shall be same as mention in `genesis.mainnet.json` file.
+  - STATS_SERVICE_ADDRESS: Public Blockchain explore address.
+    - devnet: `xinfin_xdpos_hybrid_network_stats@devnetstats.apothem.network:2000`
+    - testnet: `xdc_xinfin_apothem_network_stats@stats.apothem.network:2000`
+    - mainnet: `xinfin_xdpos_hybrid_network_stats@stats.xinfin.network:3000`
+  - RPC_API (Optional): The API that you would like to turn on. Supported values are "admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS"
+  - EXTIP (Optional): NAT port mapping based on the external IP address.
+  - SYNC_MODE (Optional): The node syncing mode. Available values are full or fast. Default to full.
+  - LOG_LEVEL (Optional): {{Log level, from 1 to 5 where 1 produce least logs. default to 3 if not provided}}
+3. Provide the specific `genesis.mainnet.json` file under the current directory. You can get it from here https://github.com/XinFinOrg/XDPoSChain/tree/dev-upgrade/genesis
+4. `docker-compose up -d mainnet`
+
+### Step 5: Host your stats service (Working In Progress)
 1. Find the file with name of `.env.stats`
 2. Fill in the environment variables in the `.env.stats`:
   - STATS_SECRET: A secret that you used between your stats service and the subnet node. 
 3. Run `docker-compose up -d stats`
 4. [Optional verification step] Run `curl localhost:3000/health`, make sure you get an `OK` response
+
+### Step 6: Host your relayer service
+1. Find the file with name of `.env.relayer`
+2. Fill in the environment variables in the `.env.relayer`:
+    - SUBNET_URL : This is the URL to your subnet with RPC port specified. e.g http://66.94.121.151:8545
+    - SC_ADDRESS : This is the smart contract address for this subnet that has been uploaded in the parent chain.
+    - PARENTCHAIN_URL : This is the XDC parent chain URL with RPC port specified.
+    - PARENTCHAIN_WALLET_PK : This is the wallet key that will be used for submit subnet data into parent chain. You will need to have credits in it first.
+    - SLACK_WEBHOOK : (Optional) If relayer detected forking of your subnet, this is the URL where we will push alerting message to. You are required to set up slack bot and install it in the relevant channel first. For details, see slack doc: https://api.slack.com/messaging/webhooks Once you are done with the slack setup, find the slack webhook url and put it here. It shall look like `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`  We only need the ones after `https://hooks.slack.com/services/`
+3. Run `docker-compose up -d relayer`

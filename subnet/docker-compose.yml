@@ -20,7 +20,7 @@ services:
   bootnode:
     image: xinfinorg/xdcsubnets:latest
     restart: "always"
-    env_file: ".env.bootnode"
+    env_file: ".env"
     volumes:
       - "./bootnodes:/work/bootnodes"
     entrypoint: ["bash","/work/start-bootnode.sh"]
@@ -31,8 +31,24 @@ services:
   stats:
     image: xinfinorg/subnet-stats-service:latest
     restart: "always"
-    env_file: ".env.stats"
+    env_file: ".env"
     volumes:
       - "./logs:/app/logs"
     ports:
       - "3000:3000"
+  mainnet:
+    image: xinfinorg/devnet:latest
+    volumes:
+      - "./xdcchain_mainnet:/work/xdcchain"
+    restart: "always"
+    environment:
+      NODE_NAME: ${PARENTCHAIN_NODE_NAME}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - "40313:30303"
+      - "9555:8545"
+      - "9565:8555"
+  relayer:
+    image: xinfinorg/xdc-relayer:latest
+    restart: "always"
+    env_file: ".env"
