@@ -32,6 +32,6 @@ XDC --ethstats ${netstats} --gcmode=archive \
 --rpcport 8545 \
 --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS \
 --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine \
---gasprice "1" --targetgaslimit "420000000" --verbosity 2 \
+--gasprice "1" --targetgaslimit "420000000" --verbosity 3 \
 --ws --wsaddr=0.0.0.0 --wsport 8555 \
 --wsorigins "*" 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
