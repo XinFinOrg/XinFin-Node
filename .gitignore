@@ -9,3 +9,4 @@ subnet/puppeth
 subnet/bootnodes/*
 subnet/logs
 XDC-Subnet
+keys.json
