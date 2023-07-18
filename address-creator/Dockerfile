@@ -2,7 +2,7 @@ FROM node:20
 
 WORKDIR /work
 
-COPY address-creator.js package.json ./
+COPY address-creator.js package.json package-lock.json ./
 
 RUN npm install
 

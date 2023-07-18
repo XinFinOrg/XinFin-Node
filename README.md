@@ -104,6 +104,9 @@ Please enter your XinFin Network (mainnet/testnet/devnet) :- devnet
 Your running network is devnet
 Please enter your XinFin MasterNode Name :- test01
 Your Masternode Name is test01
+Generate new private key and wallet address.
+If you have your own key, you can change after this and restart the node
+Type 'Y' or 'y' to continue:
 ```
 
 ---------------------------------
