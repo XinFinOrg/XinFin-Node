@@ -6,21 +6,70 @@ services:
     entrypoint: ["puppeth"]
     volumes:
       - "./puppeth:/root/.puppeth"
-  subnet:
-    image: xinfinorg/xdcsubnets:latest
+  subnet1:
+    # image: xinfinorg/xdcsubnets:latest    
+    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain:/work/xdcchain"
-      - "./genesis.json:/work/genesis.json"
+      - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: ".env"
+    env_file: "../../xinfin-script/setup-envs/subnet/subnet-1.env"
     ports:
       - "30303:30303"
       - "8545:8545"
       - "8555:8555"
+  subnet2:
+    # image: xinfinorg/xdcsubnets:latest    
+    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    volumes:
+      - "./xdcchain2:/work/xdcchain"
+      - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: "../../xinfin-script/setup-envs/subnet/subnet-2.env"
+    ports:
+      - "30304:30303"
+      - "8546:8545"
+      - "8556:8555"
+  subnet3:
+    # image: xinfinorg/xdcsubnets:latest    
+    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    volumes:
+      - "./xdcchain3:/work/xdcchain"
+      - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: "../../xinfin-script/setup-envs/subnet/subnet-3.env"
+    ports:
+      - "30305:30303"
+      - "8547:8545"
+      - "8557:8555"
+  subnet4:
+    # image: xinfinorg/xdcsubnets:latest    
+    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    volumes:
+      - "./xdcchain4:/work/xdcchain"
+      - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: "../../xinfin-script/setup-envs/subnet/subnet-4.env"
+    ports:
+      - "30306:30303"
+      - "8548:8545"
+      - "8558:8555"
+  subnet5:
+    # image: xinfinorg/xdcsubnets:latest    
+    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    volumes:
+      - "./xdcchain5:/work/xdcchain"
+      - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
+    restart: "always"
+    env_file: "../../xinfin-script/setup-envs/subnet/subnet-5.env"
+    ports:
+      - "30307:30303"
+      - "8549:8545"
+      - "8559:8555"
   bootnode:
     image: xinfinorg/xdcsubnets:latest
     restart: "always"
-    env_file: ".env"
+    env_file: "../../xinfin-script/setup-envs/subnet/bootnode.env"
     volumes:
       - "./bootnodes:/work/bootnodes"
     entrypoint: ["bash","/work/start-bootnode.sh"]
@@ -31,24 +80,24 @@ services:
   stats:
     image: xinfinorg/subnet-stats-service:latest
     restart: "always"
-    env_file: ".env"
+    env_file: "../../xinfin-script/setup-envs/subnet/stats-service.env"
     volumes:
-      - "./logs:/app/logs"
+      - "./stats-service/logs:/app/logs"
     ports:
       - "3000:3000"
-  mainnet:
-    image: xinfinorg/devnet:latest
-    volumes:
-      - "./xdcchain_mainnet:/work/xdcchain"
-    restart: "always"
-    environment:
-      NODE_NAME: ${PARENTCHAIN_NODE_NAME}
-      LOG_LEVEL: ${LOG_LEVEL}
-    ports:
-      - "40313:30303"
-      - "9555:8545"
-      - "9565:8555"
   relayer:
     image: xinfinorg/xdc-relayer:latest
     restart: "always"
-    env_file: ".env"
+    env_file: "../../xinfin-script/setup-envs/subnet/relayer.env"
+  # mainnet:
+  #   image: xinfinorg/devnet:latest
+  #   volumes:
+  #     - "./xdcchain_mainnet:/work/xdcchain"
+  #   restart: "always"
+  #   environment:
+  #     NODE_NAME: ${PARENTCHAIN_NODE_NAME}
+  #     LOG_LEVEL: ${LOG_LEVEL}
+  #   ports:
+  #     - "40313:30303"
+  #     - "9555:8545"
+  #     - "9565:8555"
