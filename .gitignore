@@ -8,5 +8,7 @@ subnet/genesis.json
 subnet/puppeth
 subnet/bootnodes/*
 subnet/logs
+subnet/relayer
+subnet/stats-service
 XDC-Subnet
 keys.json

@@ -10,14 +10,15 @@ services:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
     volumes:
-      - "./xdcchain:/work/xdcchain"
+      - "./xdcchain1:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
     env_file: "../../xinfin-script/setup-envs/subnet/subnet-1.env"
-    ports:
-      - "30303:30303"
-      - "8545:8545"
-      - "8555:8555"
+    network_mode: "host" 
+    # ports:
+    #   - "30303:30303"
+    #   - "8545:8545"
+    #   - "8555:8555"
   subnet2:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -26,10 +27,11 @@ services:
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
     env_file: "../../xinfin-script/setup-envs/subnet/subnet-2.env"
-    ports:
-      - "30304:30303"
-      - "8546:8545"
-      - "8556:8555"
+    network_mode: "host" 
+    # ports:
+    #   - "30304:30304"
+    #   - "8546:8546"
+    #   - "8556:8556"
   subnet3:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -38,10 +40,11 @@ services:
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
     env_file: "../../xinfin-script/setup-envs/subnet/subnet-3.env"
-    ports:
-      - "30305:30303"
-      - "8547:8545"
-      - "8557:8555"
+    network_mode: "host" 
+    # ports:
+    #   - "30305:30305"
+    #   - "8547:8547"
+    #   - "8557:8557"
   subnet4:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -50,10 +53,11 @@ services:
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
     env_file: "../../xinfin-script/setup-envs/subnet/subnet-4.env"
-    ports:
-      - "30306:30303"
-      - "8548:8545"
-      - "8558:8555"
+    network_mode: "host" 
+    # ports:
+    #   - "30306:30306"
+    #   - "8548:8548"
+    #   - "8558:8558"
   subnet5:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -62,10 +66,11 @@ services:
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
     env_file: "../../xinfin-script/setup-envs/subnet/subnet-5.env"
-    ports:
-      - "30307:30303"
-      - "8549:8545"
-      - "8559:8555"
+    network_mode: "host" 
+    # ports:
+    #   - "30307:30307"
+    #   - "8549:8549"
+    #   - "8559:8559"
   bootnode:
     image: xinfinorg/xdcsubnets:latest
     restart: "always"
