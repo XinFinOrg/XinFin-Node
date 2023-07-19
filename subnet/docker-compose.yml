@@ -13,12 +13,10 @@ services:
       - "./xdcchain1:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/subnet-1.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
+      - "../../xinfin-script/setup-envs/subnet/subnet-1.env"
     network_mode: "host" 
-    # ports:
-    #   - "30303:30303"
-    #   - "8545:8545"
-    #   - "8555:8555"
   subnet2:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -26,12 +24,10 @@ services:
       - "./xdcchain2:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/subnet-2.env"
+    env_file:
+      - "../../xinfin-script/setup-envs/subnet/common.env"
+      - "../../xinfin-script/setup-envs/subnet/subnet-2.env"
     network_mode: "host" 
-    # ports:
-    #   - "30304:30304"
-    #   - "8546:8546"
-    #   - "8556:8556"
   subnet3:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -39,12 +35,10 @@ services:
       - "./xdcchain3:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/subnet-3.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
+      - "../../xinfin-script/setup-envs/subnet/subnet-3.env"
     network_mode: "host" 
-    # ports:
-    #   - "30305:30305"
-    #   - "8547:8547"
-    #   - "8557:8557"
   subnet4:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -52,12 +46,10 @@ services:
       - "./xdcchain4:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/subnet-4.env"
+    env_file:
+      - "../../xinfin-script/setup-envs/subnet/common.env"
+      - "../../xinfin-script/setup-envs/subnet/subnet-4.env"
     network_mode: "host" 
-    # ports:
-    #   - "30306:30306"
-    #   - "8548:8548"
-    #   - "8558:8558"
   subnet5:
     # image: xinfinorg/xdcsubnets:latest    
     image: localbuild-subnet:latest #use localbuild, subnet public img not updated
@@ -65,16 +57,15 @@ services:
       - "./xdcchain5:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/subnet-5.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
+      - "../../xinfin-script/setup-envs/subnet/subnet-5.env"
     network_mode: "host" 
-    # ports:
-    #   - "30307:30307"
-    #   - "8549:8549"
-    #   - "8559:8559"
   bootnode:
     image: xinfinorg/xdcsubnets:latest
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/bootnode.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
     volumes:
       - "./bootnodes:/work/bootnodes"
     entrypoint: ["bash","/work/start-bootnode.sh"]
@@ -82,10 +73,12 @@ services:
     ports:
       - "30301:30301/tcp"
       - "30301:30301/udp"
+
   stats:
     image: xinfinorg/subnet-stats-service:latest
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/stats-service.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
     volumes:
       - "./stats-service/logs:/app/logs"
     ports:
@@ -93,7 +86,8 @@ services:
   relayer:
     image: xinfinorg/xdc-relayer:latest
     restart: "always"
-    env_file: "../../xinfin-script/setup-envs/subnet/relayer.env"
+    env_file: 
+      - "../../xinfin-script/setup-envs/subnet/common.env"
   # mainnet:
   #   image: xinfinorg/devnet:latest
   #   volumes:
