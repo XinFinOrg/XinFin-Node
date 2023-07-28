@@ -12,3 +12,7 @@ subnet/relayer
 subnet/stats-service
 XDC-Subnet
 keys.json
+node_modules
+subnet/deployment-generator/config
+subnet/deployment-generator/compose-output.yml
+subnet/deployment-generator/commands.txt

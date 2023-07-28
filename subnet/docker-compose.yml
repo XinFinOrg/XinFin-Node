@@ -8,7 +8,7 @@ services:
       - "./puppeth:/root/.puppeth"
   subnet1:
     # image: xinfinorg/xdcsubnets:latest    
-    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    image: 11ad4dfc45df #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain1:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -19,7 +19,7 @@ services:
     network_mode: "host" 
   subnet2:
     # image: xinfinorg/xdcsubnets:latest    
-    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    image: 11ad4dfc45df #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain2:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -30,7 +30,7 @@ services:
     network_mode: "host" 
   subnet3:
     # image: xinfinorg/xdcsubnets:latest    
-    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    image: 11ad4dfc45df #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain3:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -75,7 +75,9 @@ services:
       - "30301:30301/udp"
 
   stats:
-    image: xinfinorg/subnet-stats-service:latest
+    # image: xinfinorg/subnet-stats-service:latest
+    image: 13d52f5b1acb
+    # image: localbuild-stats
     restart: "always"
     env_file: 
       - "../../xinfin-script/setup-envs/subnet/common.env"
@@ -83,6 +85,7 @@ services:
       - "./stats-service/logs:/app/logs"
     ports:
       - "3000:3000"
+    network_mode: "host"
   relayer:
     image: xinfinorg/xdc-relayer:latest
     restart: "always"
