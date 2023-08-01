@@ -29,8 +29,6 @@ if (!require('net').isIP(ip_1)){
 // console.log(num_subnet)
 // console.log(ip_1)
 
-
-
 num_per_machine = Array(num_machines)
 //integer division
 for (let i=0; i<num_machines; i++){
@@ -59,8 +57,6 @@ for (let i=1; i<=num_machines; i++){
   });
 }
 
-bootnode = genBootNode(machine_id=1)
-doc['services']['bootnode'] = bootnode
 
 subnet_services = genServices(machine_id=1)
 Object.entries(subnet_services).forEach(entry => {
@@ -71,10 +67,10 @@ Object.entries(subnet_services).forEach(entry => {
 text = yaml.dump(doc, {
 })
 try{
-  fs.unlinkSync('./compose-output.yml')
+  fs.unlinkSync('./docker-compose.yml')
 } catch {}
 
-fs.writeFile('./compose-output.yml', text, err => {
+fs.writeFile('./docker-compose.yml', text, err => {
   if (err) {
     console.error(err);
   }
@@ -132,15 +128,24 @@ fs.writeFile('./config/deployment.json', jsonData, (err) => {
 commands = genCommands(num_machines)
 try{
   fs.unlinkSync('./commands.txt')
-}catch {
+}catch {}
 
-}
 fs.writeFile('./commands.txt', commands, err => {
   if (err) {
     console.error(err);
   }
 });
 
+compose_conf = genComposeEnv()
+try{
+  fs.unlinkSync('./docker-compose.env')
+}catch {}
+
+fs.writeFile('./docker-compose.env', compose_conf, err => {
+  if (err) {
+    console.error(err);
+  }
+});
 
 function genSubnetNodes(machine_id, num, start_num=1) {
   subnet_nodes = {}
@@ -178,6 +183,19 @@ function genBootNode(machine_id){
   return bootnode
 }
 
+function genMainnet(machine_id){
+  config='${SUBNET_CONFIG_PATH}/common.env'
+  machine='machine'+machine_id.toString()
+  mainnet = {    
+    'image': 'xinfinorg/devnet:latest',
+    'restart': 'always',
+    'env_file': config,
+    'ports': ['40313:30303', '9555:8545', '9565:8555'],
+    'profiles': [machine]
+  }
+  return mainnet
+}
+
 function genServices(machine_id) {
   config='${SUBNET_CONFIG_PATH}/common.env'
   // machine='services_machine'+machine_id.toString()
@@ -193,29 +211,28 @@ function genServices(machine_id) {
     'restart': 'always',
     'env_file': config,
     'volumes': ['./stats-service/logs:/app/logs'],
-    'ports': '3000:3000',
+    'ports': ['3000:3000'],
     'profiles': [machine]
-  }
-  mainnet = {    
-    'image': 'xinfinorg/devnet:latest',
-    'restart': 'always',
-    'env_file': config,
-    'ports': ['40313:30303', '9555:8545', '9565:8555'],
-    'profiles': [machine]
-  }
+  },
   puppeth = {
     'image': 'xinfinorg/xdcsubnets:latest',
     'entrypoint': ['puppeth'],
     'volumes': ['./puppeth:/root/.puppeth'],
-  }
+  }, 
+  bootnode=genBootNode(machine_id),
+  mainnet=genMainnet(machine_id),
+
 
   services = {
+    'bootnode': bootnode,
+    'mainnet': mainnet,
     'relayer': relayer,
     'stats': stats,
     'mainnet': mainnet,
     'bootnode': bootnode,
     'puppeth': puppeth
   }
+
   return services
 }
 
@@ -295,8 +312,8 @@ function genDeploymentJson(keys){
     "gap": 450,
     "epoch": 900,
     "xdcdevnet": "https://devnetstats.apothem.network/devnet",
-    "xdcmainnet": "127.0.0.1:40313", 
-    "xdcsubnet": "127.0.0.1:30303"
+    "xdcmainnet": "http://127.0.0.1:40313", 
+    "xdcsubnet": "http://127.0.0.1:30303"
   }
   return deployment
 
@@ -310,12 +327,19 @@ function genCommands(num_machines){
   for(let i=1; i <= num_machines; i++){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+':\n'
-    commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
+    // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
+    commands+=`  docker compose --profile ${machine_name} --env-file docker-compose.env up -d` //composeV2
   }
 
+  commands+=`\nmachine1:\n`
+  commands+=`  ./deploy_csc.sh`
+
   commands+=`\n\nmachine1:\n`
-  commands+=`  docker-compose up -d --profile services -e ${set_env} \n`
+  commands+=`  docker compose --profile services --env-file docker-compose.env up -d\n`
   return commands
+}
 
-
+function genComposeEnv(){
+  conf_path = `SUBNET_CONFIG_PATH=${__dirname}/config/`
+  return conf_path
 }

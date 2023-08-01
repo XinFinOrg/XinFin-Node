@@ -14,5 +14,8 @@ XDC-Subnet
 keys.json
 node_modules
 subnet/deployment-generator/config
-subnet/deployment-generator/compose-output.yml
+subnet/deployment-generator/puppeth
+subnet/deployment-generator/docker-compose.yml
+subnet/deployment-generator/docker-compose.env
 subnet/deployment-generator/commands.txt
+subnet/deployment-generator/genesis.json
