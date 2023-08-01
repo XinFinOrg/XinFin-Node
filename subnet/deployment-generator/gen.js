@@ -155,7 +155,7 @@ function genSubnetNodes(machine_id, num, start_num=1) {
     config='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
     subnet_nodes[node_name] = {
-      'image': 'localbuild-subnet:latest',
+      'image': 'xinfinorg/xdcsubnets:latest',
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
