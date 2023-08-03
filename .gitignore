@@ -19,3 +19,6 @@ subnet/deployment-generator/docker-compose.yml
 subnet/deployment-generator/docker-compose.env
 subnet/deployment-generator/commands.txt
 subnet/deployment-generator/genesis.json
+subnet/deployment-generator/stats-service
+subnet/deployment-generator/bootnodes
+subnet/deployment-generator/XDC-Subnet
