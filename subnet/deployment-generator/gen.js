@@ -375,7 +375,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   set_env='SUBNET_CONFIG_PATH='+conf_path
   var commands=''
   commands+=`\nmachine1:                install requirements\n`
-  commands+=`    ./install_reqs.sh\n`
+  commands+=`  ./setup.sh\n`
 
   commands+=`\nmachine1:                create genesis.json with wizard\n`
   commands+=`  docker compose --env-file docker-compose.env run puppeth\n`
@@ -393,20 +393,21 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   commands+='    '+out+'\n'
 
   commands+=`\nmachine1:                move genesis file\n`
-  commands+=`  cp puppeth/${network_name} config/genesis.json\n`
+  commands+=`  cp puppeth/${network_name} config/genesis.json\n\n`
 
   for(let i=1; i <= num_machines; i++){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
-    commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n` //composeV2
+    commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
+    commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
   commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x') \n`
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  make an edit to config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
+  commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
 
   commands+=`\nmachine1:                start services and frontend\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services up -d\n`
