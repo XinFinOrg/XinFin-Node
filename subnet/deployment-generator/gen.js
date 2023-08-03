@@ -123,7 +123,7 @@ fs.writeFile('./keys.json', jsonData, (err) => {
 });
 
 for (let i=1; i<=num_subnet; i++){
-  subnetconf = genSubnetConfig(i, keys, ip_1, secret=secret)
+  subnetconf = genSubnetConfig(i, keys, ip_1, network_id=network_id, secret=secret)
   fs.writeFileSync(`./config/subnet${i}.env`, subnetconf, err => {
   if (err) {
     console.error(err);
@@ -269,7 +269,7 @@ function genServices(machine_id) {
   return services
 }
 
-function genSubnetConfig(subnet_id, key, ip_1, secret){
+function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   key_name = `key${subnet_id}`
   private_key = key[key_name]['PrivateKey']
   port = 30303+subnet_id-1
@@ -281,7 +281,7 @@ PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 765c343f9c0c596e9cd021e2e8416908cbc3ab7d6f6671a83c85f7b121c1872f8be\
 50a591723a5d@${ip_1}:30301
-NETWORK_ID=102
+NETWORK_ID=${network_id}
 SYNC_MODE=full
 RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
 STATS_SERVICE_ADDRESS=${ip_1}:3000
@@ -399,12 +399,15 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
-    commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
+    if (i!=1){
+      commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory. Take note of the "subnet" contract value\n`
+    }
+    commands+=`  docker compose pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x') \n`
+  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x'). Might require multiple tries due to network issue.\n`
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
   commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
