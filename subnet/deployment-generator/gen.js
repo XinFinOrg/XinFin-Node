@@ -202,8 +202,8 @@ function genBootNode(machine_id){
     'env_file': config,
     'volumes': ['./bootnodes:/work/bootnodes'],
     'entrypoint': ['bash','/work/start-bootnode.sh'],
-    'command': ['-verbosity', '6', '-nodekey', 'bootnode.key', '--addr', ':30301'],
-    'ports': ['30301:30301/tcp','30301:30301/udp'],
+    'command': ['-verbosity', '6', '-nodekey', 'bootnode.key'],
+    'ports': ['30501:30501/tcp','30501:30501/udp'],
     'profiles': [machine]
   }
   return bootnode
