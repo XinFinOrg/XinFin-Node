@@ -203,7 +203,7 @@ function genBootNode(machine_id){
     'volumes': ['./bootnodes:/work/bootnodes'],
     'entrypoint': ['bash','/work/start-bootnode.sh'],
     'command': ['-verbosity', '6', '-nodekey', 'bootnode.key'],
-    'ports': ['30501:30501/tcp','30501:30501/udp'],
+    'ports': ['20301:20301/tcp','20301:20301/udp'],
     'profiles': [machine]
   }
   return bootnode
@@ -272,7 +272,7 @@ function genServices(machine_id) {
 function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   key_name = `key${subnet_id}`
   private_key = key[key_name]['PrivateKey']
-  port = 30303+subnet_id-1
+  port = 20303+subnet_id-1
   rpcport = 8545+subnet_id-1
   wsport= 8555+subnet_id-1
   config = `
@@ -280,7 +280,7 @@ INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 765c343f9c0c596e9cd021e2e8416908cbc3ab7d6f6671a83c85f7b121c1872f8be\
-50a591723a5d@${ip_1}:30501
+50a591723a5d@${ip_1}:20301
 NETWORK_ID=${network_id}
 SYNC_MODE=full
 RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
@@ -299,7 +299,7 @@ function genServicesConfig(ip_1, secret){
   config=`
 # Bootnode
 EXTIP=${ip_1}
-BOOTNODE_PORT=30501
+BOOTNODE_PORT=20301
 
 # Stats and relayer
 PARENTCHAIN_URL=http://${ip_1}:9555
