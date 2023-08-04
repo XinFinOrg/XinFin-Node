@@ -280,7 +280,7 @@ INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 765c343f9c0c596e9cd021e2e8416908cbc3ab7d6f6671a83c85f7b121c1872f8be\
-50a591723a5d@${ip_1}:30301
+50a591723a5d@${ip_1}:30501
 NETWORK_ID=${network_id}
 SYNC_MODE=full
 RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
