@@ -168,7 +168,7 @@ fs.writeFile('./commands.txt', commands, err => {
   }
 });
 
-console.log('gen successful')
+console.log('gen successful, follow the instructions in command.txt')
 
 //genesis.json step
 
@@ -289,7 +289,7 @@ STATS_SECRET=${secret}
 PORT=${port}
 RPCPORT=${rpcport}
 WSPORT=${wsport}
-LOG_LEVEL=2
+LOG_LEVEL=4
 `
 
 return config
@@ -299,6 +299,7 @@ function genServicesConfig(ip_1, secret){
   config=`
 # Bootnode
 EXTIP=${ip_1}
+BOOTNODE_PORT=30501
 
 # Stats and relayer
 PARENTCHAIN_URL=http://${ip_1}:9555
@@ -402,7 +403,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
     if (i!=1){
       commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory. Take note of the "subnet" contract value\n`
     }
-    commands+=`  docker compose pull\n`
+    commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
