@@ -41,7 +41,7 @@ services:
     network_mode: "host" 
   subnet4:
     # image: xinfinorg/xdcsubnets:latest    
-    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    image: 11ad4dfc45df #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain4:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -52,7 +52,7 @@ services:
     network_mode: "host" 
   subnet5:
     # image: xinfinorg/xdcsubnets:latest    
-    image: localbuild-subnet:latest #use localbuild, subnet public img not updated
+    image: 11ad4dfc45df #use localbuild, subnet public img not updated
     volumes:
       - "./xdcchain5:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
