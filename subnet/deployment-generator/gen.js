@@ -363,8 +363,8 @@ function genDeploymentJson(keys){
     "validators": validators,
     "gap": 450,
     "epoch": 900,
-    "xdcdevnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcdevnet": "http://127.0.0.1:40313", 
+    "xdcparentnet": "https://devnetstats.apothem.network/devnet",
+    // "xdcparentnet": "http://127.0.0.1:40313", 
     "xdcsubnet": "http://127.0.0.1:8545"
   }
   return deployment
