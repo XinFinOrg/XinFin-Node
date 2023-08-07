@@ -102,20 +102,19 @@ fs.writeFileSync('./config/common.env', commonconf, err => {
   }
 });
 
-try{
-  keysJson = fs.readFileSync('./keys.json')   //reuse keys if exist and enough for subnet nodes 
-  keys = JSON.parse(keysJson)
-  if (Object.keys(keys).length-1 < num_subnet){
-    keys = genSubnetKeys(num_subnet)
-  }
-}catch(err){
-  keys = genSubnetKeys(num_subnet)
-}
-try{
-  fs.unlinkSync('./keys.json')
-}catch{}
+// try{
+//   keysJson = fs.readFileSync('./keys.json')   //reuse keys if exist and enough for subnet nodes 
+//   keys = JSON.parse(keysJson)
+//   if (Object.keys(keys).length-1 < num_subnet){
+//     keys = genSubnetKeys(num_subnet)
+//   }
+// }catch(err){
+//   keys = genSubnetKeys(num_subnet)
+// }
+
+keys = genSubnetKeys(num_subnet)                //always gen new keys
 jsonData = JSON.stringify(keys, null, 2);
-fs.writeFile('./keys.json', jsonData, (err) => {
+fs.writeFile('./config/keys.json', jsonData, (err) => {
     if (err) {
       console.error('Error writing file:', err);
       exit()
