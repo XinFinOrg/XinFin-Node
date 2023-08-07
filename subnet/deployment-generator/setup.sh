@@ -1,17 +1,23 @@
 #!/bin/bash
-apt update
-apt upgrade
-apt install nodejs20
+
+#node 20
+sudo apt-get update
+sudo apt-get upgrade
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
+
+#install docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
-apt install net-tools
 
 #install docker compose V2
 sudo apt-get update
+sudo apt-get upgrade
 sudo apt-get install docker-compose-plugin
 
-#node 20
+#extra debug tools
+apt-get install net-tools
+
+#install dependencies
 npm install
 npm install -g yarn
-
-
