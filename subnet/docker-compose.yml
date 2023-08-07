@@ -7,7 +7,8 @@ services:
     volumes:
       - "./puppeth:/root/.puppeth"
   subnet1:
-    image: xinfinorg/xdcsubnets:latest    
+    # image: xinfinorg/xdcsubnets:latest
+    image: localbuid-subnet-dctemp:latest    
     volumes:
       - "./xdcchain1:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -18,7 +19,7 @@ services:
     network_mode: "host" 
   subnet2:
     # image: xinfinorg/xdcsubnets:latest    
-    image: 11ad4dfc45df #use localbuild, subnet public img not updated
+    image: localbuid-subnet-dctemp:latest  
     volumes:
       - "./xdcchain2:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -29,7 +30,7 @@ services:
     network_mode: "host" 
   subnet3:
     # image: xinfinorg/xdcsubnets:latest    
-    image: 11ad4dfc45df #use localbuild, subnet public img not updated
+    image: localbuid-subnet-dctemp:latest  
     volumes:
       - "./xdcchain3:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -40,7 +41,7 @@ services:
     network_mode: "host" 
   subnet4:
     # image: xinfinorg/xdcsubnets:latest    
-    image: 11ad4dfc45df #use localbuild, subnet public img not updated
+    image: localbuid-subnet-dctemp:latest  
     volumes:
       - "./xdcchain4:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -51,7 +52,7 @@ services:
     network_mode: "host" 
   subnet5:
     # image: xinfinorg/xdcsubnets:latest    
-    image: 11ad4dfc45df #use localbuild, subnet public img not updated
+    image: localbuid-subnet-dctemp:latest  
     volumes:
       - "./xdcchain5:/work/xdcchain"
       - "../../xinfin-script/setup-envs/subnet/genesis.json:/work/genesis.json"
@@ -74,8 +75,8 @@ services:
       - "30301:30301/udp"
 
   stats:
-    # image: xinfinorg/subnet-stats-service:latest
-    image: 13d52f5b1acb
+    image: xinfinorg/subnet-stats-service:latest
+    # image: 13d52f5b1acb
     # image: localbuild-stats
     restart: "always"
     env_file: 
