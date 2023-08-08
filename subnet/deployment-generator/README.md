@@ -10,7 +10,7 @@
   
   The IP address of machine1 is needed, this is the IP that is known to all other machines, could be private or public (preferrably private)
 
-  The deployment is docker based, the main file is docker-compose.yml. Then, ENVs for the services is included in `config` directory. Other files include `genesis.json` file to initialize subnet chain, `deployment.json` to deploy the checkpoint smartcontract, and `keys.json` the keypairs for subnet nodes + grandmaster node.
+  The deployment is docker based, the main deployment file is `docker-compose.yml`. The `docker-compose.env` is the injection point to all configs. Then, ENVs for the services is included in `config` directory. Other files include `genesis.json` file to initialize subnet chain, `deployment.json` to deploy the checkpoint smartcontract, and `keys.json` the keypairs for subnet nodes + grandmaster node.
 
 
 
