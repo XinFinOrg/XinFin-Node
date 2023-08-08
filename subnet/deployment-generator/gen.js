@@ -414,6 +414,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
 
   commands+=`\nmachine1:                start services and frontend\n`
+  commands+=`  docker compose --env-file docker-compose.env --profile services pull\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services up -d\n`
   return commands
 }
