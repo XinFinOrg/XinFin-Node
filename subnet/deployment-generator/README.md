@@ -15,13 +15,16 @@
 
 
 # Requirements
-  node v20 (18 could work)
+  nodejs v20 (18 could work)
 
   docker, docker compose V2
 
   `./setup.sh` is the script for setting up requirements on a fresh Ubuntu machine. 
 
+  for manual installation of nodejs please refer to: https://nodejs.org/en/download/package-manager
 
+  for manual installation of docker compose V2 please refer to: https://docs.docker.com/compose/install/linux/
+  
 # Steps
   1. install dependencies
       ```
