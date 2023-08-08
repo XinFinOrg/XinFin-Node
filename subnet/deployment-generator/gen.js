@@ -288,7 +288,7 @@ STATS_SECRET=${secret}
 PORT=${port}
 RPCPORT=${rpcport}
 WSPORT=${wsport}
-LOG_LEVEL=4
+LOG_LEVEL=2
 `
 
 return config

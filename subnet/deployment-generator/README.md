@@ -19,7 +19,7 @@
 
   docker, docker compose V2
 
-  `./setup.sh` is the script for setting up requirements on a fresh machine.
+  `./setup.sh` is the script for setting up requirements on a fresh Ubuntu machine. 
 
 
 # Steps
