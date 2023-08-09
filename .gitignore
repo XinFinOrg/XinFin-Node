@@ -8,5 +8,17 @@ subnet/genesis.json
 subnet/puppeth
 subnet/bootnodes/*
 subnet/logs
+subnet/relayer
+subnet/stats-service
 XDC-Subnet
 keys.json
+node_modules
+subnet/deployment-generator/config
+subnet/deployment-generator/puppeth
+subnet/deployment-generator/docker-compose.yml
+subnet/deployment-generator/docker-compose.env
+subnet/deployment-generator/commands.txt
+subnet/deployment-generator/genesis.json
+subnet/deployment-generator/stats-service
+subnet/deployment-generator/bootnodes
+subnet/deployment-generator/XDC-Subnet
