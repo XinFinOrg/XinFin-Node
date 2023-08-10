@@ -179,7 +179,7 @@ function genSubnetNodes(machine_id, num, start_num=1) {
     config='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
     subnet_nodes[node_name] = {
-      'image': 'xinfinorg/xdcsubnets:v0.1.1',
+      'image': 'xinfinorg/xdcsubnets:latest',
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
@@ -196,7 +196,7 @@ function genBootNode(machine_id){
   config='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   bootnode = {
-    'image': 'xinfinorg/xdcsubnets:v0.1.1',
+    'image': 'xinfinorg/xdcsubnets:latest',
     'restart': 'always',
     'env_file': config,
     'volumes': ['./bootnodes:/work/bootnodes'],
@@ -247,7 +247,7 @@ function genServices(machine_id) {
     'profiles': [machine]
   },
   puppeth = {
-    'image': 'xinfinorg/xdcsubnets:v0.1.1',
+    'image': 'xinfinorg/xdcsubnets:latest',
     'entrypoint': ['puppeth'],
     'volumes': ['./puppeth:/root/.puppeth'],
     'profiles': ['none']
