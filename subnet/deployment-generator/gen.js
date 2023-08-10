@@ -226,20 +226,20 @@ function genServices(machine_id) {
   // machine='services_machine'+machine_id.toString()
   machine='services'
   frontend = {
-    'image': 'xinfinorg/subnet-frontend:latest',    
+    'image': 'xinfinorg/subnet-frontend:v0.1.1',    
     'restart': 'always',
     'volumes': [`${config}:/app/.env.local`],
     'ports': ['5000:5000'],
     'profiles': [machine]
   }
   relayer = {
-    'image': 'xinfinorg/xdc-relayer:latest',
+    'image': 'xinfinorg/xdc-relayer:v0.1.1',
     'restart': 'always',
     'env_file': config,
     'profiles': [machine]
   }
   stats = {
-    'image': 'xinfinorg/subnet-stats-service:latest',
+    'image': 'xinfinorg/subnet-stats-service:v0.1.1',
     'restart': 'always',
     'env_file': config,
     'volumes': ['./stats-service/logs:/app/logs'],
@@ -401,14 +401,14 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
     if (i!=1){
-      commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory. Take note of the "subnet" contract value\n`
+      commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
     }
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x'). Might require multiple tries due to network issue.\n`
+  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x'). Might require multiple tries due to network issue. Take note of the "subnet" contract address\n`
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
   commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
