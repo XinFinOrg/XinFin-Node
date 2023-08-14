@@ -13,7 +13,7 @@ The purpose of this directory is for locally hosting subnet with multiple nodes.
 Bootnode doesn't work as expected. It doesn't care about `enode_id` if just the IP+port is correct, the communication will work. So this step can be skipped.
 
 
-5. `docker-compose up` start the rest of the services.
+5. `docker-compose up -d` start the rest of the services.
 
 
 # Subnet Local Debug
