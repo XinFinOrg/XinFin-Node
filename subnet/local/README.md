@@ -24,4 +24,4 @@ Bootnode doesn't work as expected. It doesn't care about `enode_id` if just the 
 
 * `./cleanup.sh` helps with deleting subnet files and the cloned XDC-Subnet directory.
 
-* Sometimes the docker image will fail to launch due to conflicting ports. Use `sudo lsof -i -P` (or `sudo lsof -i -P | grep <PORT>`) to check if the port number in the `docker-compose.env` file is available. In case of conflict, feel free to change the port numbers in the compose file. 
+* Sometimes the docker image will fail to launch due to conflicting ports. Use `sudo lsof -i -P` (or `sudo lsof -i -P | grep <PORT>`) to check if the port number in the `docker-compose.env` file is available. In case of conflict, feel free to change the port numbers in the compose file (for bootnode port change, subnets' `.env` file `BOOTNODES` port config also have to change). 
