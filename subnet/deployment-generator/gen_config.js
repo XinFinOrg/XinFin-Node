@@ -1,6 +1,7 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: ".env" });
 const crypto = require('crypto');
+const dotenv = require('dotenv');
+dotenv.config({ path: "./gen.env" });
+
 
 
 var config = {
@@ -47,7 +48,7 @@ if (config.secret_string=='') {
 }
 
 if (config.relayer_mode != 'full' || config.relayer_mode != 'lite') {
-  console.log('RELAYER_MODE only accepts \'full\' or \'lite\'')
+  console.log('RELAYER_MODE only accepts \'full\' or \'lite\' (default full)')
   process.exit()
 }
 
