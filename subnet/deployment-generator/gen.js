@@ -1,3 +1,5 @@
+// import {parseArgs} from 'node:util';
+import { config } from "./gen_config";
 const { profile } = require('console');
 const fs = require('fs');
 const yaml = require('js-yaml');
@@ -6,42 +8,25 @@ const crypto = require('crypto');
 const readline = require('readline')
 const reader = require("readline-sync");
 const ethers = require('ethers');
-
-const num_machines = parseInt(reader.question("How many machines will you use to deploy subnet?\n"));
-const num_subnet = parseInt(reader.question("How many subnet nodes will you deploy in total?\n"));
-const ip_1 = reader.question("What is the ip address of machine1?\n");
-const network_name = reader.question("What is the network name?\n");
-var network_id = reader.question("What is the network id? (default random)\n"); 
-const secret_string = crypto.randomBytes(10).toString('hex');
+const config = require('./gen_config')
+Object.freeze(config)
 
 
+// const num_machines = parseInt(reader.question("How many machines will you use to deploy subnet?\n"));
+// const num_subnet = parseInt(reader.question("How many subnet nodes will you deploy in total?\n"));
+// const ip_1 = reader.question("What is the ip address of machine1?\n");
+// const network_name = reader.question("What is the network name?\n");
+// var network_id = reader.question("What is the network id? (default random)\n"); 
+// const secret_string = crypto.randomBytes(10).toString('hex');
 
-if (num_machines==0 || num_subnet ==0){
-  console.log('Number of machines or subnet nodes cannot be 0')
-  exit()
-}
 
-if (!(num_machines%1===0 && num_subnet%1===0)) {
-  console.log('Number of machines or subnet nodes must be an integer')
-  exit()
-}
+const num_machines = config.num_machines
+const num_subnet = config.num_subnet
+const ip_1 = config.ip_1
+const network_name = config.network_name
+const network_id = config.network_id
+const secret_string = config.secret_string
 
-if (!require('net').isIP(ip_1)){
-  console.log('Invalid IP address')
-  exit()
-}
-
-if (network_name==''){
-  console.log('network name cannot be empty')
-  exit()
-}
-
-if (network_id==''){
-  network_id=Math.floor(Math.random() * (65536 - 1) + 1)
-}else if (network_id<1 || network_id >= 65536) {
-  console.log('network ID should be in range of 1 to 65536')
-  exit()
-}
 
 num_per_machine = Array(num_machines)
 //integer division
@@ -158,7 +143,16 @@ try{
   fs.unlinkSync('./commands.txt')
 }catch {}
 
+genesis_input = genGenesisInputFile(network_name, network_id, num_subnet, keys)
+genesis_input_file = yaml.dump(genesis_input, {
+})
 
+fs.writeFile('./config/genesis_input.yml', genesis_input_file, err => {
+  if (err) {
+    console.error(err);
+    exit()
+  }
+});
 
 fs.writeFile('./commands.txt', commands, err => {
   if (err) {
@@ -425,7 +419,7 @@ function genComposeEnv(){
 }
 
 function genGenesisInstructions(network_name, network_id, num_subnet, keys, indent){
-  random_key = genSubnetKeys(1)['key1']['short']
+  // random_key = genSubnetKeys(1)['key1']['short']
   questions = []
   commands = []
   questions.push('')
@@ -485,3 +479,36 @@ function genGenesisInstructions(network_name, network_id, num_subnet, keys, inde
   
   return commands
 }
+
+function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
+// name: localNet
+// certthreshold: 2
+// grandmasters: 
+//   - "0x30f21E514A66732DA5Dff95340624fa808048601"
+// masternodes:
+//   - "0x25b4cbb9a7ae13feadc3e9f29909833d19d16de5"
+//   - "0x3d9fd0c76bb8b3b4929ca861d167f3e05926cb68"
+//   - "0x3c03a0abac1da8f2f419a59afe1c125f90b506c5"
+// chainid: 29412
+
+  var masternodes = []
+  var grandmasters = []
+  Object.keys(keys).forEach(function(k) {
+    var v = keys[k];
+    if (k == 'Grandmaster'){
+      grandmasters.push(v['0x'])
+    } else {
+      masternodes.push(v['0x'])
+    }
+  });
+
+  var config = {
+    "name": network_name,
+    "certthreshold": Math.ceil(((2/3)*num_subnet)),
+    "grandmasters": grandmasters,
+    "masternodes": masternodes,
+    "chainid": network_id,
+  }
+  return config
+}
+

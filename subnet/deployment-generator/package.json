@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "js-yaml": "^4.1.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.3.0",
     "fs": "^0.0.1-security",
-    "readline-sync": "^1.4.10",
-    "ethers": "^6.3.0"
+    "js-yaml": "^4.1.0",
+    "readline-sync": "^1.4.10"
   }
 }
