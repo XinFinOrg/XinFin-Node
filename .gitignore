@@ -22,3 +22,4 @@ subnet/deployment-generator/genesis.json
 subnet/deployment-generator/stats-service
 subnet/deployment-generator/bootnodes
 subnet/deployment-generator/XDC-Subnet
+subnet/deployment-generator/gen.env

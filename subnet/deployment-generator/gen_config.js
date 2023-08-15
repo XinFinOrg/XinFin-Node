@@ -16,7 +16,6 @@ var config = {
 };
 
 
-
 if (!config.num_machines || !config.num_subnet || !config.network_name){
   console.log('NUM_MACHINE and NUM_SUBNET and NETWORK_NAME must be set')
   process.exit()
@@ -47,7 +46,7 @@ if (config.secret_string=='') {
   process.exit()
 }
 
-if (config.relayer_mode != 'full' || config.relayer_mode != 'lite') {
+if (!(config.relayer_mode == 'full' || config.relayer_mode == 'lite')) {
   console.log('RELAYER_MODE only accepts \'full\' or \'lite\' (default full)')
   process.exit()
 }

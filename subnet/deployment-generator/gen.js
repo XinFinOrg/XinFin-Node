@@ -1,5 +1,3 @@
-// import {parseArgs} from 'node:util';
-import { config } from "./gen_config";
 const { profile } = require('console');
 const fs = require('fs');
 const yaml = require('js-yaml');
@@ -107,7 +105,7 @@ fs.writeFile('./config/keys.json', jsonData, (err) => {
 });
 
 for (let i=1; i<=num_subnet; i++){
-  subnetconf = genSubnetConfig(i, keys, ip_1, network_id=network_id, secret=secret)
+  subnetconf = genSubnetConfig(i, keys, ip_1, network_id, secret)
   fs.writeFileSync(`./config/subnet${i}.env`, subnetconf, err => {
   if (err) {
     console.error(err);
@@ -170,7 +168,7 @@ function genSubnetNodes(machine_id, num, start_num=1) {
   for (let i=start_num; i < start_num+num; i++) {
     node_name='subnet'+i.toString()
     volume='./xdcchain'+i.toString()+':/work/xdcchain'
-    config='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
+    var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
     subnet_nodes[node_name] = {
       'image': 'xinfinorg/xdcsubnets:latest',
@@ -178,7 +176,7 @@ function genSubnetNodes(machine_id, num, start_num=1) {
       'restart': 'always',
       'network_mode': 'host',
       // 'env_file': ['${SUBNET_CONFIG_PATH}/common.env', config],
-      'env_file': [config],
+      'env_file': [config_path],
       'profiles': [compose_profile]
     }
 
@@ -187,12 +185,12 @@ function genSubnetNodes(machine_id, num, start_num=1) {
 }
 
 function genBootNode(machine_id){
-  config='${SUBNET_CONFIG_PATH}/common.env'
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   bootnode = {
     'image': 'xinfinorg/xdcsubnets:latest',
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'volumes': ['./bootnodes:/work/bootnodes'],
     'entrypoint': ['bash','/work/start-bootnode.sh'],
     'command': ['-verbosity', '6', '-nodekey', 'bootnode.key'],
@@ -203,12 +201,12 @@ function genBootNode(machine_id){
 }
 
 function genMainnet(machine_id){
-  config='${SUBNET_CONFIG_PATH}/common.env'
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   mainnet = {    
     'image': 'xinfinorg/devnet:latest',
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'ports': ['40313:30303', '9555:8545', '9565:8555'],
     'profiles': [machine]
   }
@@ -216,13 +214,13 @@ function genMainnet(machine_id){
 }
 
 function genServices(machine_id) {
-  config='${SUBNET_CONFIG_PATH}/common.env'
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   // machine='services_machine'+machine_id.toString()
   machine='services'
   frontend = {
     'image': 'xinfinorg/subnet-frontend:v0.1.1',    
     'restart': 'always',
-    'volumes': [`${config}:/app/.env.local`],
+    'volumes': [`${config_path}:/app/.env.local`],
     'ports': ['5000:5000'],
     'profiles': [machine]
   }
@@ -268,7 +266,7 @@ function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   port = 20303+subnet_id-1
   rpcport = 8545+subnet_id-1
   wsport= 8555+subnet_id-1
-  config = `
+  var config_env = `
 INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
@@ -285,11 +283,11 @@ WSPORT=${wsport}
 LOG_LEVEL=2
 `
 
-return config
+return config_env
 }
 
 function genServicesConfig(ip_1, secret){
-  config=`
+  var config_env=`
 # Bootnode
 EXTIP=${ip_1}
 BOOTNODE_PORT=20301
@@ -314,7 +312,7 @@ VITE_SUBNET_URL=http://${ip_1}:3000
 # Share Variable
 STATS_SECRET=${secret}
 `
-  return config
+  return config_env
 }
 
 function genSubnetKeys(num){
