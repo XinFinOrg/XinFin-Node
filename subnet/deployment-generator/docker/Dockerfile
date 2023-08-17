@@ -1,12 +1,11 @@
 
 FROM golang:1.14 as builder
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\
-    apt-get install -y nodejs
-
-RUN apt-get update && apt-get install -y build-essential 
-
-RUN npm install -g yarn
+#use node base image since it can already run the go binary
+# RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - &&\  
+#     apt-get install -y nodejs
+# RUN apt-get update && apt-get install -y build-essential 
+# RUN npm install -g yarn
 
 RUN git clone https://github.com/XinFinOrg/XDC-Subnet
 

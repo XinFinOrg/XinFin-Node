@@ -1,0 +1,3 @@
+run from upper directory (under deployment-generator):
+  docker build -t generator -f docker/Dockerfile --build-arg SUBNET_BRANCH=easy-genesis .
+  docker run --env-file docker.env -v $(pwd)/generated:/app/generated generator

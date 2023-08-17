@@ -86,8 +86,8 @@ genesis_input_file = yaml.dump(genesis_input, {
 })
 
 //writing files
-fs.rmSync(`${output_path}`, { recursive: true, force: true });
-fs.mkdirSync(`${output_path}`)
+// fs.rmSync(`${output_path}`, { recursive: true, force: true }); //wont work with docker mount
+// fs.mkdirSync(`${output_path}`) //won't work with docker mount
 fs.writeFile(`${output_path}/placeholder.txt`, '-', err => {
   if (err) {
     console.error(err);
