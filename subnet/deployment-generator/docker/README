@@ -1,4 +1,7 @@
 run from upper directory (under deployment-generator):
   docker build -t generator -f docker/Dockerfile --build-arg SUBNET_BRANCH=easy-genesis .
-  docker run --env-file docker.env -v $(pwd)/generated:/app/generated generator
-  docker run --env-file docker.env --entrypoint 'bash' generator /app/docker/deploy_csc.sh
+  docker run                                                           \
+    --env-file docker.env                                              \
+    -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \
+    --entrypoint 'bash'                                                \
+    generator /app/docker/deploy_csc.sh
