@@ -1,11 +1,10 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 dotenv.config({ path: `${__dirname}/gen.env` });
+// console.log(__dirname)
 
-
-console.log(__dirname)
 var config = {
-  // interactive: (process.env.INTERACTIVE || false),
+  deployment_path: (process.env.CONFIG_PATH           || ''),
   num_machines:    parseInt(process.env.NUM_MACHINE),
   num_subnet:      parseInt(process.env.NUM_SUBNET),
   ip_1:            (process.env.MAIN_IP               || ''),
@@ -20,6 +19,12 @@ var config = {
     relayer:  (process.env.VERSION_RELAYER  || 'v0.1.1'),
     stats:    (process.env.VERSION_STATS    || 'v0.1.1'),
     frontend: (process.env.VERSION_FRONTEND || 'v0.1.1')
+  },
+  parentchain:{
+    network:    (process.env.PARENTCHAIN               || 'testnet'),
+    // url:        '',
+    pubkey:     (process.env.PARENTCHAIN_WALLET        || '0x0000000000000000000000000000000000000000')       ,
+    privatekey: (process.env.PARENTCHAIN_WALLET_PK     || '0x0000000000000000000000000000000000000000000000000000000000000000')       ,
   }
 };
 
@@ -56,6 +61,13 @@ if (config.secret_string=='') {
 
 if (!(config.relayer_mode == 'full' || config.relayer_mode == 'lite')) {
   console.log('RELAYER_MODE only accepts \'full\' or \'lite\' (default full)')
+  process.exit()
+}
+
+if (!(config.parentchain.network == 'devnet'  || 
+      config.parentchain.network == 'testnet' || 
+      config.parentchain.network == 'mainnet' )){
+  console.log('PARENTCHAIN must be devnet, testnet, or mainnet ')
   process.exit()
 }
 

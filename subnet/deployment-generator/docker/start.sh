@@ -2,7 +2,7 @@
 node /app/script/gen.js
 puppeth --file /app/generated/genesis_input.yml --out /app/generated/
 
-if [[ -z "${SLEEP}" ]]; then
+if [[ -n "${SLEEP}" ]]; then
     echo "sleep ${SLEEP}"
     sleep ${SLEEP}
 else

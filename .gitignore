@@ -14,3 +14,4 @@ XDC-Subnet
 keys.json
 node_modules
 subnet/deployment-generator/generated
+subnet/deployment-generator/script/gen.env

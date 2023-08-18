@@ -17,16 +17,17 @@ FROM node:18
 
 WORKDIR /app
 
-RUN ls && ls /app
-
 COPY --from=builder /go/XDC-Subnet/build/bin/puppeth /bin/puppeth
 COPY --from=builder /go/XDC-Subnet/mainnet_contract /app/contract
 
-RUN chmod +x /app
+#this step here for caching
+RUN cd contract && yarn
 
 COPY . /app
 
+RUN chmod +x /app
+
 RUN cd script && npm install
-RUN cd contract && yarn
+
 
 ENTRYPOINT ["bash","/app/docker/start.sh"]

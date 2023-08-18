@@ -66,7 +66,7 @@ compose_content = yaml.dump(doc, {
 })
 
 //gen services configs
-commonconf = genServicesConfig(ip_1, secret=secret_string)
+commonconf = genServicesConfig(ip_1, secret=secret_string, parentchain_config=config.parentchain)
 
 keys = genSubnetKeys(num_subnet)            
 
@@ -74,7 +74,7 @@ subnetconf=[]
 for (let i=1; i<=num_subnet; i++){
   subnetconf.push(genSubnetConfig(i, keys, ip_1, network_id, secret))
 }
-compose_conf = genComposeEnv()
+compose_conf = genComposeEnv(path=config.deployment_path)
 
 //checkpoint smartcontract deployment config
 deployment_json = genDeploymentJson(keys)
@@ -281,7 +281,17 @@ LOG_LEVEL=2
 return config_env
 }
 
-function genServicesConfig(ip_1, secret){
+function genServicesConfig(ip_1, secret, parentchain_config){
+  var url = ''
+  switch (parentchain_config.network){
+    case 'devnet':
+       url='https://devnetstats.apothem.network/devnet'
+    case 'testnet':
+       url='https://devnetstats.apothem.network/testnet' //confirm url
+    case 'mainnet':
+       url='https://devnetstats.apothem.network/mainnet' //confirm url
+  }
+  
   var config_env=`
 # Bootnode
 EXTIP=${ip_1}
@@ -289,9 +299,9 @@ BOOTNODE_PORT=20301
 
 # Stats and relayer
 #PARENTCHAIN_URL=http://${ip_1}:9555
-PARENTCHAIN_URL=https://devnetstats.apothem.network/devnet
-PARENTCHAIN_WALLET=0x0000000000000000000000000000000000000000
-PARENTCHAIN_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
+PARENTCHAIN_URL=${url}
+PARENTCHAIN_WALLET=${parentchain_config.pubkey}
+PARENTCHAIN_WALLET_PK=${parentchain_config.privatekey}
 SUBNET_URL=http://${ip_1}:8545
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
@@ -352,7 +362,8 @@ function genDeploymentJson(keys){
     "epoch": 900,
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
     // "xdcparentnet": "http://127.0.0.1:40313", 
-    "xdcsubnet": "http://127.0.0.1:8545"
+    // "xdcsubnet": "http://127.0.0.1:8545" 
+    "xdcsubnet": `http://${ip_1}:8545`
   }
   return deployment
 
@@ -406,8 +417,8 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   return commands
 }
 
-function genComposeEnv(){
-  conf_path = `SUBNET_CONFIG_PATH=${__dirname}/../generated/`
+function genComposeEnv(path){
+  conf_path = `SUBNET_CONFIG_PATH=${path}/generated/`
   return conf_path
 }
 
