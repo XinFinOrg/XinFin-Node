@@ -13,7 +13,7 @@ ARG SUBNET_BRANCH=easy-genesis
 #it is called 'BRANCH' but commits also work
 RUN cd XDC-Subnet && git checkout ${SUBNET_BRANCH} &&  make puppeth
 
-FROM node:18
+FROM node:18.15
 
 WORKDIR /app
 
