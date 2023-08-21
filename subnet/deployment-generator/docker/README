@@ -1,4 +1,5 @@
 run from upper directory (under deployment-generator):
+  docker build --target builder -f docker/Dockerfile --build-arg SUBNET_BRANCH=easy-genesis --no-cache .
   docker build -t generator -f docker/Dockerfile --build-arg SUBNET_BRANCH=easy-genesis --no-cache .
   #gen configs
   docker run --env-file docker.env -v $(pwd)/generated:/app/generated generator
