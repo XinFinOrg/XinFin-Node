@@ -373,43 +373,23 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   conf_path = __dirname+'/config/'
   set_env='SUBNET_CONFIG_PATH='+conf_path
   var commands=''
-  commands+=`\nmachine1:                install requirements\n`
-  commands+=`  ./setup.sh\n`
-
-  commands+=`\nmachine1:                create genesis.json with wizard\n`
-  commands+=`  docker compose --env-file docker-compose.env run puppeth\n`
-
-  indent='    '
-  out = genGenesisInstructions(
-    network_name=network_name, 
-    network_id=network_id, 
-    num_subnet=num_subnet, 
-    keys=keys,
-    indent=indent
-    )
-  join_str='\n'+indent
-  out = out.join(join_str)
-  commands+='    '+out+'\n'
-
-  commands+=`\nmachine1:                move genesis file\n`
-  commands+=`  cp puppeth/${network_name} config/genesis.json\n\n`
 
   for(let i=1; i <= num_machines; i++){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
     if (i!=1){
-      commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
+      commands+=`  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
     }
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x'). Might require multiple tries due to network issue. Take note of the "subnet" contract address\n`
-
-  commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
+  commands+=`  docker run --env-file docker.env \\
+    -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \\
+    --entrypoint 'bash' generator ./deploy_csc.sh \n`
+  commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
 
   commands+=`\nmachine1:                start services and frontend\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services pull\n`

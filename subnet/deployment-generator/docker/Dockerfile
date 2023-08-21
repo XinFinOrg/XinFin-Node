@@ -23,11 +23,13 @@ COPY --from=builder /go/XDC-Subnet/mainnet_contract /app/contract
 #this step here for caching
 RUN cd contract && yarn
 
-COPY . /app
+COPY ./script /app/script
+COPY ./docker/start.sh /app/start.sh
+COPY ./docker/deploy_csc.sh /app/deploy_csc.sh
 
 RUN chmod +x /app
 
 RUN cd script && npm install
 
 
-ENTRYPOINT ["bash","/app/docker/start.sh"]
+ENTRYPOINT ["bash","/app/start.sh"]

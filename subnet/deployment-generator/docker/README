@@ -6,5 +6,4 @@ run from upper directory (under deployment-generator):
   docker run                                                           \
     --env-file docker.env                                              \
     -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \
-    --entrypoint 'bash'                                                \
-    generator /app/docker/deploy_csc.sh
+    --entrypoint 'bash' generator ./deploy_csc.sh
