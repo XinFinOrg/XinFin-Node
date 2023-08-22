@@ -1,45 +1,48 @@
 # Overview
-  The Subnet deployment generator is a wizard for easy subnet deployment. It generates all the necessary files and configs you'll need. There are 5 questions you have to answer. 
+  The Subnet deployment generator is config generator for all components of subnet deployment. It generates all the necessary files and configs you'll need from a simple initial docker.env file. The required parameters are 
 
-    How many machines will you use to deploy subnet?
-    How many subnet nodes will you deploy in total?
-    What is the ip address of machine1?
-    What is the network name?
-    What is the network id? (default random)
-  In the setup scheme machine1 will host all the subnet services(relayer, stats, frontend) while the subnet miner nodes will be spread out among all machines.
+    1. How many machines will you use to deploy subnet?
+    2. How many subnet nodes will you deploy in total?
+    3. IP address of the main machine
+    4. Parentchain wallet with funds
+
+  In this setup the main machine (machine1) will host all the subnet services(relayer, stats, frontend) while the subnet miner nodes will be spread out among all machines.
   
-  The IP address of machine1 is needed, this is the IP that is known to all other machines, could be private or public (preferrably private)
+  The IP address of the main machine is needed for subnet connectivity, this is the IP that is known to all other machines, could be private or public (preferrably private)
 
-  The deployment is docker based, the main deployment file is `docker-compose.yml`. The `docker-compose.env` is the injection point to all configs. Then, ENVs for the services is included in `config` directory. Other files include `genesis.json` file to initialize subnet chain, `deployment.json` to deploy the checkpoint smartcontract, and `keys.json` the keypairs for subnet nodes + grandmaster node.
+  Once generated, the commands to startup the subnet is also provided as a generated `commands.txt` file.
+
+  The deployment is docker based, the main deployment file is `docker-compose.yml`. The `docker-compose.env` is the injection point to all configs. Then, ENVs for the services are in `*.env` files. Other files include `genesis.json` file to initialize subnet chain, `deployment.json` to deploy the checkpoint smartcontract, and `keys.json` the keypairs for subnet nodes + grandmaster node.
 
 
 
 # Requirements
-  nodejs v20 (18 could work)
-
   docker, docker compose V2
-
-  `./setup.sh` is the script for setting up requirements on a fresh Ubuntu machine. 
-
-  for manual installation of nodejs please refer to: https://nodejs.org/en/download/package-manager
 
   for manual installation of docker compose V2 please refer to: https://docs.docker.com/compose/install/linux/
   
 # Steps
-  1. install dependencies
-      ```
-      npm install
-      ```
+  1. Create a `docker.env` file with parameters similar to `docker.env.example`
+  
+  2. Generate configurations, this will create a new `generated` directory
+  ```
+  docker run --env-file docker.env -v $(pwd)/generated:/app/generated xinfinorg/subnet-generator:latest && cd generated
+  ```
 
-      ``` 
-      npm install -g yarn
-      ```
-  2. run config generation script
-      ```
-      node gen.js    
-      ```
 
-  3. follow the generated instructions in `commands.txt`
+  2. follow the generated instructions in `commands.txt` to start Subnet Nodes and make sure they are mining.
+
+  3. follow the generated instructions in `commands.txt` to deploy the Checkpoint Smart Contract. 
+  ```
+  docker run                                                           \
+    --env-file docker.env                                              \
+    -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \
+    --entrypoint 'bash' xinfinorg/subnet-generator:latest ./deploy_csc.sh
+  ```
+
+  4. follow the generated instructions in `commands.txt` to deploy the Subnet Services (relayer, stats-server, frontend)
+
+  5. Check out the Subnet UI at `<MAIN_IP>:5000`
 
 
 ## Debug guide (how to know if my subnet is running?)
@@ -48,7 +51,7 @@
   ```
   docker logs -f <container_name> 
   ```
-  Assuming log level 4, you want to look for logs with blockNum, and blockNum should increase with time.
+  Assuming log level 4 (default 2), you want to look for logs with blockNum, and blockNum should increase with time.
 
   2. Check chainstate
 
@@ -81,7 +84,6 @@
   3. Stats-server
 
   Check logs, in `<deployment folder>/stats-service/logs/debug`, you should see block data and history data being received.
-
   
   4. Frontend
 
