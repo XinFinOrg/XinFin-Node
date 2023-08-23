@@ -3,7 +3,7 @@ name: Build and update image
 on:
   push:
     branches:
-      - master
+      - deployment-generator-v2
     paths: 
       - subnet/deployment-generator
     tags: 
