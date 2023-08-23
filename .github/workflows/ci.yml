@@ -1,0 +1,48 @@
+name: Build and update image
+
+on:
+  push:
+    branches:
+      - master
+    paths: 
+      - subnet/deployment-generator
+    tags: 
+      - '*'
+
+  workflow_dispatch: #allow manual trigger to workflow
+
+jobs:
+  build_and_push_image:
+    name: build and push image to registry
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: subnet/deployment-generator
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Docker login
+        env:
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
+        run: |
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    
+      - name: Determine Docker Image Name
+        id: image
+        run: |
+          if [[ "${{github.ref_name}}" == "master" ]]; then
+            echo "name= xinfinorg/subnet-generator:latest" >> $GITHUB_OUTPUT
+          else
+            echo "name= xinfinorg/subnet-generator:${{github.ref_name}}" >> $GITHUB_OUTPUT
+          fi
+      - name: Load Subnet commit/branch config
+        id: commit
+        run: |
+          echo commit=$(cat subnet_commit.env) >> $GITHUB_OUTPUT
+      - name: Build and push image
+        run: |
+          docker build . --file docker/Dockerfile                       \
+            --build-arg SUBNET_BRANCH=${{ steps.commit.outputs.commit}} \
+            --tag ${{ steps.image.outputs.name }}
+          docker push ${{ steps.image.outputs.name }}

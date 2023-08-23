@@ -9,7 +9,7 @@ FROM golang:1.14 as builder
 
 RUN git clone https://github.com/XinFinOrg/XDC-Subnet
 
-ARG SUBNET_BRANCH=easy-genesis        
+ARG SUBNET_BRANCH=master        
 #it is called 'BRANCH' but commits also work
 RUN cd XDC-Subnet && git checkout ${SUBNET_BRANCH} &&  make puppeth
 
