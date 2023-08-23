@@ -23,16 +23,20 @@
   
 # Steps
   1. Create a `docker.env` file with parameters similar to `docker.env.example`
+
+  2. Pull latest subnet-generator image
+  ```
+  docker pull xinfinorg/subnet-generator:latest
+  ```
   
-  2. Generate configurations, this will create a new `generated` directory
+  3. Generate configurations, this will create a new `generated` directory
   ```
   docker run --env-file docker.env -v $(pwd)/generated:/app/generated xinfinorg/subnet-generator:latest && cd generated
   ```
 
+  4. follow the generated instructions in `commands.txt` to start Subnet Nodes and [make sure they are mining](#subnet-nodes).
 
-  2. follow the generated instructions in `commands.txt` to start Subnet Nodes and make sure they are mining.
-
-  3. follow the generated instructions in `commands.txt` to deploy the Checkpoint Smart Contract. 
+  5. follow the generated instructions in `commands.txt` to deploy the Checkpoint Smart Contract. 
   ```
   docker run                                                           \
     --env-file docker.env                                              \
@@ -40,9 +44,9 @@
     --entrypoint 'bash' xinfinorg/subnet-generator:latest ./deploy_csc.sh
   ```
 
-  4. follow the generated instructions in `commands.txt` to deploy the Subnet Services (relayer, stats-server, frontend)
+  6. follow the generated instructions in `commands.txt` to deploy the Subnet Services (relayer, stats-server, frontend)
 
-  5. Check out the Subnet UI at `<MAIN_IP>:5000`
+  7. Check out the Subnet UI at `<MAIN_IP>:5000`
 
 
 ## Debug guide (how to know if my subnet is running?)
