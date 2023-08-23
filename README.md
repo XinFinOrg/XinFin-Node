@@ -19,7 +19,7 @@ To qualify for Masternode on XinFin Network, you need at least **10,000,000 XDC,
 * **"C:\Program Files\XinFin-Network"** this will be your destination folder and this **"C:\Users\...\AppData\Roaming\XDCChain"** will contain your Keystore folder.
 * Make sure, you create a backup of your Keystore folder.
 * Now click on "XinFin Network" One click installer.
-* You can see the address of One Click Instaaler in left side, Also you can change the Network.
+* You can see the address of One Click Installer in left side, Also you can change the Network.
 * For changing the Network, click on "Develop" then select "Network" (XinFin - Main Network/ XinFin Apothem Network)
 * You can check the Node status under the **[stats.xinfin.network](http://stats.xinfin.network/)**
 
@@ -182,7 +182,7 @@ cd testnet
 sudo docker-compose -f docker-compose.yml up -d
 ```
 
-You should be able to see your node listed on the [Apothem Network] page.
+You should be able to see your node listed on the [Apothem Network](https://apothem.network/#stats) page.
 Select **"Switch to LiveNet"** to check **LiveNetwork** Stats and Select **"Switch to TestNet"** for **TestNetwork.**
 
 Your coinbase address can be found in xdcchain/coinbase.txt file.
