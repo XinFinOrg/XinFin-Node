@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths: 
-      - subnet/deployment-generator
+      - subnet/deployment-generator/**
     tags: 
       - '*'
   workflow_dispatch: #allow manual trigger to workflow
