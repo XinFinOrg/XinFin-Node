@@ -6,42 +6,26 @@ const crypto = require('crypto');
 const readline = require('readline')
 const reader = require("readline-sync");
 const ethers = require('ethers');
+const config = require('./gen_config')
+  Object.freeze(config)
+  // console.log(config)
 
-const num_machines = parseInt(reader.question("How many machines will you use to deploy subnet?\n"));
-const num_subnet = parseInt(reader.question("How many subnet nodes will you deploy in total?\n"));
-const ip_1 = reader.question("What is the ip address of machine1?\n");
-const network_name = reader.question("What is the network name?\n");
-var network_id = reader.question("What is the network id? (default random)\n"); 
-const secret_string = crypto.randomBytes(10).toString('hex');
+// const num_machines = parseInt(reader.question("How many machines will you use to deploy subnet?\n"));
+// const num_subnet = parseInt(reader.question("How many subnet nodes will you deploy in total?\n"));
+// const ip_1 = reader.question("What is the ip address of machine1?\n");
+// const network_name = reader.question("What is the network name?\n");
+// var network_id = reader.question("What is the network id? (default random)\n"); 
+// const secret_string = crypto.randomBytes(10).toString('hex');
 
 
+const num_machines = config.num_machines
+const num_subnet = config.num_subnet
+const ip_1 = config.ip_1
+const network_name = config.network_name
+const network_id = config.network_id
+const secret_string = config.secret_string
+const output_path = `${__dirname}/../generated/`
 
-if (num_machines==0 || num_subnet ==0){
-  console.log('Number of machines or subnet nodes cannot be 0')
-  exit()
-}
-
-if (!(num_machines%1===0 && num_subnet%1===0)) {
-  console.log('Number of machines or subnet nodes must be an integer')
-  exit()
-}
-
-if (!require('net').isIP(ip_1)){
-  console.log('Invalid IP address')
-  exit()
-}
-
-if (network_name==''){
-  console.log('network name cannot be empty')
-  exit()
-}
-
-if (network_id==''){
-  network_id=Math.floor(Math.random() * (65536 - 1) + 1)
-}else if (network_id<1 || network_id >= 65536) {
-  console.log('network ID should be in range of 1 to 65536')
-  exit()
-}
 
 num_per_machine = Array(num_machines)
 //integer division
@@ -63,7 +47,7 @@ doc = {
 
 start_num = 1
 for (let i=1; i<=num_machines; i++){
-  subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
+  subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num, version=config.version)
   start_num+=num_per_machine[i-1]
   Object.entries(subnet_nodes).forEach(entry => {
     const [key, value] = entry;
@@ -71,96 +55,100 @@ for (let i=1; i<=num_machines; i++){
   });
 }
 
-subnet_services = genServices(machine_id=1)
+//gen subnets configs
+subnet_services = genServices(machine_id=1, version=config.version)
 Object.entries(subnet_services).forEach(entry => {
   const [key, value] = entry;
   doc['services'][key]=value
 });
 
-text = yaml.dump(doc, {
+compose_content = yaml.dump(doc, {
 })
-try{
-  fs.unlinkSync('./docker-compose.yml')
-} catch {}
 
-fs.writeFile('./docker-compose.yml', text, err => {
+//gen services configs
+commonconf = genServicesConfig(ip_1, secret=secret_string, parentchain_config=config.parentchain)
+
+keys = genSubnetKeys(num_subnet)            
+
+subnetconf=[]
+for (let i=1; i<=num_subnet; i++){
+  subnetconf.push(genSubnetConfig(i, keys, ip_1, network_id, secret))
+}
+compose_conf = genComposeEnv(path=config.deployment_path)
+
+//checkpoint smartcontract deployment config
+deployment_json = genDeploymentJson(keys)
+
+//deployment commands list 
+commands = genCommands(num_machines, network_name, network_id, num_subnet, keys)
+genesis_input = genGenesisInputFile(network_name, network_id, num_subnet, keys)
+genesis_input_file = yaml.dump(genesis_input, {
+})
+
+//writing files
+// fs.rmSync(`${output_path}`, { recursive: true, force: true }); //wont work with docker mount
+// fs.mkdirSync(`${output_path}`) //won't work with docker mount
+fs.writeFile(`${output_path}/placeholder.txt`, '-', err => {
   if (err) {
     console.error(err);
     exit()
   }
 });
 
-fs.rmSync('./config', { recursive: true, force: true });
-fs.mkdirSync('./config')
-
-//gen base configs
-commonconf = genServicesConfig(ip_1, secret=secret_string)
-fs.writeFileSync('./config/common.env', commonconf, err => {
+fs.writeFile(`${output_path}/docker-compose.yml`, compose_content, err => {
   if (err) {
     console.error(err);
     exit()
   }
 });
 
-// try{
-//   keysJson = fs.readFileSync('./keys.json')   //reuse keys if exist and enough for subnet nodes 
-//   keys = JSON.parse(keysJson)
-//   if (Object.keys(keys).length-1 < num_subnet){
-//     keys = genSubnetKeys(num_subnet)
-//   }
-// }catch(err){
-//   keys = genSubnetKeys(num_subnet)
-// }
+fs.writeFileSync(`${output_path}/common.env`, commonconf, err => {
+  if (err) {
+    console.error(err);
+    exit()
+  }
+});
 
-keys = genSubnetKeys(num_subnet)                //always gen new keys
-jsonData = JSON.stringify(keys, null, 2);
-fs.writeFile('./config/keys.json', jsonData, (err) => {
+keys_json = JSON.stringify(keys, null, 2);
+fs.writeFile(`${output_path}/keys.json`, keys_json, (err) => {
     if (err) {
-      console.error('Error writing file:', err);
+      console.error('Error writing key file:', err);
       exit()
     }
 });
 
 for (let i=1; i<=num_subnet; i++){
-  subnetconf = genSubnetConfig(i, keys, ip_1, network_id=network_id, secret=secret)
-  fs.writeFileSync(`./config/subnet${i}.env`, subnetconf, err => {
-  if (err) {
-    console.error(err);
-    exit()
-  }
-  })
+  fs.writeFileSync(`${output_path}/subnet${i}.env`, subnetconf[i-1], err => {
+    if (err) {
+      console.error(err);
+      exit()
+    }
+    })
 }
-compose_conf = genComposeEnv()
-try{
-  fs.unlinkSync('./docker-compose.env')
-}catch {}
 
-fs.writeFile('./docker-compose.env', compose_conf, err => {
+fs.writeFile(`${output_path}/docker-compose.env`, compose_conf, err => {
   if (err) {
     console.error(err);
     exit()
   }
 });
 
-//checkpoint contract deployment
-deployment_json = genDeploymentJson(keys)
-jsonData = JSON.stringify(deployment_json, null, 2);
-fs.writeFile('./config/deployment.json', jsonData, (err) => {
+deployment_json = JSON.stringify(deployment_json, null, 2);
+fs.writeFile(`${output_path}/deployment.json`, deployment_json, (err) => {
   if (err) {
     console.error('Error writing file:', err);
     exit()
   }
 })
 
-//deployment commands list 
-commands = genCommands(num_machines, network_name, network_id, num_subnet, keys)
-try{
-  fs.unlinkSync('./commands.txt')
-}catch {}
+fs.writeFile(`${output_path}/genesis_input.yml`, genesis_input_file, err => {
+  if (err) {
+    console.error(err);
+    exit()
+  }
+});
 
-
-
-fs.writeFile('./commands.txt', commands, err => {
+fs.writeFile(`${output_path}/commands.txt`, commands, err => {
   if (err) {
     console.error(err);
     exit()
@@ -169,22 +157,21 @@ fs.writeFile('./commands.txt', commands, err => {
 
 console.log('gen successful, follow the instructions in command.txt')
 
-//genesis.json step
 
-function genSubnetNodes(machine_id, num, start_num=1) {
+function genSubnetNodes(machine_id, num, start_num=1, version) {
   subnet_nodes = {}
   for (let i=start_num; i < start_num+num; i++) {
     node_name='subnet'+i.toString()
     volume='./xdcchain'+i.toString()+':/work/xdcchain'
-    config='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
+    var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
     subnet_nodes[node_name] = {
-      'image': 'xinfinorg/xdcsubnets:latest',
+      'image': `xinfinorg/xdcsubnets:${version.subnet}`,
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
       // 'env_file': ['${SUBNET_CONFIG_PATH}/common.env', config],
-      'env_file': [config],
+      'env_file': [config_path],
       'profiles': [compose_profile]
     }
 
@@ -192,13 +179,13 @@ function genSubnetNodes(machine_id, num, start_num=1) {
   return subnet_nodes
 }
 
-function genBootNode(machine_id){
-  config='${SUBNET_CONFIG_PATH}/common.env'
+function genBootNode(machine_id, version){
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   bootnode = {
-    'image': 'xinfinorg/xdcsubnets:latest',
+    'image': `xinfinorg/xdcsubnets:${version.bootnode}`,
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'volumes': ['./bootnodes:/work/bootnodes'],
     'entrypoint': ['bash','/work/start-bootnode.sh'],
     'command': ['-verbosity', '6', '-nodekey', 'bootnode.key'],
@@ -208,60 +195,60 @@ function genBootNode(machine_id){
   return bootnode
 }
 
-function genMainnet(machine_id){
-  config='${SUBNET_CONFIG_PATH}/common.env'
+function genObserver(machine_id, version){
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
-  mainnet = {    
-    'image': 'xinfinorg/devnet:latest',
+  observer = {    
+    'image': `xinfinorg/devnet:${version.observer}`,
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'ports': ['40313:30303', '9555:8545', '9565:8555'],
     'profiles': [machine]
   }
-  return mainnet
+  return observer
 }
 
-function genServices(machine_id) {
-  config='${SUBNET_CONFIG_PATH}/common.env'
+function genServices(machine_id, version) {
+  var config_path='${SUBNET_CONFIG_PATH}/common.env'
   // machine='services_machine'+machine_id.toString()
   machine='services'
   frontend = {
-    'image': 'xinfinorg/subnet-frontend:v0.1.1',    
+    'image': `xinfinorg/subnet-frontend:${version.frontend}`,    
     'restart': 'always',
-    'volumes': [`${config}:/app/.env.local`],
+    'volumes': [`${config_path}:/app/.env.local`],
     'ports': ['5000:5000'],
     'profiles': [machine]
   }
   relayer = {
-    'image': 'xinfinorg/xdc-relayer:v0.1.1',
+    'image': `xinfinorg/xdc-relayer:${version.relayer}`,
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'profiles': [machine]
   }
   stats = {
-    'image': 'xinfinorg/subnet-stats-service:v0.1.1',
+    'image': `xinfinorg/subnet-stats-service:${version.stats}`,
     'restart': 'always',
-    'env_file': config,
+    'env_file': config_path,
     'volumes': ['./stats-service/logs:/app/logs'],
     'ports': ['3000:3000'],
     'profiles': [machine]
   },
-  puppeth = {
-    'image': 'xinfinorg/xdcsubnets:latest',
-    'entrypoint': ['puppeth'],
-    'volumes': ['./puppeth:/root/.puppeth'],
-    'profiles': ['none']
-  }, 
-  bootnode=genBootNode(machine_id),
-  mainnet=genMainnet(machine_id),
+  // puppeth = {
+  //   'image': 'xinfinorg/xdcsubnets:latest',
+  //   'entrypoint': ['puppeth'],
+  //   'volumes': ['./puppeth:/root/.puppeth'],
+  //   'profiles': ['none']
+  // }, 
+  bootnode=genBootNode(machine_id, version),
+  observer=genObserver(machine_id, version),
 
 
   services = {
     'bootnode': bootnode,
-    'mainnet': mainnet,
+    'observer': observer,
     'relayer': relayer,
     'stats': stats,
-    'puppeth': puppeth,
+    // 'puppeth': puppeth,
     'frontend': frontend,
   }
 
@@ -274,7 +261,7 @@ function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   port = 20303+subnet_id-1
   rpcport = 8545+subnet_id-1
   wsport= 8555+subnet_id-1
-  config = `
+  var config_env = `
 INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
@@ -291,20 +278,30 @@ WSPORT=${wsport}
 LOG_LEVEL=2
 `
 
-return config
+return config_env
 }
 
-function genServicesConfig(ip_1, secret){
-  config=`
+function genServicesConfig(ip_1, secret, parentchain_config){
+  var url = ''
+  switch (parentchain_config.network){
+    case 'devnet':
+       url='https://devnetstats.apothem.network/devnet'
+    case 'testnet':
+       url='https://devnetstats.apothem.network/testnet' //confirm url
+    case 'mainnet':
+       url='https://devnetstats.apothem.network/mainnet' //confirm url
+  }
+  
+  var config_env=`
 # Bootnode
 EXTIP=${ip_1}
 BOOTNODE_PORT=20301
 
 # Stats and relayer
 #PARENTCHAIN_URL=http://${ip_1}:9555
-PARENTCHAIN_URL=https://devnetstats.apothem.network/devnet
-PARENTCHAIN_WALLET=0x0000000000000000000000000000000000000000
-PARENTCHAIN_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
+PARENTCHAIN_URL=${url}
+PARENTCHAIN_WALLET=${parentchain_config.pubkey}
+PARENTCHAIN_WALLET_PK=${parentchain_config.privatekey}
 SUBNET_URL=http://${ip_1}:8545
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
@@ -320,7 +317,7 @@ VITE_SUBNET_URL=http://${ip_1}:3000
 # Share Variable
 STATS_SECRET=${secret}
 `
-  return config
+  return config_env
 }
 
 function genSubnetKeys(num){
@@ -365,7 +362,8 @@ function genDeploymentJson(keys){
     "epoch": 900,
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
     // "xdcparentnet": "http://127.0.0.1:40313", 
-    "xdcsubnet": "http://127.0.0.1:8545"
+    // "xdcsubnet": "http://127.0.0.1:8545" 
+    "xdcsubnet": `http://${ip_1}:8545`
   }
   return deployment
 
@@ -375,43 +373,23 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   conf_path = __dirname+'/config/'
   set_env='SUBNET_CONFIG_PATH='+conf_path
   var commands=''
-  commands+=`\nmachine1:                install requirements\n`
-  commands+=`  ./setup.sh\n`
-
-  commands+=`\nmachine1:                create genesis.json with wizard\n`
-  commands+=`  docker compose --env-file docker-compose.env run puppeth\n`
-
-  indent='    '
-  out = genGenesisInstructions(
-    network_name=network_name, 
-    network_id=network_id, 
-    num_subnet=num_subnet, 
-    keys=keys,
-    indent=indent
-    )
-  join_str='\n'+indent
-  out = out.join(join_str)
-  commands+='    '+out+'\n'
-
-  commands+=`\nmachine1:                move genesis file\n`
-  commands+=`  cp puppeth/${network_name} config/genesis.json\n\n`
 
   for(let i=1; i <= num_machines; i++){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
     if (i!=1){
-      commands+=`  copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
+      commands+=`  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`
     }
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
 
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  ./deploy_csc.sh  <PARENTCHAIN_WALLET_PK> (without '0x'). Might require multiple tries due to network issue. Take note of the "subnet" contract address\n`
-
-  commands+=`\nmachine1:                deploy checkpoint smart contract\n`
-  commands+=`  make an edit to ./config/common.env to include values for PARENTCHAIN_WALLET,PARENTCHAIN_WALLET_PK,CHECKPOINT_CONTRACT (with '0x') \n`
+  commands+=`  docker run --env-file docker.env \\
+    -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \\
+    --entrypoint 'bash' generator ./deploy_csc.sh \n`
+  commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
 
   commands+=`\nmachine1:                start services and frontend\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services pull\n`
@@ -419,13 +397,13 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   return commands
 }
 
-function genComposeEnv(){
-  conf_path = `SUBNET_CONFIG_PATH=${__dirname}/config/`
+function genComposeEnv(path){
+  conf_path = `SUBNET_CONFIG_PATH=${path}/generated/`
   return conf_path
 }
 
 function genGenesisInstructions(network_name, network_id, num_subnet, keys, indent){
-  random_key = genSubnetKeys(1)['key1']['short']
+  // random_key = genSubnetKeys(1)['key1']['short']
   questions = []
   commands = []
   questions.push('')
@@ -485,3 +463,36 @@ function genGenesisInstructions(network_name, network_id, num_subnet, keys, inde
   
   return commands
 }
+
+function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
+// name: localNet
+// certthreshold: 2
+// grandmasters: 
+//   - "0x30f21E514A66732DA5Dff95340624fa808048601"
+// masternodes:
+//   - "0x25b4cbb9a7ae13feadc3e9f29909833d19d16de5"
+//   - "0x3d9fd0c76bb8b3b4929ca861d167f3e05926cb68"
+//   - "0x3c03a0abac1da8f2f419a59afe1c125f90b506c5"
+// chainid: 29412
+
+  var masternodes = []
+  var grandmasters = []
+  Object.keys(keys).forEach(function(k) {
+    var v = keys[k];
+    if (k == 'Grandmaster'){
+      grandmasters.push(v['0x'])
+    } else {
+      masternodes.push(v['0x'])
+    }
+  });
+
+  var config = {
+    "name": network_name,
+    "certthreshold": Math.ceil(((2/3)*num_subnet)),
+    "grandmasters": grandmasters,
+    "masternodes": masternodes,
+    "chainid": network_id,
+  }
+  return config
+}
+
