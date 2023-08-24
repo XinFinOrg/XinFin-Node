@@ -3,28 +3,29 @@ name: Build and update image
 on:
   push:
     branches:
-      - deployment-generator-v2
+      - master
     paths: 
       - subnet/deployment-generator
     tags: 
       - '*'
-
   workflow_dispatch: #allow manual trigger to workflow
 
 jobs:
   build_and_push_image:
     name: build and push image to registry
     runs-on: ubuntu-latest
+    environment: DockerHub
     defaults:
       run:
         working-directory: subnet/deployment-generator
     steps:
       - name: Check out code
         uses: actions/checkout@v3
+
       - name: Docker login
         env:
-          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_ACCESS_TOKEN}}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     
@@ -36,10 +37,12 @@ jobs:
           else
             echo "name= xinfinorg/subnet-generator:${{github.ref_name}}" >> $GITHUB_OUTPUT
           fi
+          
       - name: Load Subnet commit/branch config
         id: commit
         run: |
           echo commit=$(cat subnet_commit.env) >> $GITHUB_OUTPUT
+
       - name: Build and push image
         run: |
           docker build . --file docker/Dockerfile                       \
