@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - generator*
     paths: 
       - subnet/deployment-generator/**
     tags: 
@@ -38,10 +39,11 @@ jobs:
             echo "name= xinfinorg/subnet-generator:${{github.ref_name}}" >> $GITHUB_OUTPUT
           fi
           
-      - name: Load Subnet commit/branch config
+      - name: Load Subnet commit/branch config (used for genesis gen)
         id: commit
         run: |
-          echo commit=$(cat subnet_commit.env) >> $GITHUB_OUTPUT
+          cat docker/genesis_commit.env 
+          echo commit=$(cat docker/genesis_commit.env) >> $GITHUB_OUTPUT
 
       - name: Build and push image
         run: |
