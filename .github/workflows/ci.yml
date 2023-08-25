@@ -3,7 +3,8 @@ name: Build and update image
 on:
   push:
     branches:
-      - generator-imagefix
+      - master
+      - generator*
     paths: 
       - subnet/deployment-generator/**
     tags: 
