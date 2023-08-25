@@ -388,7 +388,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   commands+=`\nmachine1:                deploy checkpoint smart contract\n`
   commands+=`  docker run --env-file docker.env \\
     -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \\
-    --entrypoint 'bash' generator ./deploy_csc.sh \n`
+    --entrypoint 'bash' xinfinorg/subnet-generator:latest ./deploy_csc.sh \n`         //how to inject version other than latest??
   commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
 
   commands+=`\nmachine1:                start services and frontend\n`
