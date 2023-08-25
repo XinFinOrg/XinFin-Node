@@ -48,33 +48,70 @@
 
   7. Check out the Subnet UI at `<MAIN_IP>:5000`
 
+### Removing Subnet
+  1.  Change the commands in `commands.txt` to `docker compose ... down`
+  ```
+  docker compose --env-file docker-compose.env --profile <profile_name> down 
+  ```
+
+  2. Repeat 1. for every docker `--profile` that was started. 
+
+  3. Inside `generated` directory, remove `bootnodes`, `stats-service`, and `xdcchain*` directories
 
 ## Debug guide (how to know if my subnet is running?)
   ### Subnet nodes
-  1. Check logs
-  ```
-  docker logs -f <container_name> 
-  ```
-  Assuming log level 4 (default 2), you want to look for logs with blockNum, and blockNum should increase with time.
 
-  2. Check chainstate
-
-  Exec into the subnet container
+  1. Check chainstate with curl, you can change `localhost:8545` to your subnet node's RPC PORT
   
-    docker exec -it <container_name> bash
+      Call current block api
 
+      ```
+      curl --location 'http://localhost:8545' \
+      --header 'Content-Type: application/json' \
+      --data '{"jsonrpc":"2.0","method":"XDPoS_getV2BlockByNumber","params":["latest"],"id":1}'
+      ```
 
-  Attach to the API process
+      Check current peers
+      
+      ```
+      curl --location 'http://localhost:8545' \
+      --header 'Content-Type: application/json' \
+      --data '{"jsonrpc":"2.0","method":"admin_peers","params":[],"id":1}'
+      ```
 
-    XDC attach /work/xdcchain/XDC.ipc
+  2. Check chainstate inside docker
 
-  Call current block api
+      Exec into the subnet container
+      
+      ```
+      docker exec -it <container_name> bash
+      ```
+
+      Attach to the API process
+
+      ```
+      XDC attach /work/xdcchain/XDC.ipc
+      ```
+
+      Call current block api
+        
+      ```
+      XDPoS.getV2Block()
+      ```
+
+      Check current peers
+
+      ```
+      admin.peers
+      ```
+
+3. Check logs, assuming log level 4 (default 2), you want to look for logs with blockNum, and blockNum should increase with time.
     
-    XDPoS.getV2Block()
+    ```
+    docker logs -f <container_name> 
+    ```
 
-  Check current peers
 
-    admin.peers
 
   ### Subnet Services
   1. Bootnode
