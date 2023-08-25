@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - generator-imagefix
-    paths: 
-      - subnet/deployment-generator/**
+    # paths: 
+    #   - subnet/deployment-generator/**
     tags: 
       - '*'
   workflow_dispatch: #allow manual trigger to workflow
@@ -35,7 +35,7 @@ jobs:
           if [[ "${{github.ref_name}}" == "master" ]]; then
             echo "name= xinfinorg/subnet-generator:latest" >> $GITHUB_OUTPUT
           else
-            echo "name= xinfinorg/subnet-generator:${{github.ref_name}}" >> $GITHUB_OUTPUT
+            echo "name= xinfinorg/subnet-generator:latest" >> $GITHUB_OUTPUT
           fi
           
       - name: Load Subnet commit/branch config (used for genesis gen)
