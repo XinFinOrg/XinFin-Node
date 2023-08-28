@@ -13,12 +13,12 @@ var config = {
   secret_string:   (process.env.SERVICES_SECRET       || crypto.randomBytes(10).toString('hex')),
   relayer_mode:    (process.env.RELAYER_MODE          || 'full'), //full or lite
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'latest'),
-    bootnode: (process.env.VERSION_BOOTNODE || 'latest'),
+    subnet:   (process.env.VERSION_SUBNET   || 'v0.1.3'),
+    bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.3'),
     observer: (process.env.VERSION_OBSERVER || 'latest'),
-    relayer:  (process.env.VERSION_RELAYER  || 'v0.1.1'),
-    stats:    (process.env.VERSION_STATS    || 'v0.1.1'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.1')
+    relayer:  (process.env.VERSION_RELAYER  || 'v0.1.3'),
+    stats:    (process.env.VERSION_STATS    || 'v0.1.3'),
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.3')
   },
   parentchain:{
     network:    (process.env.PARENTCHAIN               || 'testnet'),
