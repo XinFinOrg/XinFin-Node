@@ -21,7 +21,7 @@ var config = {
     frontend: (process.env.VERSION_FRONTEND || 'v0.1.3')
   },
   parentchain:{
-    network:    (process.env.PARENTCHAIN               || 'testnet'),
+    network:    (process.env.PARENTCHAIN               || 'devnet'),
     // url:        '',
     pubkey:     (process.env.PARENTCHAIN_WALLET        || '0x0000000000000000000000000000000000000000')       ,
     privatekey: (process.env.PARENTCHAIN_WALLET_PK     || '0x0000000000000000000000000000000000000000000000000000000000000000')       ,

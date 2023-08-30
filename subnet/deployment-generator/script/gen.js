@@ -285,7 +285,7 @@ function genServicesConfig(ip_1, secret, parentchain_config){
   var url = ''
   switch (parentchain_config.network){
     case 'devnet':
-       url='https://devnetstats.apothem.network/devnet'
+       url='https://devnetstats.apothem.network/devnet'       //debug devnet not using this url
     case 'testnet':
        url='https://devnetstats.apothem.network/testnet' //confirm url
     case 'mainnet':
