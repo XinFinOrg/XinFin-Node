@@ -226,12 +226,12 @@ function genServices(machine_id) {
   },
 
   bootnode=genBootNode(machine_id),
-  observer=genObserver(machine_id),
+  observer=genObserver(machine_id),      
 
 
   services = {
     'bootnode': bootnode,
-    'observer': observer,
+    // 'observer': observer,                 //disable until we comeup with a satisfied solution
     'relayer': relayer,
     'stats': stats,
     'frontend': frontend,
