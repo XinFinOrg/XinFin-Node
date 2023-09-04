@@ -2,17 +2,9 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/apothemnetwork:v1.4.7
+    image: xinfinorg/xdposchain:v1.4.8-beta
     volumes:
-      - "./xdcchain-testnet:/work/xdcchain-testnet"
-      - "./testnetgenesis.json:/work/testnetgenesis.json"
-      - "./start-apothem.sh:/work/start-apothem.sh"
-      - "./testnetbootnodes.list:/work/testnetbootnodes.list"
-      - "./.pwd:/work/.pwd"
-      - "/etc/localtime:/etc/localtime:ro"
+      - "./xdcchain:/work/xdcchain"
     restart: "always"
     env_file: .env
-    ports:
-      - "30304:30304"
-      - "8999:8555"
-      - "8898:8556"
+    network_mode: "host"
