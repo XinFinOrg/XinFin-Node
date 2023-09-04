@@ -2,12 +2,9 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xdposchain:v1.4.8
+    image: xinfinorg/xdposchain:v1.4.8-beta
     volumes:
-      - "./xdcchain-testnet:/work/xdcchain"
+      - "./xdcchain:/work/xdcchain"
     restart: "always"
     env_file: .env
-    ports:
-      - "30304:30304"
-      - "8555:8555"
-      - "8556:8556"
+    network_mode: "host"

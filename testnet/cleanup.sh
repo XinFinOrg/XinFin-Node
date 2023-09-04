@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf xdcchain-testnet/XDC
+rm -rf ./xdcchain/XDC
