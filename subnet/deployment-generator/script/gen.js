@@ -194,7 +194,7 @@ function genObserver(machine_id){
     'image': `xinfinorg/devnet:${config.version.observer}`,
     'restart': 'always',
     'env_file': config_path,
-    'ports': ['40313:30303', '9555:8545', '9565:8555'],
+    'ports': ['20302:30303', '7545:8545', '7555:8555'],
     'profiles': [machine]
   }
   return observer
@@ -245,7 +245,7 @@ function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   private_key = key[key_name]['PrivateKey']
   port = 20303+subnet_id-1
   rpcport = 8545+subnet_id-1
-  wsport= 8555+subnet_id-1
+  wsport= 9555+subnet_id-1
   var config_env = `
 INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
