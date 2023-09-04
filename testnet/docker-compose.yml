@@ -4,7 +4,7 @@ services:
   xinfinnetwork:
     image: xinfinorg/xdposchain:v1.4.8
     volumes:
-      - "./xdcchain-testnet:/work/xdcchain-testnet"
+      - "./xdcchain-testnet:/work/xdcchain"
     restart: "always"
     env_file: .env
     ports:
