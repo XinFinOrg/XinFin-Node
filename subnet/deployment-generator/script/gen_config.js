@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
+const ethers = require('ethers');
+const { NonceManager } = require('ethers');
 dotenv.config({ path: `${__dirname}/gen.env` });
 // console.log(__dirname)
 
@@ -21,10 +23,16 @@ var config = {
     frontend: (process.env.VERSION_FRONTEND || 'v0.1.3')
   },
   parentchain:{
-    network:    (process.env.PARENTCHAIN               || 'devnet'),
+    network:    (process.env.PARENTCHAIN              || 'devnet'),
     // url:        '',
-    pubkey:     (process.env.PARENTCHAIN_WALLET        || '0x0000000000000000000000000000000000000000')       ,
-    privatekey: (process.env.PARENTCHAIN_WALLET_PK     || '0x0000000000000000000000000000000000000000000000000000000000000000')       ,
+    pubkey:     ''                                                ,
+    privatekey: (process.env.PARENTCHAIN_WALLET_PK    || '')      ,
+  },
+  custom_keys: {
+    subnets_addr: []                                        ,
+    subnets_pk: (process.env.SUBNETS_PK               || ''),
+    grandmaster_addr: ''                                    ,
+    grandmaster_pk: (process.env.GRANDMASTER_PK       || ''),
   }
 };
 
@@ -71,4 +79,55 @@ if (!(config.parentchain.network == 'devnet'  ||
   process.exit()
 }
 
+if (config.parentchain.privatekey != ''){
+  try{
+    config.parentchain.pubkey = validatePK(config.parentchain.privatekey)
+  }catch{
+    console.log('Invalid PARENTCHAIN_WALLET_PK')
+    process.exit()
+  }
+}
+
+if (config.custom_keys.grandmaster_pk != ''){
+  try{
+    config.custom_keys.grandmaster_addr = validatePK(config.custom_keys.grandmaster_pk)
+  }catch{
+    console.log('Invalid GRANDMASTER_PK')
+    process.exit()
+  }
+}
+
+if (config.custom_keys.subnets_pk != ''){
+  try{
+    let output = []
+    let pks = config.custom_keys.subnets_pk.split(',')
+    pks.forEach(pk => {
+      output.push(validatePK(pk))
+    })
+    config.custom_keys.subnets_addr=output
+    config.custom_keys.subnets_pk=pks
+  }catch{
+    console.log('Invalid SUBNETS_PK please make sure keys are correct length, comma separated with no whitespace or invalid characters')
+    process.exit()
+  }
+
+  if (config.custom_keys.subnets_addr.length != config.num_subnet) {
+    console.log(`number of keys in SUBNETS_PK (${config.custom_keys.subnets_addr.length}) does not match NUM_SUBNET (${config.num_subnet})`)
+    process.exit()
+  }
+
+  const setPK = new Set(config.custom_keys.subnets_pk) 
+  if (setPK.size != config.custom_keys.subnets_pk.length){
+    console.log('found duplicate keys in SUBNETS_PK')
+    process.exit()
+  }
+
+}
+
+
 module.exports = config
+
+function validatePK(private_key){
+  let wallet = new ethers.Wallet(private_key)
+  return wallet.address
+}

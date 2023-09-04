@@ -7,15 +7,8 @@ const readline = require('readline')
 const reader = require("readline-sync");
 const ethers = require('ethers');
 const config = require('./gen_config')
-  Object.freeze(config)
-  // console.log(config)
-
-// const num_machines = parseInt(reader.question("How many machines will you use to deploy subnet?\n"));
-// const num_subnet = parseInt(reader.question("How many subnet nodes will you deploy in total?\n"));
-// const ip_1 = reader.question("What is the ip address of machine1?\n");
-// const network_name = reader.question("What is the network name?\n");
-// var network_id = reader.question("What is the network id? (default random)\n"); 
-// const secret_string = crypto.randomBytes(10).toString('hex');
+Object.freeze(config)
+console.log(config)
 
 
 const num_machines = config.num_machines
@@ -47,7 +40,7 @@ doc = {
 
 start_num = 1
 for (let i=1; i<=num_machines; i++){
-  subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num, version=config.version)
+  subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
   start_num+=num_per_machine[i-1]
   Object.entries(subnet_nodes).forEach(entry => {
     const [key, value] = entry;
@@ -56,7 +49,7 @@ for (let i=1; i<=num_machines; i++){
 }
 
 //gen subnets configs
-subnet_services = genServices(machine_id=1, version=config.version)
+subnet_services = genServices(machine_id=1)
 Object.entries(subnet_services).forEach(entry => {
   const [key, value] = entry;
   doc['services'][key]=value
@@ -66,7 +59,7 @@ compose_content = yaml.dump(doc, {
 })
 
 //gen services configs
-commonconf = genServicesConfig(ip_1, secret=secret_string, parentchain_config=config.parentchain)
+commonconf = genServicesConfig(ip_1, secret=secret_string)
 
 keys = genSubnetKeys(num_subnet)            
 
@@ -74,7 +67,7 @@ subnetconf=[]
 for (let i=1; i<=num_subnet; i++){
   subnetconf.push(genSubnetConfig(i, keys, ip_1, network_id, secret))
 }
-compose_conf = genComposeEnv(path=config.deployment_path)
+compose_conf = genComposeEnv()
 
 //checkpoint smartcontract deployment config
 deployment_json = genDeploymentJson(keys)
@@ -158,7 +151,7 @@ fs.writeFile(`${output_path}/commands.txt`, commands, err => {
 console.log('gen successful, follow the instructions in command.txt')
 
 
-function genSubnetNodes(machine_id, num, start_num=1, version) {
+function genSubnetNodes(machine_id, num, start_num=1) {
   subnet_nodes = {}
   for (let i=start_num; i < start_num+num; i++) {
     node_name='subnet'+i.toString()
@@ -166,11 +159,10 @@ function genSubnetNodes(machine_id, num, start_num=1, version) {
     var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
     subnet_nodes[node_name] = {
-      'image': `xinfinorg/xdcsubnets:${version.subnet}`,
+      'image': `xinfinorg/xdcsubnets:${config.version.subnet}`,
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
-      // 'env_file': ['${SUBNET_CONFIG_PATH}/common.env', config],
       'env_file': [config_path],
       'profiles': [compose_profile]
     }
@@ -179,11 +171,11 @@ function genSubnetNodes(machine_id, num, start_num=1, version) {
   return subnet_nodes
 }
 
-function genBootNode(machine_id, version){
+function genBootNode(machine_id){
   var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   bootnode = {
-    'image': `xinfinorg/xdcsubnets:${version.bootnode}`,
+    'image': `xinfinorg/xdcsubnets:${config.version.bootnode}`,
     'restart': 'always',
     'env_file': config_path,
     'volumes': ['./bootnodes:/work/bootnodes'],
@@ -195,11 +187,11 @@ function genBootNode(machine_id, version){
   return bootnode
 }
 
-function genObserver(machine_id, version){
+function genObserver(machine_id){
   var config_path='${SUBNET_CONFIG_PATH}/common.env'
   machine='machine'+machine_id.toString()
   observer = {    
-    'image': `xinfinorg/devnet:${version.observer}`,
+    'image': `xinfinorg/devnet:${config.version.observer}`,
     'restart': 'always',
     'env_file': config_path,
     'ports': ['40313:30303', '9555:8545', '9565:8555'],
@@ -208,39 +200,33 @@ function genObserver(machine_id, version){
   return observer
 }
 
-function genServices(machine_id, version) {
+function genServices(machine_id) {
   var config_path='${SUBNET_CONFIG_PATH}/common.env'
-  // machine='services_machine'+machine_id.toString()
   machine='services'
   frontend = {
-    'image': `xinfinorg/subnet-frontend:${version.frontend}`,    
+    'image': `xinfinorg/subnet-frontend:${config.version.frontend}`,    
     'restart': 'always',
     'volumes': [`${config_path}:/app/.env.local`],
     'ports': ['5000:5000'],
     'profiles': [machine]
   }
   relayer = {
-    'image': `xinfinorg/xdc-relayer:${version.relayer}`,
+    'image': `xinfinorg/xdc-relayer:${config.version.relayer}`,
     'restart': 'always',
     'env_file': config_path,
     'profiles': [machine]
   }
   stats = {
-    'image': `xinfinorg/subnet-stats-service:${version.stats}`,
+    'image': `xinfinorg/subnet-stats-service:${config.version.stats}`,
     'restart': 'always',
     'env_file': config_path,
     'volumes': ['./stats-service/logs:/app/logs'],
     'ports': ['3000:3000'],
     'profiles': [machine]
   },
-  // puppeth = {
-  //   'image': 'xinfinorg/xdcsubnets:latest',
-  //   'entrypoint': ['puppeth'],
-  //   'volumes': ['./puppeth:/root/.puppeth'],
-  //   'profiles': ['none']
-  // }, 
-  bootnode=genBootNode(machine_id, version),
-  observer=genObserver(machine_id, version),
+
+  bootnode=genBootNode(machine_id),
+  observer=genObserver(machine_id),
 
 
   services = {
@@ -248,7 +234,6 @@ function genServices(machine_id, version) {
     'observer': observer,
     'relayer': relayer,
     'stats': stats,
-    // 'puppeth': puppeth,
     'frontend': frontend,
   }
 
@@ -281,15 +266,21 @@ LOG_LEVEL=2
 return config_env
 }
 
-function genServicesConfig(ip_1, secret, parentchain_config){
+function genServicesConfig(ip_1, secret){
   var url = ''
-  switch (parentchain_config.network){
+  switch (config.parentchain.network){
     case 'devnet':
-       url='https://devnetstats.apothem.network/devnet'       //debug devnet not using this url
+      url='https://devnetstats.apothem.network/devnet'  
+      break
     case 'testnet':
-       url='https://devnetstats.apothem.network/testnet' //confirm url
+      url='https://devnetstats.apothem.network/testnet' //confirm url
+      break
     case 'mainnet':
-       url='https://devnetstats.apothem.network/mainnet' //confirm url
+      url='https://devnetstats.apothem.network/mainnet' //confirm url
+      break
+    default: 
+      console.error('PARENTCHAIN invalid, should be devnet, testnet, or mainnet') //should not reach this case
+      exit()
   }
   
   var config_env=`
@@ -300,9 +291,10 @@ BOOTNODE_PORT=20301
 # Stats and relayer
 #PARENTCHAIN_URL=http://${ip_1}:9555
 PARENTCHAIN_URL=${url}
-PARENTCHAIN_WALLET=${parentchain_config.pubkey}
-PARENTCHAIN_WALLET_PK=${parentchain_config.privatekey}
+PARENTCHAIN_WALLET=${config.parentchain.pubkey}
+PARENTCHAIN_WALLET_PK=${config.parentchain.privatekey}
 SUBNET_URL=http://${ip_1}:8545
+RELAYER_MODE=${config.relayer_mode}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 CORS_ALLOW_ORIGIN=*
@@ -397,8 +389,8 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   return commands
 }
 
-function genComposeEnv(path){
-  conf_path = `SUBNET_CONFIG_PATH=${path}/generated/`
+function genComposeEnv(){
+  conf_path = `SUBNET_CONFIG_PATH=${config.deployment_path}/generated/`
   return conf_path
 }
 
