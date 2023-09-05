@@ -42,7 +42,7 @@ jobs:
       - name: Load Subnet commit/branch config (used for genesis gen)
         id: commit
         run: |
-          cat docker/genesis_commit.env 
+          cat docker/puppeth_csc_commit.env 
           echo commit=$(cat docker/genesis_commit.env) >> $GITHUB_OUTPUT
 
       - name: Build and push image

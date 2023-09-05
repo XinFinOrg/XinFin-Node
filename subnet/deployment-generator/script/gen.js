@@ -126,7 +126,7 @@ fs.writeFile(`${output_path}/docker-compose.env`, compose_conf, err => {
 });
 
 deployment_json = JSON.stringify(deployment_json, null, 2);
-fs.writeFile(`${output_path}/deployment.json`, deployment_json, (err) => {
+fs.writeFile(`${output_path}/deployment.config.json`, deployment_json, (err) => {
   if (err) {
     console.error('Error writing file:', err);
     exit()
@@ -411,7 +411,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   commands+=`\nmachine1:                deploy checkpoint smart contract \n` // (please be mindful of docker image tag if you are not using 'latest')
   commands+=`  cd ..\n`
   commands+=`  docker run --env-file docker.env \\
-    -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \\
+    -v $(pwd)/generated/deployment.config.json:/app/generated/deployment.config.json \\
     --entrypoint 'bash' xinfinorg/subnet-generator:latest ./deploy_csc.sh \n`         //how to inject version other than latest??
   // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
   commands+=`  cd generated\n`
