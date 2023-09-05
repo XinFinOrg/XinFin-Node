@@ -61,7 +61,7 @@ compose_content = yaml.dump(doc, {
 //gen services configs
 commonconf = genServicesConfig(ip_1, secret=secret_string)
 
-keys = genSubnetKeys(num_subnet)            
+keys = genSubnetKeys()            
 
 subnetconf=[]
 for (let i=1; i<=num_subnet; i++){
@@ -312,32 +312,64 @@ STATS_SECRET=${secret}
   return config_env
 }
 
-function genSubnetKeys(num){
-  const keys = {}
-  for ( let i = 1; i <= num+1; i++) {
-      const key = `key${i}`
-      const privateKey = crypto.randomBytes(32).toString('hex');
-      const wallet = new ethers.Wallet(privateKey);
-      if (i==num+1){
-        keys['Grandmaster'] = {
-          "PrivateKey": privateKey,
-          "0x":wallet.address,
-          "xdc": wallet.address.replace(/^0x/i, "xdc"),
-          "short": wallet.address.replace(/^0x/i, '')
-        }
+// function genSubnetKeys(){
+//   num = config.num_subnet
+//   const keys = {}
+//   for ( let i = 1; i <= num+1; i++) {
+//       const key = `key${i}`
+//       const privateKey = crypto.randomBytes(32).toString('hex');
+//       const wallet = new ethers.Wallet(privateKey);
+//       if (i==num+1){
+//         keys['Grandmaster'] = {
+//           "PrivateKey": privateKey,
+//           "0x":wallet.address,
+//           "xdc": wallet.address.replace(/^0x/i, "xdc"),
+//           "short": wallet.address.replace(/^0x/i, '')
+//         }
 
-      }else{
-        keys[key] = {
-            "PrivateKey": privateKey,
-            "0x":wallet.address,
-            "xdc": wallet.address.replace(/^0x/i, "xdc"),
-            "short": wallet.address.replace(/^0x/i, '')
-      }
+//       }else{
+//         keys[key] = {
+//             "PrivateKey": privateKey,
+//             "0x":wallet.address,
+//             "xdc": wallet.address.replace(/^0x/i, "xdc"),
+//             "short": wallet.address.replace(/^0x/i, '')
+//       }
+//     }
+//   }
+//   return keys
+// }
+
+function genSubnetKeys(){
+  const keys = {}
+  num = config.keys.subnets_addr.length
+  for(i=0; i<config.keys.subnets_addr.length; i++){
+    const key = `key${i+1}`
+    const private_key = config.keys.subnets_pk[i]
+    const address = config.keys.subnets_addr[i]
+    keys[key] = {
+      "PrivateKey": private_key,
+      "0x": address,
+      "xdc": address.replace(/^0x/i, "xdc"),
+      "short": address.replace(/^0x/i, '')
     }
   }
-  return keys
+  keys['Grandmaster'] = {
+    "PrivateKey": config.keys.grandmaster_pk,
+    "0x": config.keys.grandmaster_addr,
+    "xdc": config.keys.grandmaster_addr.replace(/^0x/i, "xdc"),
+    "short": config.keys.grandmaster_addr.replace(/^0x/i, '')
+  }
 
+  if (Object.keys(keys).length != config.num_subnet+1){      //sanity check
+    console.log('bad case, key length not equal number of subnets')
+    console.log(Object.keys(keys).length, config.num_subnet+1)
+    console.log(keys)
+    process.exit()
+  }
+
+  return keys
 }
+
 
 function genDeploymentJson(keys){
   num = Object.keys(keys).length-1;
@@ -353,7 +385,7 @@ function genDeploymentJson(keys){
     "gap": 450,
     "epoch": 900,
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcparentnet": "http://127.0.0.1:40313", 
+    // "xdcparentnet": "http://127.0.0.1:20302", 
     // "xdcsubnet": "http://127.0.0.1:8545" 
     "xdcsubnet": `http://${ip_1}:8545`
   }

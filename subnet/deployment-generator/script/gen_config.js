@@ -28,7 +28,7 @@ var config = {
     pubkey:     ''                                                ,
     privatekey: (process.env.PARENTCHAIN_WALLET_PK    || '')      ,
   },
-  custom_keys: {
+  keys: {
     subnets_addr: []                                        ,
     subnets_pk: (process.env.SUBNETS_PK               || ''),
     grandmaster_addr: ''                                    ,
@@ -88,39 +88,58 @@ if (config.parentchain.privatekey != ''){
   }
 }
 
-if (config.custom_keys.grandmaster_pk != ''){
+if (config.keys.grandmaster_pk != ''){
   try{
-    config.custom_keys.grandmaster_addr = validatePK(config.custom_keys.grandmaster_pk)
+    config.keys.grandmaster_addr = validatePK(config.keys.grandmaster_pk)
   }catch{
     console.log('Invalid GRANDMASTER_PK')
     process.exit()
   }
+} else {
+    const privatekey = '0x'+crypto.randomBytes(32).toString('hex');
+    const wallet = new ethers.Wallet(privatekey)
+    config.keys.grandmaster_pk = privatekey
+    config.keys.grandmaster_addr = wallet.address
+
 }
 
-if (config.custom_keys.subnets_pk != ''){
+if (config.keys.subnets_pk != ''){
   try{
     let output = []
-    let pks = config.custom_keys.subnets_pk.split(',')
+    let pks = config.keys.subnets_pk.split(',')
     pks.forEach(pk => {
       output.push(validatePK(pk))
     })
-    config.custom_keys.subnets_addr=output
-    config.custom_keys.subnets_pk=pks
+    config.keys.subnets_pk=pks
+    config.keys.subnets_addr=output
+
   }catch{
     console.log('Invalid SUBNETS_PK please make sure keys are correct length, comma separated with no whitespace or invalid characters')
     process.exit()
   }
 
-  if (config.custom_keys.subnets_addr.length != config.num_subnet) {
-    console.log(`number of keys in SUBNETS_PK (${config.custom_keys.subnets_addr.length}) does not match NUM_SUBNET (${config.num_subnet})`)
+  if (config.keys.subnets_addr.length != config.num_subnet) {
+    console.log(`number of keys in SUBNETS_PK (${config.keys.subnets_addr.length}) does not match NUM_SUBNET (${config.num_subnet})`)
     process.exit()
   }
 
-  const setPK = new Set(config.custom_keys.subnets_pk) 
-  if (setPK.size != config.custom_keys.subnets_pk.length){
+  const setPK = new Set(config.keys.subnets_pk) 
+  if (setPK.size != config.keys.subnets_pk.length){
     console.log('found duplicate keys in SUBNETS_PK')
     process.exit()
   }
+
+} else {
+  let output_pk = []
+  let output_wallet = []
+  for (let i=0; i<config.num_subnet; i++){
+    const privatekey = '0x'+crypto.randomBytes(32).toString('hex');
+    const wallet = new ethers.Wallet(privatekey)
+    output_pk.push(privatekey)
+    output_wallet.push(wallet.address)
+  }
+  config.keys.subnets_pk=output_pk
+  config.keys.subnets_addr=output_wallet
 
 }
 
