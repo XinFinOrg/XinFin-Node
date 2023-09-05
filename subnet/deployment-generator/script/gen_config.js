@@ -96,7 +96,7 @@ if (config.keys.grandmaster_pk != ''){
     process.exit()
   }
 } else {
-    const privatekey = '0x'+crypto.randomBytes(32).toString('hex');
+    const privatekey = crypto.randomBytes(32).toString('hex');
     const wallet = new ethers.Wallet(privatekey)
     config.keys.grandmaster_pk = privatekey
     config.keys.grandmaster_addr = wallet.address
@@ -133,7 +133,7 @@ if (config.keys.subnets_pk != ''){
   let output_pk = []
   let output_wallet = []
   for (let i=0; i<config.num_subnet; i++){
-    const privatekey = '0x'+crypto.randomBytes(32).toString('hex');
+    const privatekey = crypto.randomBytes(32).toString('hex');
     const wallet = new ethers.Wallet(privatekey)
     output_pk.push(privatekey)
     output_wallet.push(wallet.address)
