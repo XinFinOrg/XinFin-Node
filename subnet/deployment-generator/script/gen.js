@@ -8,7 +8,7 @@ const reader = require("readline-sync");
 const ethers = require('ethers');
 const config = require('./gen_config')
 Object.freeze(config)
-console.log(config)
+// console.log(config)
 
 
 const num_machines = config.num_machines
@@ -75,8 +75,7 @@ deployment_json = genDeploymentJson(keys)
 //deployment commands list 
 commands = genCommands(num_machines, network_name, network_id, num_subnet, keys)
 genesis_input = genGenesisInputFile(network_name, network_id, num_subnet, keys)
-genesis_input_file = yaml.dump(genesis_input, {
-})
+genesis_input_file = yaml.dump(genesis_input, {})
 
 //writing files
 // fs.rmSync(`${output_path}`, { recursive: true, force: true }); //wont work with docker mount
@@ -364,7 +363,7 @@ function genSubnetKeys(){
     console.log('bad case, key length not equal number of subnets')
     console.log(Object.keys(keys).length, config.num_subnet+1)
     console.log(keys)
-    process.exit()
+    exit()
   }
 
   return keys
@@ -408,13 +407,14 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`
     commands+=`  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n` //composeV2
   }
-
-  commands+=`\nmachine1:                deploy checkpoint smart contract (please be mindful of docker image tag if you are not using 'latest' \n`
+                                    
+  commands+=`\nmachine1:                deploy checkpoint smart contract \n` // (please be mindful of docker image tag if you are not using 'latest')
+  commands+=`  cd ..\n`
   commands+=`  docker run --env-file docker.env \\
     -v $(pwd)/generated/deployment.json:/app/generated/deployment.json \\
     --entrypoint 'bash' xinfinorg/subnet-generator:latest ./deploy_csc.sh \n`         //how to inject version other than latest??
-  commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
-
+  // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
+  commands+=`  cd generated\n`
   commands+=`\nmachine1:                start services and frontend\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services pull\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services up -d\n`
@@ -426,67 +426,67 @@ function genComposeEnv(){
   return conf_path
 }
 
-function genGenesisInstructions(network_name, network_id, num_subnet, keys, indent){
-  // random_key = genSubnetKeys(1)['key1']['short']
-  questions = []
-  commands = []
-  questions.push('')
-  commands.push(`${network_name}`)     //name
-  questions.push('')
-  commands.push(`2`) //
-  questions.push('')
-  commands.push(`3`)  //
-  questions.push('')
-  commands.push('default') //blocks second
-  questions.push('')
-  commands.push('default')  //ethers reward
-  questions.push('')
-  commands.push('default')  //v2blocknum
-  questions.push('')
-  commands.push('default')  //v2timeout
-  questions.push('')
-  commands.push('default')  //v2timeout
-  questions.push('')
-  commands.push(Math.ceil(((2/3)*num_subnet)).toString()) //num votes to generate QC
-  questions.push('')
-  commands.push(keys['Grandmaster']['short']) //who owns first masternode
-  questions.push('')
-  commands.push(keys['Grandmaster']['short']) //grandmaster nodes 
+// function genGenesisInstructions(network_name, network_id, num_subnet, keys, indent){
+//   // random_key = genSubnetKeys(1)['key1']['short']
+//   questions = []
+//   commands = []
+//   questions.push('')
+//   commands.push(`${network_name}`)     //name
+//   questions.push('')
+//   commands.push(`2`) //
+//   questions.push('')
+//   commands.push(`3`)  //
+//   questions.push('')
+//   commands.push('default') //blocks second
+//   questions.push('')
+//   commands.push('default')  //ethers reward
+//   questions.push('')
+//   commands.push('default')  //v2blocknum
+//   questions.push('')
+//   commands.push('default')  //v2timeout
+//   questions.push('')
+//   commands.push('default')  //v2timeout
+//   questions.push('')
+//   commands.push(Math.ceil(((2/3)*num_subnet)).toString()) //num votes to generate QC
+//   questions.push('')
+//   commands.push(keys['Grandmaster']['short']) //who owns first masternode
+//   questions.push('')
+//   commands.push(keys['Grandmaster']['short']) //grandmaster nodes 
   
-  num = Object.keys(keys).length-1;
-  key_string = []
-  for (let i=1; i<= num; i++){
-    key_name = `key${i}`
-    public_key = keys[key_name]['short']
-    key_string.push(public_key)
-  }
-  join_str='\n'+indent
-  key_string = key_string.join(join_str)
-  questions.push('')
-  commands.push(key_string) //master nodes 
-  questions.push('')
-  commands.push('default') //blocks per epoch
-  questions.push('')
-  commands.push('default') //gap block
-  questions.push('')
-  commands.push(keys['Grandmaster']['short']) //foundation wallet address
-  questions.push('')
-  commands.push('1111111111111111111111111111111111111111')//Which accounts are allowed to confirm in Foudation MultiSignWallet?
-  questions.push('')
-  commands.push('default')  //How many require for confirm tx in Foudation MultiSignWallet? 
-  questions.push('')
-  commands.push('1111111111111111111111111111111111111111') //Which accounts are allowed to confirm in Team MultiSignWallet?
-  questions.push('')
-  commands.push('default')  //How many require for confirm tx in Team MultiSignWallet?
-  questions.push('')
-  commands.push('1111111111111111111111111111111111111111') //What is swap wallet address for fund 55m XDC?
-  questions.push('')
-  commands.push(keys['Grandmaster']['short']) //Which accounts should be pre-funded? 
-  questions.push('')
-  commands.push(`${network_id}`) //final input network_id
+//   num = Object.keys(keys).length-1;
+//   key_string = []
+//   for (let i=1; i<= num; i++){
+//     key_name = `key${i}`
+//     public_key = keys[key_name]['short']
+//     key_string.push(public_key)
+//   }
+//   join_str='\n'+indent
+//   key_string = key_string.join(join_str)
+//   questions.push('')
+//   commands.push(key_string) //master nodes 
+//   questions.push('')
+//   commands.push('default') //blocks per epoch
+//   questions.push('')
+//   commands.push('default') //gap block
+//   questions.push('')
+//   commands.push(keys['Grandmaster']['short']) //foundation wallet address
+//   questions.push('')
+//   commands.push('1111111111111111111111111111111111111111')//Which accounts are allowed to confirm in Foudation MultiSignWallet?
+//   questions.push('')
+//   commands.push('default')  //How many require for confirm tx in Foudation MultiSignWallet? 
+//   questions.push('')
+//   commands.push('1111111111111111111111111111111111111111') //Which accounts are allowed to confirm in Team MultiSignWallet?
+//   questions.push('')
+//   commands.push('default')  //How many require for confirm tx in Team MultiSignWallet?
+//   questions.push('')
+//   commands.push('1111111111111111111111111111111111111111') //What is swap wallet address for fund 55m XDC?
+//   questions.push('')
+//   commands.push(keys['Grandmaster']['short']) //Which accounts should be pre-funded? 
+//   questions.push('')
+//   commands.push(`${network_id}`) //final input network_id
   
-  return commands
-}
+//   return commands
+// }
 
 function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
 // name: localNet
