@@ -49,6 +49,6 @@ jobs:
         run: |
           docker build . --file docker/Dockerfile                       \
             --build-arg SUBNET_BRANCH=${{ steps.commit.outputs.commit}} \
-            --build-arg IMAGE_TAG=${{ steps.image.outputs.name }}       \
+            --build-arg IMAGE_NAME=${{ steps.image.outputs.name }}       \
             --tag ${{ steps.image.outputs.name }}
           docker push ${{ steps.image.outputs.name }}
