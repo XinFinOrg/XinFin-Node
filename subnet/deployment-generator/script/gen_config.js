@@ -14,6 +14,7 @@ var config = {
   network_id:      parseInt(process.env.NETWORK_ID    || Math.floor(Math.random() * (65536 - 1) + 1)),
   secret_string:   (process.env.SERVICES_SECRET       || crypto.randomBytes(10).toString('hex')),
   relayer_mode:    (process.env.RELAYER_MODE          || 'full'), //full or lite
+  docker_image_name: (process.env.IMAGE_NAME          || 'xinfinorg/subnet-generator:latest'),
   version: {
     subnet:   (process.env.VERSION_SUBNET   || 'v0.1.3'),
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.3'),
