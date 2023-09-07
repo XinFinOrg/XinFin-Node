@@ -242,6 +242,7 @@ function genServices(machine_id) {
 function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
   key_name = `key${subnet_id}`
   private_key = key[key_name]['PrivateKey']
+  private_key = private_key.slice(2, private_key.length)    //remove 0x for subnet conf
   port = 20303+subnet_id-1
   rpcport = 8545+subnet_id-1
   wsport= 9555+subnet_id-1

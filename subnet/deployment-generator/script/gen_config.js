@@ -106,13 +106,17 @@ if (config.keys.grandmaster_pk != ''){
 
 if (config.keys.subnets_pk != ''){
   try{
-    let output = []
+    let output_pk = []
+    let output_wallet = []
     let pks = config.keys.subnets_pk.split(',')
     pks.forEach(pk => {
-      output.push(validatePK(pk))
+      const wallet = new ethers.Wallet(pk) //validate pk with crypto
+      console.log(pk)
+      output_pk.push(wallet.privateKey)
+      output_wallet.push(wallet.address)
     })
-    config.keys.subnets_pk=pks
-    config.keys.subnets_addr=output
+    config.keys.subnets_pk=output_pk
+    config.keys.subnets_addr=output_wallet
 
   }catch{
     console.log('Invalid SUBNETS_PK please make sure keys are correct length, comma separated with no whitespace or invalid characters')
@@ -136,7 +140,7 @@ if (config.keys.subnets_pk != ''){
   for (let i=0; i<config.num_subnet; i++){
     const privatekey = crypto.randomBytes(32).toString('hex');
     const wallet = new ethers.Wallet(privatekey)
-    output_pk.push(privatekey)
+    output_pk.push(wallet.privateKey) 
     output_wallet.push(wallet.address)
   }
   config.keys.subnets_pk=output_pk
