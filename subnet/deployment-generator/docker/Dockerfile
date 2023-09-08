@@ -34,7 +34,8 @@ COPY ./script /app/script
 COPY ./docker/start.sh /app/start.sh
 COPY ./docker/deploy_csc.sh /app/deploy_csc.sh
 
-RUN chmod +x /app
+RUN chmod +x /app/start.sh
+RUN chmod +x /app/deploy_csc.sh
 
 RUN cd script && npm install
 

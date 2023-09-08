@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 node /app/script/gen.js
 puppeth --file /app/generated/genesis_input.yml --out /app/generated/
 
