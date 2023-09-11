@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const dotenv = require('dotenv');
+const ethers = require('ethers');
+const { NonceManager } = require('ethers');
 dotenv.config({ path: `${__dirname}/gen.env` });
 // console.log(__dirname)
 
@@ -12,19 +14,26 @@ var config = {
   network_id:      parseInt(process.env.NETWORK_ID    || Math.floor(Math.random() * (65536 - 1) + 1)),
   secret_string:   (process.env.SERVICES_SECRET       || crypto.randomBytes(10).toString('hex')),
   relayer_mode:    (process.env.RELAYER_MODE          || 'full'), //full or lite
+  docker_image_name: (process.env.IMAGE_NAME          || 'xinfinorg/subnet-generator:latest'),
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'v0.1.3'),
-    bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.3'),
+    subnet:   (process.env.VERSION_SUBNET   || 'v0.1.6'),
+    bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.6'),
     observer: (process.env.VERSION_OBSERVER || 'latest'),
-    relayer:  (process.env.VERSION_RELAYER  || 'v0.1.3'),
-    stats:    (process.env.VERSION_STATS    || 'v0.1.3'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.3')
+    relayer:  (process.env.VERSION_RELAYER  || 'v0.1.4'),
+    stats:    (process.env.VERSION_STATS    || 'v0.1.5'),
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.5')
   },
   parentchain:{
-    network:    (process.env.PARENTCHAIN               || 'testnet'),
+    network:    (process.env.PARENTCHAIN              || 'devnet'),
     // url:        '',
-    pubkey:     (process.env.PARENTCHAIN_WALLET        || '0x0000000000000000000000000000000000000000')       ,
-    privatekey: (process.env.PARENTCHAIN_WALLET_PK     || '0x0000000000000000000000000000000000000000000000000000000000000000')       ,
+    pubkey:     ''                                                ,
+    privatekey: (process.env.PARENTCHAIN_WALLET_PK    || '')      ,
+  },
+  keys: {
+    subnets_addr: []                                        ,
+    subnets_pk: (process.env.SUBNETS_PK               || ''),
+    grandmaster_addr: ''                                    ,
+    grandmaster_pk: (process.env.GRANDMASTER_PK       || ''),
   }
 };
 
@@ -71,4 +80,78 @@ if (!(config.parentchain.network == 'devnet'  ||
   process.exit()
 }
 
+if (config.parentchain.privatekey != ''){
+  try{
+    config.parentchain.pubkey = validatePK(config.parentchain.privatekey)
+  }catch{
+    console.log('Invalid PARENTCHAIN_WALLET_PK')
+    process.exit()
+  }
+}
+
+if (config.keys.grandmaster_pk != ''){
+  try{
+    config.keys.grandmaster_addr = validatePK(config.keys.grandmaster_pk)
+  }catch{
+    console.log('Invalid GRANDMASTER_PK')
+    process.exit()
+  }
+} else {
+    const privatekey = crypto.randomBytes(32).toString('hex');
+    const wallet = new ethers.Wallet(privatekey)
+    config.keys.grandmaster_pk = privatekey
+    config.keys.grandmaster_addr = wallet.address
+
+}
+
+if (config.keys.subnets_pk != ''){
+  try{
+    let output_pk = []
+    let output_wallet = []
+    let pks = config.keys.subnets_pk.split(',')
+    pks.forEach(pk => {
+      const wallet = new ethers.Wallet(pk) //validate pk with crypto
+      console.log(pk)
+      output_pk.push(wallet.privateKey)
+      output_wallet.push(wallet.address)
+    })
+    config.keys.subnets_pk=output_pk
+    config.keys.subnets_addr=output_wallet
+
+  }catch{
+    console.log('Invalid SUBNETS_PK please make sure keys are correct length, comma separated with no whitespace or invalid characters')
+    process.exit()
+  }
+
+  if (config.keys.subnets_addr.length != config.num_subnet) {
+    console.log(`number of keys in SUBNETS_PK (${config.keys.subnets_addr.length}) does not match NUM_SUBNET (${config.num_subnet})`)
+    process.exit()
+  }
+
+  const setPK = new Set(config.keys.subnets_pk) 
+  if (setPK.size != config.keys.subnets_pk.length){
+    console.log('found duplicate keys in SUBNETS_PK')
+    process.exit()
+  }
+
+} else {
+  let output_pk = []
+  let output_wallet = []
+  for (let i=0; i<config.num_subnet; i++){
+    const privatekey = crypto.randomBytes(32).toString('hex');
+    const wallet = new ethers.Wallet(privatekey)
+    output_pk.push(wallet.privateKey) 
+    output_wallet.push(wallet.address)
+  }
+  config.keys.subnets_pk=output_pk
+  config.keys.subnets_addr=output_wallet
+
+}
+
+
 module.exports = config
+
+function validatePK(private_key){
+  let wallet = new ethers.Wallet(private_key)
+  return wallet.address
+}
