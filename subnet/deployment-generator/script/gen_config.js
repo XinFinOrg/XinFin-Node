@@ -16,12 +16,12 @@ var config = {
   relayer_mode:    (process.env.RELAYER_MODE          || 'full'), //full or lite
   docker_image_name: (process.env.IMAGE_NAME          || 'xinfinorg/subnet-generator:latest'),
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'v0.1.5'),
-    bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.4'),
+    subnet:   (process.env.VERSION_SUBNET   || 'v0.1.6'),
+    bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.6'),
     observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer:  (process.env.VERSION_RELAYER  || 'v0.1.4'),
-    stats:    (process.env.VERSION_STATS    || 'v0.1.4'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.4')
+    stats:    (process.env.VERSION_STATS    || 'v0.1.5'),
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.5')
   },
   parentchain:{
     network:    (process.env.PARENTCHAIN              || 'devnet'),
