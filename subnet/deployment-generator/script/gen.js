@@ -65,21 +65,25 @@ if (config.operating_system == 'mac'){
   for (let i=1; i<=num_subnet; i++){
     subnetconf.push(genSubnetConfigMac(i, keys, ip_record))
   }
-  
+  //checkpoint smartcontract deployment config
+  deployment_json = genDeploymentJsonMac(keys, ip_record)
+
 } else {
   commonconf = genServicesConfig()
   subnetconf=[]
   for (let i=1; i<=num_subnet; i++){
     subnetconf.push(genSubnetConfig(i, keys))
   }
+  //checkpoint smartcontract deployment config
+  deployment_json = genDeploymentJson(keys,ip_record)
+
 }
 
 compose_content = yaml.dump(doc,{})
 
 compose_conf = genComposeEnv()
 
-//checkpoint smartcontract deployment config
-deployment_json = genDeploymentJson(keys)
+
 
 //deployment commands list 
 commands = genCommands()
@@ -166,13 +170,17 @@ function genSubnetNodes(machine_id, num, start_num=1) {
     volume='./xdcchain'+i.toString()+':/work/xdcchain'
     var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
+    port = 20303+i-1
+    rpcport = 8545+i-1
+    wsport= 9555+i-1
     subnet_nodes[node_name] = {
       'image': `xinfinorg/xdcsubnets:${config.version.subnet}`,
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
       'env_file': [config_path],
-      'profiles': [compose_profile]
+      'profiles': [compose_profile],
+      'ports': [`${port}:${port}`,`${rpcport}:${rpcport}`,`${wsport}:${wsport}`]
     }
 
   }
@@ -447,6 +455,27 @@ function genDeploymentJson(keys){
 
 }
 
+function genDeploymentJsonMac(keys){
+  num = Object.keys(keys).length-1;
+  validators = []
+  for (let i=1; i<= num; i++){
+    key_name = `key${i}`
+    public_key = keys[key_name]['0x']
+    validators.push(public_key)
+  }
+  deployment = {
+    "validators": validators,
+    "gap": 450,
+    "epoch": 900,
+    "xdcparentnet": "https://devnetstats.apothem.network/devnet",
+    // "xdcparentnet": "http://127.0.0.1:20302", 
+    "xdcsubnet": `http://127.0.0.1:8545`
+  }
+  return deployment
+
+}
+
+
 function genCommands(){
   conf_path = __dirname+'/config/'
   set_env='SUBNET_CONFIG_PATH='+conf_path
@@ -467,6 +496,7 @@ function genCommands(){
   commands+=`  cd ..\n`
   commands+=`  docker run --env-file generated/common.env   \\
     -v $(pwd)/generated/:/app/generated/       \\
+    --network host                             \\
     --entrypoint 'bash' ${config.docker_image_name} ./deploy_csc.sh \n`       
   // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
   commands+=`  cd generated\n`
@@ -538,11 +568,11 @@ function injectMacConfig(compose_object){
   record_services_ip={}
 
   ip_string_base='192.168.25.'
-  start=1
+  start_ip=11
   Object.entries(compose_object["services"]).forEach(entry => {
     const [key, value] = entry;
-    component_ip = ip_string_base+parseInt(start)
-    start += 1
+    component_ip = ip_string_base+parseInt(start_ip)
+    start_ip += 1
     if(!net.isIP(component_ip)){
       console.log(`ERROR: found invalid IP assignment ${component_ip} in mac mode`)
       process.exit()
@@ -558,11 +588,6 @@ function injectMacConfig(compose_object){
   });
 
   compose_object["networks"]=network
-  new_compose_object = {        //rearrange
-    "version": compose_object["version"],
-    "networks": compose_object["networks"],
-    "services": compose_object["services"],
-  }
 
-  return new_compose_object, record_services_ip
+  return compose_object, record_services_ip
 } 
