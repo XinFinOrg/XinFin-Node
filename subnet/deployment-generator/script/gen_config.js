@@ -1,20 +1,21 @@
 const crypto = require('crypto');
+const net = require('net');
 const dotenv = require('dotenv');
 const ethers = require('ethers');
-const { NonceManager } = require('ethers');
 dotenv.config({ path: `${__dirname}/gen.env` });
 // console.log(__dirname)
 
 var config = {
-  deployment_path: (process.env.CONFIG_PATH           || ''),
-  num_machines:    parseInt(process.env.NUM_MACHINE),
-  num_subnet:      parseInt(process.env.NUM_SUBNET),
-  ip_1:            (process.env.MAIN_IP               || ''),
-  network_name:    (process.env.NETWORK_NAME),
-  network_id:      parseInt(process.env.NETWORK_ID    || Math.floor(Math.random() * (65536 - 1) + 1)),
-  secret_string:   (process.env.SERVICES_SECRET       || crypto.randomBytes(10).toString('hex')),
-  relayer_mode:    (process.env.RELAYER_MODE          || 'full'), //full or lite
-  docker_image_name: (process.env.IMAGE_NAME          || 'xinfinorg/subnet-generator:latest'),
+  deployment_path:    (process.env.CONFIG_PATH            || ''),
+  num_machines:       parseInt(process.env.NUM_MACHINE),
+  num_subnet:         parseInt(process.env.NUM_SUBNET),
+  ip_1:               (process.env.MAIN_IP                || ''),
+  network_name:       (process.env.NETWORK_NAME),
+  network_id:         parseInt(process.env.NETWORK_ID     || Math.floor(Math.random() * (65536 - 1) + 1)),
+  secret_string:      (process.env.SERVICES_SECRET        || crypto.randomBytes(10).toString('hex')),
+  relayer_mode:       (process.env.RELAYER_MODE           || 'full'), //full or lite
+  docker_image_name:  (process.env.IMAGE_NAME             || 'xinfinorg/subnet-generator:latest'),
+  operating_system:   (process.env.OS                     || ''),
   version: {
     subnet:   (process.env.VERSION_SUBNET   || 'v0.1.6'),
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.6'),
@@ -48,7 +49,7 @@ if (config.num_machines==0 || config.num_subnet ==0){
   process.exit()
 }
 
-if (!require('net').isIP(config.ip_1)){
+if (!net.isIP(config.ip_1)){
   console.log('MAIN_IP Invalid IP address')
   process.exit()
 }
@@ -111,7 +112,6 @@ if (config.keys.subnets_pk != ''){
     let pks = config.keys.subnets_pk.split(',')
     pks.forEach(pk => {
       const wallet = new ethers.Wallet(pk) //validate pk with crypto
-      console.log(pk)
       output_pk.push(wallet.privateKey)
       output_wallet.push(wallet.address)
     })
@@ -148,6 +148,13 @@ if (config.keys.subnets_pk != ''){
 
 }
 
+if (config.operating_system == 'mac') {
+  if (config.num_machines != 1){
+    console.log(`OS=mac requires NUM_MACHINE=1. Due to Docker network limitation, Subnets on MacOS can only communicate within its own machine. This option is intended for single machine testing environment only`)
+    process.exit()
+  }
+  console.log(`OS=mac specified, this option is intended for single machine testing environment only. Due to Docker network limitation, Subnets on MacOS can only communicate within its own machine.`)
+}
 
 module.exports = config
 
