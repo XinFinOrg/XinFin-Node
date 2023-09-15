@@ -75,7 +75,7 @@ if (config.operating_system == 'mac'){
     subnetconf.push(genSubnetConfig(i, keys))
   }
   //checkpoint smartcontract deployment config
-  deployment_json = genDeploymentJson(keys,ip_record)
+  deployment_json = genDeploymentJson(keys)
 
 }
 
@@ -447,8 +447,8 @@ function genDeploymentJson(keys){
     "gap": 450,
     "epoch": 900,
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcparentnet": "http://127.0.0.1:20302", 
-    // "xdcsubnet": "http://127.0.0.1:8545" 
+    // "xdcparentnet": "http://localhost:20302", 
+    // "xdcsubnet": "http://localhost:8545" 
     "xdcsubnet": `http://${ip_1}:8545`
   }
   return deployment
@@ -468,8 +468,8 @@ function genDeploymentJsonMac(keys){
     "gap": 450,
     "epoch": 900,
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcparentnet": "http://127.0.0.1:20302", 
-    "xdcsubnet": `http://127.0.0.1:8545`
+    // "xdcparentnet": "http://localhost:20302", 
+    "xdcsubnet": `http://localhost:8545`
   }
   return deployment
 
