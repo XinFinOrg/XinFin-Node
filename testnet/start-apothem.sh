@@ -2,9 +2,9 @@
 
 if [ ! -d /work/xdcchain/XDC/chaindata ]
 then
-  wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain |  awk -F '[{}]' '{print $2}')
   echo "Initializing Testnet Genesis Block"
-  echo $wallet
+  echo "wallet: $wallet"
   coinbaseaddr="$wallet"
   coinbasefile=/work/xdcchain/coinbase.txt
   touch $coinbasefile
@@ -15,7 +15,8 @@ then
   fi
   XDC --datadir /work/xdcchain init /work/genesis.json
 else
-  wallet=$(XDC account list --datadir /work/xdcchain| head -n 1 | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account list --datadir /work/xdcchain| head -n 1 |  awk -F '[{}]' '{print $2}')
+  echo "wallet: $wallet"
 fi
 
 input="/work/bootnodes.list"
@@ -42,4 +43,4 @@ XDC --ethstats ${netstats} --gcmode=archive \
     --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd \
     --mine --gasprice "1" --targetgaslimit "420000000" \
     --verbosity 2 --ws --wsaddr=0.0.0.0 --wsport 8556 \
-    --wsorigins "*" 2>&1 >>/work/xdcchain/xdc.log | tee --append /work/xdcchain/xdc.log
+    --wsorigins "*" 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
