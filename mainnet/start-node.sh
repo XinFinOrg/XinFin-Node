@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d /work/xdcchain/XDC/chaindata ]	
+if [ ! -d /work/xdcchain/XDC/chaindata ]
 then
   wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -v FS="({|})" '{print $2}')
   echo "Initalizing Genesis Block"
@@ -8,7 +8,7 @@ then
   coinbasefile=/work/xdcchain/coinbase.txt
   touch $coinbasefile
   if [ -f "$coinbasefile" ]
-  then 
+  then
       echo "$coinbaseaddr" > "$coinbasefile"
   fi
   XDC --datadir /work/xdcchain init /work/genesis.json
