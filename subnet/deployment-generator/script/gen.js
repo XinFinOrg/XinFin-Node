@@ -12,6 +12,8 @@ Object.freeze(config)
 // console.log(config)
 
 
+
+
 const num_machines = config.num_machines
 const num_subnet = config.num_subnet
 const ip_1 = config.ip_1
@@ -19,6 +21,8 @@ const network_name = config.network_name
 const network_id = config.network_id
 const secret_string = config.secret_string
 const output_path = `${__dirname}/../generated/`
+
+
 
 
 keys = genSubnetKeys()  
