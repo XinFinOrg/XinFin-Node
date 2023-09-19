@@ -17,7 +17,7 @@ else
   exit 1
 fi
 
-found=$(cat log.log | grep -m 1 "deployed to")
+found=$(cat csc.log | grep -m 1 "deployed to")
 echo $found
 
 if [[ $found == '' ]]
