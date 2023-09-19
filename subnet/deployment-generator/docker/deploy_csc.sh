@@ -17,9 +17,7 @@ else
   exit 1
 fi
 
-line=$(tail -n 1 csc.log)
-echo $line
-found=$(echo $line | grep "deployed to")
+found=$(cat log.log | grep -m 1 "deployed to")
 echo $found
 
 if [[ $found == '' ]]
