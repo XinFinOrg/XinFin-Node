@@ -21,8 +21,8 @@ var config = {
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.6'),
     observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer:  (process.env.VERSION_RELAYER  || 'v0.1.4'),
-    stats:    (process.env.VERSION_STATS    || 'v0.1.6'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.6')
+    stats:    (process.env.VERSION_STATS    || 'v0.1.7'),
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.7')
   },
   parentchain:{
     network:    (process.env.PARENTCHAIN              || 'devnet'),
