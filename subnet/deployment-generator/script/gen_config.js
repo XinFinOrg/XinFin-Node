@@ -41,44 +41,44 @@ var config = {
 
 if (!config.num_machines || !config.num_subnet || !config.network_name){
   console.log('NUM_MACHINE and NUM_SUBNET and NETWORK_NAME must be set')
-  process.exit()
+  process.exit(1)
 }
 
 if (config.num_machines==0 || config.num_subnet ==0){
   console.log('NUM_MACHINE and NUM_SUBNET cannot be 0')
-  process.exit()
+  process.exit(1)
 }
 
 if (!net.isIP(config.ip_1)){
   console.log('MAIN_IP Invalid IP address')
-  process.exit()
+  process.exit(1)
 }
 
 if (!config.network_name || config.network_name==''){
   console.log('NETWORK_NAME cannot be empty')
-  process.exit()
+  process.exit(1)
 }
 
 if (config.network_id<1 || config.network_id >= 65536) {
   console.log('NETWORK_ID should be in range of 1 to 65536')
-  process.exit()
+  process.exit(1)
 }
 
 if (config.secret_string=='') {
   console.log('SERVICES_SECRET cannot be empty string')
-  process.exit()
+  process.exit(1)
 }
 
 if (!(config.relayer_mode == 'full' || config.relayer_mode == 'lite')) {
   console.log('RELAYER_MODE only accepts \'full\' or \'lite\' (default full)')
-  process.exit()
+  process.exit(1)
 }
 
 if (!(config.parentchain.network == 'devnet'  || 
       config.parentchain.network == 'testnet' || 
       config.parentchain.network == 'mainnet' )){
   console.log('PARENTCHAIN must be devnet, testnet, or mainnet ')
-  process.exit()
+  process.exit(1)
 }
 
 if (config.parentchain.privatekey != ''){
@@ -86,7 +86,7 @@ if (config.parentchain.privatekey != ''){
     config.parentchain.pubkey = validatePK(config.parentchain.privatekey)
   }catch{
     console.log('Invalid PARENTCHAIN_WALLET_PK')
-    process.exit()
+    process.exit(1)
   }
 }
 
@@ -95,7 +95,7 @@ if (config.keys.grandmaster_pk != ''){
     config.keys.grandmaster_addr = validatePK(config.keys.grandmaster_pk)
   }catch{
     console.log('Invalid GRANDMASTER_PK')
-    process.exit()
+    process.exit(1)
   }
 } else {
     const privatekey = crypto.randomBytes(32).toString('hex');
@@ -120,18 +120,18 @@ if (config.keys.subnets_pk != ''){
 
   }catch{
     console.log('Invalid SUBNETS_PK please make sure keys are correct length, comma separated with no whitespace or invalid characters')
-    process.exit()
+    process.exit(1)
   }
 
   if (config.keys.subnets_addr.length != config.num_subnet) {
     console.log(`number of keys in SUBNETS_PK (${config.keys.subnets_addr.length}) does not match NUM_SUBNET (${config.num_subnet})`)
-    process.exit()
+    process.exit(1)
   }
 
   const setPK = new Set(config.keys.subnets_pk) 
   if (setPK.size != config.keys.subnets_pk.length){
     console.log('found duplicate keys in SUBNETS_PK')
-    process.exit()
+    process.exit(1)
   }
 
 } else {

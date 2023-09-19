@@ -83,7 +83,7 @@ if (config.operating_system == 'mac'){
 
 } else {
   console.log(`ERROR: unknown OS ${config.operating_system} not supported`)
-  process.exit()
+  process.exit(1)
 }
 
 compose_content = yaml.dump(doc,{})
@@ -582,7 +582,7 @@ function injectMacConfig(compose_object){
     start_ip += 1
     if(!net.isIP(component_ip)){
       console.log(`ERROR: found invalid IP assignment ${component_ip} in mac mode`)
-      process.exit()
+      process.exit(1)
     }
     component_network = {
       "docker_net": {
