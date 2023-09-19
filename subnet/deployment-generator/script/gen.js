@@ -68,7 +68,7 @@ if (config.operating_system == 'mac'){
   //checkpoint smartcontract deployment config
   deployment_json = genDeploymentJsonMac(keys, ip_record)
 
-} else {
+} else if(config.operating_system == 'linux'){
   commonconf = genServicesConfig()
   subnetconf=[]
   for (let i=1; i<=num_subnet; i++){
@@ -77,6 +77,9 @@ if (config.operating_system == 'mac'){
   //checkpoint smartcontract deployment config
   deployment_json = genDeploymentJson(keys)
 
+} else {
+  console.log(`ERROR: unknown OS ${config.operating_system} not supported`)
+  process.exit()
 }
 
 compose_content = yaml.dump(doc,{})

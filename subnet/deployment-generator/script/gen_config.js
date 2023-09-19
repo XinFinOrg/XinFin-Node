@@ -15,7 +15,7 @@ var config = {
   secret_string:      (process.env.SERVICES_SECRET        || crypto.randomBytes(10).toString('hex')),
   relayer_mode:       (process.env.RELAYER_MODE           || 'full'), //full or lite
   docker_image_name:  (process.env.IMAGE_NAME             || 'xinfinorg/subnet-generator:latest'),
-  operating_system:   (process.env.OS                     || ''),
+  operating_system:   (process.env.OS                     || 'linux'),
   version: {
     subnet:   (process.env.VERSION_SUBNET   || 'v0.1.6'),
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.1.6'),
