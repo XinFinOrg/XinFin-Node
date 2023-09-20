@@ -1,6 +1,7 @@
 #!/bin/sh
 echo "Upgrading XDC Network Configuration Scripts"
 cd testnet
+cp start-apothem.sh start-apothem.sh.tmp || true
 mv .env .env_tmp
 
 git stash
@@ -13,5 +14,5 @@ sed -i "s/NODE_TYPE=full/NODE_TYPE=$NODE_TYPE/" .env
 
 bash docker-down.sh
 mv xdcchain xdcchain-testnet || true
-mv start.sh start-apothem.sh || true
+mv start-apothem.sh.tmp start-apothem.sh || true
 bash docker-up.sh
