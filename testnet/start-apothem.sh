@@ -31,7 +31,7 @@ do
     fi
 done < "$input"
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
-netstats="${INSTANCE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
+netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
 echo "Starting nodes with $bootnodes ..."
 XDC --ethstats ${netstats} --gcmode=archive \

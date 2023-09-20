@@ -3,12 +3,15 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { exit } = require('process');
 const crypto = require('crypto');
+const net = require('net');
 const readline = require('readline')
 const reader = require("readline-sync");
 const ethers = require('ethers');
 const config = require('./gen_config')
 Object.freeze(config)
 // console.log(config)
+
+
 
 
 const num_machines = config.num_machines
@@ -19,6 +22,10 @@ const network_id = config.network_id
 const secret_string = config.secret_string
 const output_path = `${__dirname}/../generated/`
 
+
+
+
+keys = genSubnetKeys()  
 
 num_per_machine = Array(num_machines)
 //integer division
@@ -55,25 +62,38 @@ Object.entries(subnet_services).forEach(entry => {
   doc['services'][key]=value
 });
 
-compose_content = yaml.dump(doc, {
-})
+if (config.operating_system == 'mac'){
+  doc, ip_record = injectMacConfig(doc)
+  commonconf = genServicesConfigMac(ip_record)
+  subnetconf=[]
+  for (let i=1; i<=num_subnet; i++){
+    subnetconf.push(genSubnetConfigMac(i, keys, ip_record))
+  }
+  //checkpoint smartcontract deployment config
+  deployment_json = genDeploymentJsonMac(keys, ip_record)
 
-//gen services configs
-commonconf = genServicesConfig(ip_1, secret=secret_string)
+} else if(config.operating_system == 'linux'){
+  commonconf = genServicesConfig()
+  subnetconf=[]
+  for (let i=1; i<=num_subnet; i++){
+    subnetconf.push(genSubnetConfig(i, keys))
+  }
+  //checkpoint smartcontract deployment config
+  deployment_json = genDeploymentJson(keys)
 
-keys = genSubnetKeys()            
-
-subnetconf=[]
-for (let i=1; i<=num_subnet; i++){
-  subnetconf.push(genSubnetConfig(i, keys, ip_1, network_id, secret))
+} else {
+  console.log(`ERROR: unknown OS ${config.operating_system} not supported`)
+  process.exit(1)
 }
+
+compose_content = yaml.dump(doc,{})
+
 compose_conf = genComposeEnv()
 
-//checkpoint smartcontract deployment config
-deployment_json = genDeploymentJson(keys)
+
 
 //deployment commands list 
-commands = genCommands(num_machines, network_name, network_id, num_subnet, keys)
+commands = genCommands()
 genesis_input = genGenesisInputFile(network_name, network_id, num_subnet, keys)
 genesis_input_file = yaml.dump(genesis_input, {})
 
@@ -157,13 +177,17 @@ function genSubnetNodes(machine_id, num, start_num=1) {
     volume='./xdcchain'+i.toString()+':/work/xdcchain'
     var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
+    port = 20303+i-1
+    rpcport = 8545+i-1
+    wsport= 9555+i-1
     subnet_nodes[node_name] = {
       'image': `xinfinorg/xdcsubnets:${config.version.subnet}`,
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
       'restart': 'always',
       'network_mode': 'host',
       'env_file': [config_path],
-      'profiles': [compose_profile]
+      'profiles': [compose_profile],
+      'ports': [`${port}:${port}`,`${rpcport}:${rpcport}`,`${wsport}:${wsport}`]
     }
 
   }
@@ -239,7 +263,7 @@ function genServices(machine_id) {
   return services
 }
 
-function genSubnetConfig(subnet_id, key, ip_1, network_id, secret){
+function genSubnetConfig(subnet_id, key){
   key_name = `key${subnet_id}`
   private_key = key[key_name]['PrivateKey']
   private_key = private_key.slice(2, private_key.length)    //remove 0x for subnet conf
@@ -251,12 +275,40 @@ INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
 BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 765c343f9c0c596e9cd021e2e8416908cbc3ab7d6f6671a83c85f7b121c1872f8be\
-50a591723a5d@${ip_1}:20301
-NETWORK_ID=${network_id}
+50a591723a5d@${config.ip_1}:20301
+NETWORK_ID=${config.network_id}
 SYNC_MODE=full
 RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
-STATS_SERVICE_ADDRESS=${ip_1}:3000
-STATS_SECRET=${secret}
+STATS_SERVICE_ADDRESS=${config.ip_1}:3000
+STATS_SECRET=${config.secret_string}
+PORT=${port}
+RPCPORT=${rpcport}
+WSPORT=${wsport}
+LOG_LEVEL=2
+`
+
+return  config_env
+}
+
+
+function genSubnetConfigMac(subnet_id, key, ip_record){
+  key_name = `key${subnet_id}`
+  private_key = key[key_name]['PrivateKey']
+  private_key = private_key.slice(2, private_key.length)    //remove 0x for subnet conf
+  port = 20303+subnet_id-1
+  rpcport = 8545+subnet_id-1
+  wsport= 9555+subnet_id-1
+  var config_env = `
+INSTANCE_NAME=subnet${subnet_id}
+PRIVATE_KEY=${private_key}
+BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
+765c343f9c0c596e9cd021e2e8416908cbc3ab7d6f6671a83c85f7b121c1872f8be\
+50a591723a5d@${ip_record["bootnode"]}:20301
+NETWORK_ID=${config.network_id}
+SYNC_MODE=full
+RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
+STATS_SERVICE_ADDRESS=${ip_record["stats"]}:3000
+STATS_SECRET=${config.secret_string}
 PORT=${port}
 RPCPORT=${rpcport}
 WSPORT=${wsport}
@@ -266,7 +318,7 @@ LOG_LEVEL=2
 return config_env
 }
 
-function genServicesConfig(ip_1, secret){
+function genServicesConfig(){
   var url = ''
   switch (config.parentchain.network){
     case 'devnet':
@@ -285,15 +337,14 @@ function genServicesConfig(ip_1, secret){
   
   var config_env=`
 # Bootnode
-EXTIP=${ip_1}
+EXTIP=${config.ip_1}
 BOOTNODE_PORT=20301
 
 # Stats and relayer
-#PARENTCHAIN_URL=http://${ip_1}:9555
 PARENTCHAIN_URL=${url}
 PARENTCHAIN_WALLET=${config.parentchain.pubkey}
 PARENTCHAIN_WALLET_PK=${config.parentchain.privatekey}
-SUBNET_URL=http://${ip_1}:8545
+SUBNET_URL=http://${config.ip_1}:8545
 RELAYER_MODE=${config.relayer_mode}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
@@ -304,40 +355,59 @@ PARENTCHAIN_NODE_NAME=mainnet_observer
 PRIVATE_KEYS=1111111111111111111111111111111111111111111111111111111111111111
 
 # Frontend
-VITE_SUBNET_URL=http://${ip_1}:3000
+VITE_SUBNET_URL=http://${config.ip_1}:3000
 
 # Share Variable
-STATS_SECRET=${secret}
+STATS_SECRET=${config.secret_string}
 `
   return config_env
 }
 
-// function genSubnetKeys(){
-//   num = config.num_subnet
-//   const keys = {}
-//   for ( let i = 1; i <= num+1; i++) {
-//       const key = `key${i}`
-//       const privateKey = crypto.randomBytes(32).toString('hex');
-//       const wallet = new ethers.Wallet(privateKey);
-//       if (i==num+1){
-//         keys['Grandmaster'] = {
-//           "PrivateKey": privateKey,
-//           "0x":wallet.address,
-//           "xdc": wallet.address.replace(/^0x/i, "xdc"),
-//           "short": wallet.address.replace(/^0x/i, '')
-//         }
+function genServicesConfigMac(ip_record){
+  var url = ''
+  switch (config.parentchain.network){
+    case 'devnet':
+      url='https://devnetstats.apothem.network/devnet'  
+      break
+    case 'testnet':
+      url='https://devnetstats.apothem.network/testnet' //confirm url
+      break
+    case 'mainnet':
+      url='https://devnetstats.apothem.network/mainnet' //confirm url
+      break
+    default: 
+      console.error('PARENTCHAIN invalid, should be devnet, testnet, or mainnet') //should not reach this case
+      exit()
+  }
+  
+  var config_env=`
+# Bootnode
+EXTIP=${ip_record["bootnode"]}
+BOOTNODE_PORT=20301
 
-//       }else{
-//         keys[key] = {
-//             "PrivateKey": privateKey,
-//             "0x":wallet.address,
-//             "xdc": wallet.address.replace(/^0x/i, "xdc"),
-//             "short": wallet.address.replace(/^0x/i, '')
-//       }
-//     }
-//   }
-//   return keys
-// }
+# Stats and relayer
+PARENTCHAIN_URL=${url}
+PARENTCHAIN_WALLET=${config.parentchain.pubkey}
+PARENTCHAIN_WALLET_PK=${config.parentchain.privatekey}
+SUBNET_URL=http://${ip_record["subnet1"]}:8545
+RELAYER_MODE=${config.relayer_mode}
+CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
+SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+CORS_ALLOW_ORIGIN=*
+
+# Parent Chain Observe Node
+PARENTCHAIN_NODE_NAME=mainnet_observer
+PRIVATE_KEYS=1111111111111111111111111111111111111111111111111111111111111111
+
+# Frontend
+VITE_SUBNET_URL=http://127.0.0.1:3000
+
+# Share Variable
+STATS_SECRET=${config.secret_string}
+`
+  return config_env
+}
+
 
 function genSubnetKeys(){
   const keys = {}
@@ -370,7 +440,6 @@ function genSubnetKeys(){
   return keys
 }
 
-
 function genDeploymentJson(keys){
   num = Object.keys(keys).length-1;
   validators = []
@@ -393,12 +462,33 @@ function genDeploymentJson(keys){
 
 }
 
-function genCommands(num_machines, network_name, network_id, num_subnet, keys){
+function genDeploymentJsonMac(keys){
+  num = Object.keys(keys).length-1;
+  validators = []
+  for (let i=1; i<= num; i++){
+    key_name = `key${i}`
+    public_key = keys[key_name]['0x']
+    validators.push(public_key)
+  }
+  deployment = {
+    "validators": validators,
+    "gap": 450,
+    "epoch": 900,
+    "xdcparentnet": "https://devnetstats.apothem.network/devnet",
+    // "xdcparentnet": "http://127.0.0.1:20302", 
+    "xdcsubnet": `http://127.0.0.1:8545`
+  }
+  return deployment
+
+}
+
+
+function genCommands(){
   conf_path = __dirname+'/config/'
   set_env='SUBNET_CONFIG_PATH='+conf_path
   var commands=''
 
-  for(let i=1; i <= num_machines; i++){
+  for(let i=1; i <= config.num_machines; i++){
     machine_name = 'machine'+i.toString()
     commands+=machine_name+`:                deploy subnet on machine${i}\n`
     // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
@@ -413,6 +503,7 @@ function genCommands(num_machines, network_name, network_id, num_subnet, keys){
   commands+=`  cd ..\n`
   commands+=`  docker run --env-file generated/common.env   \\
     -v $(pwd)/generated/:/app/generated/       \\
+    --network host                             \\
     --entrypoint 'bash' ${config.docker_image_name} ./deploy_csc.sh \n`       
   // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
   commands+=`  cd generated\n`
@@ -426,68 +517,6 @@ function genComposeEnv(){
   conf_path = `SUBNET_CONFIG_PATH=${config.deployment_path}/generated/`
   return conf_path
 }
-
-// function genGenesisInstructions(network_name, network_id, num_subnet, keys, indent){
-//   // random_key = genSubnetKeys(1)['key1']['short']
-//   questions = []
-//   commands = []
-//   questions.push('')
-//   commands.push(`${network_name}`)     //name
-//   questions.push('')
-//   commands.push(`2`) //
-//   questions.push('')
-//   commands.push(`3`)  //
-//   questions.push('')
-//   commands.push('default') //blocks second
-//   questions.push('')
-//   commands.push('default')  //ethers reward
-//   questions.push('')
-//   commands.push('default')  //v2blocknum
-//   questions.push('')
-//   commands.push('default')  //v2timeout
-//   questions.push('')
-//   commands.push('default')  //v2timeout
-//   questions.push('')
-//   commands.push(Math.ceil(((2/3)*num_subnet)).toString()) //num votes to generate QC
-//   questions.push('')
-//   commands.push(keys['Grandmaster']['short']) //who owns first masternode
-//   questions.push('')
-//   commands.push(keys['Grandmaster']['short']) //grandmaster nodes 
-  
-//   num = Object.keys(keys).length-1;
-//   key_string = []
-//   for (let i=1; i<= num; i++){
-//     key_name = `key${i}`
-//     public_key = keys[key_name]['short']
-//     key_string.push(public_key)
-//   }
-//   join_str='\n'+indent
-//   key_string = key_string.join(join_str)
-//   questions.push('')
-//   commands.push(key_string) //master nodes 
-//   questions.push('')
-//   commands.push('default') //blocks per epoch
-//   questions.push('')
-//   commands.push('default') //gap block
-//   questions.push('')
-//   commands.push(keys['Grandmaster']['short']) //foundation wallet address
-//   questions.push('')
-//   commands.push('1111111111111111111111111111111111111111')//Which accounts are allowed to confirm in Foudation MultiSignWallet?
-//   questions.push('')
-//   commands.push('default')  //How many require for confirm tx in Foudation MultiSignWallet? 
-//   questions.push('')
-//   commands.push('1111111111111111111111111111111111111111') //Which accounts are allowed to confirm in Team MultiSignWallet?
-//   questions.push('')
-//   commands.push('default')  //How many require for confirm tx in Team MultiSignWallet?
-//   questions.push('')
-//   commands.push('1111111111111111111111111111111111111111') //What is swap wallet address for fund 55m XDC?
-//   questions.push('')
-//   commands.push(keys['Grandmaster']['short']) //Which accounts should be pre-funded? 
-//   questions.push('')
-//   commands.push(`${network_id}`) //final input network_id
-  
-//   return commands
-// }
 
 function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
 // name: localNet
@@ -521,3 +550,51 @@ function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
   return config
 }
 
+function injectMacConfig(compose_object){
+  // networks:
+  //   docker_net:
+  //     driver: bridge
+  //     ipam:
+  //       config:
+  //         - subnet: 192.168.25.0/24
+  network = {
+    "docker_net": {
+      "driver": `bridge`,
+      "ipam": {
+        "config": [
+          {"subnet": "192.168.25.0/24"}
+        ]
+      }
+    }
+  }
+  // networks:
+  //   docker_net:
+  //     ipv4_address: 
+  //       192.168.25.10
+
+  record_services_ip={}
+
+  ip_string_base='192.168.25.'
+  start_ip=11
+  Object.entries(compose_object["services"]).forEach(entry => {
+    const [key, value] = entry;
+    component_ip = ip_string_base+parseInt(start_ip)
+    start_ip += 1
+    if(!net.isIP(component_ip)){
+      console.log(`ERROR: found invalid IP assignment ${component_ip} in mac mode`)
+      process.exit(1)
+    }
+    component_network = {
+      "docker_net": {
+        "ipv4_address": component_ip 
+      }
+    }
+    compose_object["services"][key]["networks"] = component_network
+    delete compose_object["services"][key]["network_mode"]
+    record_services_ip[key]=component_ip
+  });
+
+  compose_object["networks"]=network
+
+  return compose_object, record_services_ip
+} 
