@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xdposchain:v1.4.10-beta1
+    image: xinfinorg/xdposchain:v1.4.10-beta2
     volumes:
       - "./xdcchain-testnet:/work/xdcchain"
       - "./start-apothem.sh:/work/start.sh"
