@@ -1,12 +1,7 @@
-const { profile } = require('console');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { exit } = require('process');
-const crypto = require('crypto');
 const net = require('net');
-const readline = require('readline')
-const reader = require("readline-sync");
-const ethers = require('ethers');
 const config = require('./gen_config')
 Object.freeze(config)
 // console.log(config)
@@ -27,7 +22,7 @@ const output_path = `${__dirname}/../generated/`
 
 keys = genSubnetKeys()  
 
-num_per_machine = Array(num_machines)
+var num_per_machine = Array(num_machines)
 //integer division
 for (let i=0; i<num_machines; i++){
   num_per_machine[i] = Math.floor(num_subnet / num_machines) 
@@ -47,7 +42,7 @@ doc = {
 
 start_num = 1
 for (let i=1; i<=num_machines; i++){
-  subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
+  var subnet_nodes = genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
   start_num+=num_per_machine[i-1]
   Object.entries(subnet_nodes).forEach(entry => {
     const [key, value] = entry;
@@ -408,7 +403,6 @@ STATS_SECRET=${config.secret_string}
   return config_env
 }
 
-
 function genSubnetKeys(){
   const keys = {}
   num = config.keys.subnets_addr.length
@@ -429,7 +423,8 @@ function genSubnetKeys(){
     "xdc": config.keys.grandmaster_addr.replace(/^0x/i, "xdc"),
     "short": config.keys.grandmaster_addr.replace(/^0x/i, '')
   }
-
+  console.log(keys['Grandmaster'])
+  console.log(keys['key1'])
   if (Object.keys(keys).length != config.num_subnet+1){      //sanity check
     console.log('bad case, key length not equal number of subnets')
     console.log(Object.keys(keys).length, config.num_subnet+1)
