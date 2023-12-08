@@ -16,3 +16,4 @@ node_modules
 subnet/deployment-generator/generated
 subnet/deployment-generator/script/gen.env
 subnet/scripts/faucet/*.env
+package-lock.json
