@@ -92,17 +92,14 @@ if (config.parentchain.privatekey != ''){
 
 if (config.keys.grandmaster_pk != ''){
   try{
-    config.keys.grandmaster_addr = validatePK(config.keys.grandmaster_pk)
+    [config.keys.grandmaster_addr, config.keys.grandmaster_pk] = validatePK(config.keys.grandmaster_pk)
   }catch{
     console.log('Invalid GRANDMASTER_PK')
     process.exit(1)
   }
 } else {
     const privatekey = crypto.randomBytes(32).toString('hex');
-    const wallet = new ethers.Wallet(privatekey)
-    config.keys.grandmaster_pk = privatekey
-    config.keys.grandmaster_addr = wallet.address
-
+    [config.keys.grandmaster_addr, config.keys.grandmaster_pk] = validatePK(privatekey)
 }
 
 if (config.keys.subnets_pk != ''){
@@ -111,9 +108,9 @@ if (config.keys.subnets_pk != ''){
     let output_wallet = []
     let pks = config.keys.subnets_pk.split(',')
     pks.forEach(pk => {
-      const wallet = new ethers.Wallet(pk) //validate pk with crypto
-      output_pk.push(wallet.privateKey)
-      output_wallet.push(wallet.address)
+      const [address, private_key] = validatePK(pk)
+      output_wallet.push(address)
+      output_pk.push(private_key)
     })
     config.keys.subnets_pk=output_pk
     config.keys.subnets_addr=output_wallet
@@ -139,9 +136,10 @@ if (config.keys.subnets_pk != ''){
   let output_wallet = []
   for (let i=0; i<config.num_subnet; i++){
     const privatekey = crypto.randomBytes(32).toString('hex');
-    const wallet = new ethers.Wallet(privatekey)
-    output_pk.push(wallet.privateKey) 
-    output_wallet.push(wallet.address)
+    const [address, private_key] = validatePK(privatekey)
+    output_wallet.push(address)
+    output_pk.push(private_key) 
+    
   }
   config.keys.subnets_pk=output_pk
   config.keys.subnets_addr=output_wallet
@@ -160,5 +158,5 @@ module.exports = config
 
 function validatePK(private_key){
   let wallet = new ethers.Wallet(private_key)
-  return wallet.address
+  return [wallet.address, wallet.privateKey]
 }
