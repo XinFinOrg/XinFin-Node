@@ -22,7 +22,9 @@ var config = {
     observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer:  (process.env.VERSION_RELAYER  || 'v0.2.1'),
     stats:    (process.env.VERSION_STATS    || 'v0.1.8'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.8')
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.8'),
+    // csc:      (process.env.VERSION_CSC      || 'v0.1.1'),
+    // zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet:{
     network:    (process.env.PARENTNET              || 'devnet'),
