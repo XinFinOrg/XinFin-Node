@@ -2,11 +2,13 @@ const fs = require('fs');
 const yaml = require('js-yaml');
 const { exit } = require('process');
 const net = require('net');
-const config = require('./gen_config')
+const config = require('./config_gen')
+const gen_compose = require('./gen_compose')
+const gen_env = require('./gen_env')
+const gen_other = require('./gen_other')
+
 Object.freeze(config)
 // console.log(config)
-
-
 
 
 const num_machines = config.num_machines
@@ -16,8 +18,6 @@ const network_name = config.network_name
 const network_id = config.network_id
 const secret_string = config.secret_string
 const output_path = `${__dirname}/../generated/`
-
-
 
 
 keys = genSubnetKeys()  
@@ -224,6 +224,7 @@ function genServices(machine_id) {
   frontend = {
     'image': `xinfinorg/subnet-frontend:${config.version.frontend}`,    
     'restart': 'always',
+    'env_file': config_path,      //not used directly (injected via volume) but required to trigger restart if common.env changes
     'volumes': [`${config_path}:/app/.env.local`],
     'ports': ['5000:5000'],
     'profiles': [machine]
@@ -315,7 +316,7 @@ return config_env
 
 function genServicesConfig(){
   var url = ''
-  switch (config.parentchain.network){
+  switch (config.parentnet.network){
     case 'devnet':
       url='https://devnetstats.apothem.network/devnet'  
       break
@@ -326,7 +327,7 @@ function genServicesConfig(){
       url='https://devnetstats.apothem.network/mainnet' //confirm url
       break
     default: 
-      console.error('PARENTCHAIN invalid, should be devnet, testnet, or mainnet') //should not reach this case
+      console.error('PARENTNET invalid, should be devnet, testnet, or mainnet') //should not reach this case
       exit()
   }
   
@@ -336,18 +337,14 @@ EXTIP=${config.ip_1}
 BOOTNODE_PORT=20301
 
 # Stats and relayer
-PARENTCHAIN_URL=${url}
-PARENTCHAIN_WALLET=${config.parentchain.pubkey}
-PARENTCHAIN_WALLET_PK=${config.parentchain.privatekey}
+PARENTNET_URL=${url}
+PARENTNET_WALLET=${config.parentnet.pubkey}
+PARENTNET_WALLET_PK=${config.parentnet.privatekey}
 SUBNET_URL=http://${config.ip_1}:8545
 RELAYER_MODE=${config.relayer_mode}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 CORS_ALLOW_ORIGIN=*
-
-# Parent Chain Observe Node
-PARENTCHAIN_NODE_NAME=mainnet_observer
-PRIVATE_KEYS=1111111111111111111111111111111111111111111111111111111111111111
 
 # Frontend
 VITE_SUBNET_URL=http://${config.ip_1}:3000
@@ -355,23 +352,27 @@ VITE_SUBNET_URL=http://${config.ip_1}:3000
 # Share Variable
 STATS_SECRET=${config.secret_string}
 `
+// # Parent Chain Observe Node
+// PARENTNET_NODE_NAME=mainnet_observer
+// PRIVATE_KEYS=11111111111111111111111111111111111111111111111111111111111111
+
   return config_env
 }
 
 function genServicesConfigMac(ip_record){
   var url = ''
-  switch (config.parentchain.network){
+  switch (config.parentnet.network){
     case 'devnet':
       url='https://devnetstats.apothem.network/devnet'  
       break
     case 'testnet':
-      url='https://devnetstats.apothem.network/testnet' //confirm url
+      url='https://erpc.apothem.network/' 
       break
     case 'mainnet':
       url='https://devnetstats.apothem.network/mainnet' //confirm url
       break
     default: 
-      console.error('PARENTCHAIN invalid, should be devnet, testnet, or mainnet') //should not reach this case
+      console.error('PARENTNET invalid, should be devnet, testnet, or mainnet') //should not reach this case
       exit()
   }
   
@@ -381,9 +382,9 @@ EXTIP=${ip_record["bootnode"]}
 BOOTNODE_PORT=20301
 
 # Stats and relayer
-PARENTCHAIN_URL=${url}
-PARENTCHAIN_WALLET=${config.parentchain.pubkey}
-PARENTCHAIN_WALLET_PK=${config.parentchain.privatekey}
+PARENTNET_URL=${url}
+PARENTNET_WALLET=${config.parentnet.pubkey}
+PARENTNET_WALLET_PK=${config.parentnet.privatekey}
 SUBNET_URL=http://${ip_record["subnet1"]}:8545
 RELAYER_MODE=${config.relayer_mode}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
@@ -391,7 +392,7 @@ SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXX
 CORS_ALLOW_ORIGIN=*
 
 # Parent Chain Observe Node
-PARENTCHAIN_NODE_NAME=mainnet_observer
+PARENTNET_NODE_NAME=mainnet_observer
 PRIVATE_KEYS=1111111111111111111111111111111111111111111111111111111111111111
 
 # Frontend
