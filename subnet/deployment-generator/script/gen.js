@@ -320,7 +320,7 @@ function genServicesConfig(){
       url='https://devnetstats.apothem.network/devnet'  
       break
     case 'testnet':
-      url='https://devnetstats.apothem.network/testnet' //confirm url
+      url='https://erpc.apothem.network/' 
       break
     case 'mainnet':
       url='https://devnetstats.apothem.network/mainnet' //confirm url
