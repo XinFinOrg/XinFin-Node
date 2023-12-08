@@ -423,8 +423,6 @@ function genSubnetKeys(){
     "xdc": config.keys.grandmaster_addr.replace(/^0x/i, "xdc"),
     "short": config.keys.grandmaster_addr.replace(/^0x/i, '')
   }
-  console.log(keys['Grandmaster'])
-  console.log(keys['key1'])
   if (Object.keys(keys).length != config.num_subnet+1){      //sanity check
     console.log('bad case, key length not equal number of subnets')
     console.log(Object.keys(keys).length, config.num_subnet+1)
