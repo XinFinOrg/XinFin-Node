@@ -37,6 +37,9 @@ var config = {
     subnets_pk: (process.env.SUBNETS_PK               || ''),
     grandmaster_addr: ''                                    ,
     grandmaster_pk: (process.env.GRANDMASTER_PK       || ''),
+  },
+  generator: {
+    output_path: `${__dirname}/../generated/`   
   }
 };
 
@@ -97,7 +100,7 @@ function configSanityCheck(config){
 
   if (config.parentnet.privatekey != ''){
     try{
-      config.parentnet.pubkey = validatePK(config.parentnet.privatekey)[1]
+      config.parentnet.pubkey = validatePK(config.parentnet.privatekey)[0]
     }catch{
       console.log('Invalid PARENTNET_WALLET_PK')
       process.exit(1)

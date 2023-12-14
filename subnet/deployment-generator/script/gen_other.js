@@ -55,7 +55,7 @@ function genDeploymentJson(keys){
     "xdcparentnet": "https://devnetstats.apothem.network/devnet",
     // "xdcparentnet": "http://127.0.0.1:20302", 
     // "xdcsubnet": "http://127.0.0.1:8545" 
-    "xdcsubnet": `http://${ip_1}:8545`
+    "xdcsubnet": `http://${config.ip_1}:8545`
   }
   return deployment
 

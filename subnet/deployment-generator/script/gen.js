@@ -10,24 +10,24 @@ Object.freeze(config)
 // console.log(config)
 
 
-const num_machines = config.num_machines
-const num_subnet = config.num_subnet
-const ip_1 = config.ip_1
-const network_name = config.network_name
-const network_id = config.network_id
-const secret_string = config.secret_string
-const output_path = `${__dirname}/../generated/`
+// const num_machines = config.num_machines
+// const num_subnet = config.num_subnet
+// const ip_1 = config.ip_1
+// const network_name = config.network_name
+// const network_id = config.network_id
+// const secret_string = config.secret_string
+// const output_path = `${__dirname}/../generated/`
 
 
 keys = gen_other.genSubnetKeys()  
 
-var num_per_machine = Array(num_machines)
+var num_per_machine = Array(config.num_machines)
 //integer division
-for (let i=0; i<num_machines; i++){
-  num_per_machine[i] = Math.floor(num_subnet / num_machines) 
+for (let i=0; i<config.num_machines; i++){
+  num_per_machine[i] = Math.floor(config.num_subnet / config.num_machines) 
 }
 //divide up the remainder
-for (let i=0; i<num_subnet%num_machines; i++) {   
+for (let i=0; i<config.num_subnet%config.num_machines; i++) {   
   num_per_machine[i]++
 }
 num_per_machine.reverse()  //let first machines host services, put fewer subnets
@@ -40,7 +40,7 @@ doc = {
 }
 
 start_num = 1
-for (let i=1; i<=num_machines; i++){
+for (let i=1; i<=config.num_machines; i++){
   var subnet_nodes = gen_compose.genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
   start_num+=num_per_machine[i-1]
   Object.entries(subnet_nodes).forEach(entry => {
@@ -60,7 +60,7 @@ if (config.operating_system == 'mac'){
   doc, ip_record = gen_compose.injectMacConfig(doc)
   commonconf = gen_env.genServicesConfigMac(ip_record)
   subnetconf=[]
-  for (let i=1; i<=num_subnet; i++){
+  for (let i=1; i<=config.num_subnet; i++){
     subnetconf.push(gen_env.genSubnetConfigMac(i, keys, ip_record))
   }
   //checkpoint smartcontract deployment config
@@ -69,7 +69,7 @@ if (config.operating_system == 'mac'){
 } else if(config.operating_system == 'linux'){
   commonconf = gen_env.genServicesConfig()
   subnetconf=[]
-  for (let i=1; i<=num_subnet; i++){
+  for (let i=1; i<=config.num_subnet; i++){
     subnetconf.push(gen_env.genSubnetConfig(i, keys))
   }
   //checkpoint smartcontract deployment config
@@ -85,10 +85,10 @@ compose_conf = gen_compose.genComposeEnv()
 
 //deployment commands list 
 commands = gen_other.genCommands()
-genesis_input = gen_other.genGenesisInputFile(network_name, network_id, num_subnet, keys)
+genesis_input = gen_other.genGenesisInputFile(config.network_name, config.network_id, config.num_subnet, keys)
 genesis_input_file = yaml.dump(genesis_input, {})
 
-writeGenerated(output_path)
+writeGenerated(config.generator.output_path)
 
 console.log('gen successful, follow the instructions in command.txt')
 
@@ -127,7 +127,7 @@ function writeGenerated(output_dir){
       }
   });
 
-  for (let i=1; i<=num_subnet; i++){
+  for (let i=1; i<=config.num_subnet; i++){
     fs.writeFileSync(`${output_dir}/subnet${i}.env`, subnetconf[i-1], err => {
       if (err) {
         console.error(err);
