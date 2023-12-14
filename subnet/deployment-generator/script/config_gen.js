@@ -97,7 +97,7 @@ function configSanityCheck(config){
 
   if (config.parentnet.privatekey != ''){
     try{
-      config.parentnet.pubkey = validatePK(config.parentnet.privatekey)
+      config.parentnet.pubkey = validatePK(config.parentnet.privatekey)[1]
     }catch{
       console.log('Invalid PARENTNET_WALLET_PK')
       process.exit(1)
