@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /app/contract
-remove0x=${PARENTNET:2}
+remove0x=${PARENTNET_WALLET_PK:2}
 echo "PRIVATE_KEY=${remove0x}" >> .env 
 cp /app/generated/deployment.config.json /app/contract/deployment.config.json
 echo "RELAYER_MODE=${RELAYER_MODE}"
