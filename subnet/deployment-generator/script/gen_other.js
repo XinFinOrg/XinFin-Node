@@ -81,7 +81,6 @@ function genDeploymentJsonMac(keys){
 
 }
 
-
 function genCommands(){
   conf_path = __dirname+'/config/'
   set_env='SUBNET_CONFIG_PATH='+conf_path
