@@ -102,7 +102,7 @@ function genCommands(){
   commands+=`  docker run --env-file generated/common.env   \\
     -v $(pwd)/generated/:/app/generated/       \\
     --network host                             \\
-    --entrypoint 'bash' ${config.docker_image_name} ./deploy_csc.sh \n`       
+    --entrypoint 'bash' xinfinorg/subnet-generator:v0.1.6 ./deploy_csc.sh \n`       
   // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
   commands+=`  cd generated\n`
   commands+=`\nmachine1:                start services and frontend\n`
