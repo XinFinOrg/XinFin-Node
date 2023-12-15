@@ -20,9 +20,9 @@ function genSubnetNodes(machine_id, num, start_num=1) {
     volume='./xdcchain'+i.toString()+':/work/xdcchain'
     var config_path='${SUBNET_CONFIG_PATH}/subnet'+i.toString()+'.env'
     compose_profile='machine'+machine_id.toString()
-    port = 20303+i-1
-    rpcport = 8545+i-1
-    wsport= 9555+i-1
+    port = 20302+i
+    rpcport = 8544+i
+    wsport= 9554+i
     subnet_nodes[node_name] = {
       'image': `xinfinorg/xdcsubnets:${config.version.subnet}`,
       'volumes': [volume, '${SUBNET_CONFIG_PATH}/genesis.json:/work/genesis.json'],
