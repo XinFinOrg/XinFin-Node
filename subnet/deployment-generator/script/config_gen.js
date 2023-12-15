@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const net = require('net');
 const dotenv = require('dotenv');
 const ethers = require('ethers');
+const { off } = require('process');
 dotenv.config({ path: `${__dirname}/gen.env` });
 // console.log(__dirname)
 
@@ -28,7 +29,7 @@ var config = {
   },
   parentnet:{
     network:    (process.env.PARENTNET              || 'devnet'),
-    // url:        '',
+    url:        '',
     pubkey:     ''                                                ,
     privatekey: (process.env.PARENTNET_WALLET_PK    || '')      ,
   },
@@ -43,7 +44,7 @@ var config = {
   }
 };
 
-if (configSanityCheck(config) == true){
+if (configSanityCheck(config) === true){
   module.exports = config
 } else {
   console.log('bad config init file, please check again')
@@ -61,7 +62,7 @@ function configSanityCheck(config){
     process.exit(1)
   }
 
-  if (config.num_machines==0 || config.num_subnet ==0){
+  if (config.num_machines===0 || config.num_subnet ===0){
     console.log('NUM_MACHINE and NUM_SUBNET cannot be 0')
     process.exit(1)
   }
@@ -71,7 +72,7 @@ function configSanityCheck(config){
     process.exit(1)
   }
 
-  if (!config.network_name || config.network_name==''){
+  if (!config.network_name || config.network_name===''){
     console.log('NETWORK_NAME cannot be empty')
     process.exit(1)
   }
@@ -81,19 +82,25 @@ function configSanityCheck(config){
     process.exit(1)
   }
 
-  if (config.secret_string=='') {
+  if (config.secret_string==='') {
     console.log('SERVICES_SECRET cannot be empty string')
     process.exit(1)
   }
 
-  if (!(config.relayer_mode == 'full' || config.relayer_mode == 'lite')) {
+  if (!(config.relayer_mode === 'full' || config.relayer_mode === 'lite')) {
     console.log('RELAYER_MODE only accepts \'full\' or \'lite\' (default full)')
     process.exit(1)
   }
 
-  if (!(config.parentnet.network == 'devnet'  || 
-        config.parentnet.network == 'testnet' || 
-        config.parentnet.network == 'mainnet' )){
+  if (!(config.parentnet.network === 'devnet'  || 
+        config.parentnet.network === 'testnet' || 
+        config.parentnet.network === 'mainnet' )){
+    var official_urls = {
+      'devnet':'https://devnetstats.apothem.network/devnet'  ,
+      'testnet':'https://erpc.apothem.network/' ,
+      'mainnet': 'https://devnetstats.apothem.network/mainnet' //confirm url
+    }
+    config.parentnet.url = official_urls[config.parentnet.network]
     console.log('PARENTNET must be devnet, testnet, or mainnet ')
     process.exit(1)
   }
@@ -163,7 +170,7 @@ function configSanityCheck(config){
 
   }
 
-  if (config.operating_system == 'mac') {
+  if (config.operating_system === 'mac') {
     if (config.num_machines != 1){
       console.log(`OS=mac requires NUM_MACHINE=1. Due to Docker network limitation, Subnets on MacOS can only communicate within its own machine. This option is intended for single machine testing environment only`)
       process.exit()

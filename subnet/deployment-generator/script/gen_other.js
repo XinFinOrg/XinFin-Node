@@ -126,7 +126,7 @@ function genGenesisInputFile(network_name, network_id,  num_subnet, keys ){
   var grandmasters = []
   Object.keys(keys).forEach(function(k) {
     var v = keys[k];
-    if (k == 'Grandmaster'){
+    if (k === 'Grandmaster'){
       grandmasters.push(v['0x'])
     } else {
       masternodes.push(v['0x'])

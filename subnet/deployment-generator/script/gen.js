@@ -56,7 +56,7 @@ Object.entries(subnet_services).forEach(entry => {
   doc['services'][key]=value
 });
 
-if (config.operating_system == 'mac'){
+if (config.operating_system === 'mac'){
   doc, ip_record = gen_compose.injectMacConfig(doc)
   commonconf = gen_env.genServicesConfigMac(ip_record)
   subnetconf=[]
@@ -66,7 +66,7 @@ if (config.operating_system == 'mac'){
   //checkpoint smartcontract deployment config
   deployment_json = gen_other.genDeploymentJsonMac(keys, ip_record)
 
-} else if(config.operating_system == 'linux'){
+} else if(config.operating_system === 'linux'){
   commonconf = gen_env.genServicesConfig()
   subnetconf=[]
   for (let i=1; i<=config.num_subnet; i++){

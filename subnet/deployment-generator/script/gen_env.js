@@ -66,22 +66,7 @@ return config_env
 }
 
 function genServicesConfig(){
-  var url = ''
-  switch (config.parentnet.network){
-    case 'devnet':
-      url='https://devnetstats.apothem.network/devnet'  
-      break
-    case 'testnet':
-      url='https://erpc.apothem.network/' 
-      break
-    case 'mainnet':
-      url='https://devnetstats.apothem.network/mainnet' //confirm url
-      break
-    default: 
-      console.error('PARENTNET invalid, should be devnet, testnet, or mainnet') //should not reach this case
-      exit()
-  }
-  
+  var url = config.parentnet.url
   var config_env=`
 # Bootnode
 EXTIP=${config.ip_1}
@@ -107,27 +92,11 @@ STATS_SECRET=${config.secret_string}
 // # Parent Chain Observe Node
 // PARENTNET_NODE_NAME=mainnet_observer
 // PRIVATE_KEYS=11111111111111111111111111111111111111111111111111111111111111
-
   return config_env
 }
 
 function genServicesConfigMac(ip_record){
-  var url = ''
-  switch (config.parentnet.network){
-    case 'devnet':
-      url='https://devnetstats.apothem.network/devnet'  
-      break
-    case 'testnet':
-      url='https://erpc.apothem.network/' 
-      break
-    case 'mainnet':
-      url='https://devnetstats.apothem.network/mainnet' //confirm url
-      break
-    default: 
-      console.error('PARENTNET invalid, should be devnet, testnet, or mainnet') //should not reach this case
-      exit()
-  }
-  
+  var url = config.parentnet.url
   var config_env=`
 # Bootnode
 EXTIP=${ip_record["bootnode"]}

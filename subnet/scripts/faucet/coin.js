@@ -1,5 +1,3 @@
-
-
 const dotenv = require('dotenv');
 dotenv.config({ path: `${__dirname}/coin.env` });
 const { Web3 } = require('web3');
