@@ -25,10 +25,10 @@ RUN echo IMAGE_NAME=${IMAGE_NAME}
 WORKDIR /app
 
 COPY --from=builder /go/XDC-Subnet/build/bin/puppeth /bin/puppeth
-COPY --from=builder /go/XDC-Subnet/mainnet_contract /app/contract
+# COPY --from=builder /go/XDC-Subnet/mainnet_contract /app/contract
 
 #this step here for caching
-RUN cd contract && yarn
+# RUN cd contract && yarn
 
 COPY ./script /app/script
 COPY ./docker/start.sh /app/start.sh
