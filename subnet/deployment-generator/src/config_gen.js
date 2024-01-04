@@ -6,7 +6,7 @@ const { off } = require('process');
 dotenv.config({ path: `${__dirname}/gen.env` });
 // console.log(__dirname)
 
-var config = {
+let config = {
   deployment_path:    (process.env.CONFIG_PATH            || ''),
   num_machines:       parseInt(process.env.NUM_MACHINE),
   num_subnet:         parseInt(process.env.NUM_SUBNET),
@@ -14,17 +14,17 @@ var config = {
   network_name:       (process.env.NETWORK_NAME),
   network_id:         parseInt(process.env.NETWORK_ID     || Math.floor(Math.random() * (65536 - 1) + 1)),
   secret_string:      (process.env.SERVICES_SECRET        || crypto.randomBytes(10).toString('hex')),
-  relayer_mode:       (process.env.RELAYER_MODE           || 'full'), //full or lite
+  relayer_mode:       (process.env.RELAYER_MODE           || 'full'), //full or lite //in upgradable csc both are deployed
   docker_image_name:  (process.env.IMAGE_NAME             || 'xinfinorg/subnet-generator:latest'),
   operating_system:   (process.env.OS                     || 'linux'),
   version: {
     subnet:   (process.env.VERSION_SUBNET   || 'v0.2.1'),
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.2.1'),
-    observer: (process.env.VERSION_OBSERVER || 'latest'),
-    relayer:  (process.env.VERSION_RELAYER  || 'v0.2.1'),
+    // observer: (process.env.VERSION_OBSERVER || 'latest'),
+    relayer:  (process.env.VERSION_RELAYER  || 'v0.2.2'),
     stats:    (process.env.VERSION_STATS    || 'v0.1.8'),
     frontend: (process.env.VERSION_FRONTEND || 'v0.1.8'),
-    // csc:      (process.env.VERSION_CSC      || 'v0.1.1'),
+    csc:      (process.env.VERSION_CSC      || 'v0.1.1'),
     // zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet:{
@@ -92,15 +92,16 @@ function configSanityCheck(config){
     process.exit(1)
   }
 
-  if (!(config.parentnet.network === 'devnet'  || 
-        config.parentnet.network === 'testnet' || 
-        config.parentnet.network === 'mainnet' )){
-    var official_urls = {
+  if (config.parentnet.network === 'devnet'  || 
+      config.parentnet.network === 'testnet' || 
+      config.parentnet.network === 'mainnet' ){
+    let official_urls = {
       'devnet':'https://devnetstats.apothem.network/devnet'  ,
       'testnet':'https://erpc.apothem.network/' ,
       'mainnet': 'https://devnetstats.apothem.network/mainnet' //confirm url
     }
     config.parentnet.url = official_urls[config.parentnet.network]
+  } else {
     console.log('PARENTNET must be devnet, testnet, or mainnet ')
     process.exit(1)
   }

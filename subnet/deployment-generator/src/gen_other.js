@@ -5,7 +5,6 @@ Object.freeze(config)
 module.exports = { 
   genSubnetKeys,
   genDeploymentJson,
-  genDeploymentJsonMac,
   genCommands,
   genGenesisInputFile,
 };
@@ -40,46 +39,36 @@ function genSubnetKeys(){
 }
 
 function genDeploymentJson(keys){
-  num = Object.keys(keys).length-1;
-  validators = []
+  let num = Object.keys(keys).length-1;
+  let validators = []
   for (let i=1; i<= num; i++){
-    key_name = `key${i}`
-    public_key = keys[key_name]['0x']
+    let key_name = `key${i}`
+    let public_key = keys[key_name]['0x']
     validators.push(public_key)
   }
 
-  deployment = {
+  let deployment = {
     "validators": validators,
     "gap": 450,
     "epoch": 900,
-    "xdcparentnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcparentnet": "http://127.0.0.1:20302", 
-    // "xdcsubnet": "http://127.0.0.1:8545" 
-    "xdcsubnet": `http://${config.ip_1}:8545`
   }
   return deployment
-
 }
 
-function genDeploymentJsonMac(keys){
-  num = Object.keys(keys).length-1;
-  validators = []
-  for (let i=1; i<= num; i++){
-    key_name = `key${i}`
-    public_key = keys[key_name]['0x']
-    validators.push(public_key)
-  }
-  deployment = {
-    "validators": validators,
-    "gap": 450,
-    "epoch": 900,
-    "xdcparentnet": "https://devnetstats.apothem.network/devnet",
-    // "xdcparentnet": "http://127.0.0.1:20302", 
-    "xdcsubnet": `http://127.0.0.1:8545`
-  }
-  return deployment
-
-}
+// function genNetworkJson(){   //don't need this, config will overlap(duplicate) with other files, shell script in CSC docker can gen this
+//   let network = { 
+//     "xdcsubnet": `http://${config.ip_1}:8545`,
+//     "xdcparentnet": config.parentnet.url
+//   }
+//   return network
+// }
+// function genNetworkJsonMac(){
+//   let network = { 
+//     "xdcsubnet": `http://127.0.0.1:8545`,
+//     "xdcparentnet": config.parentnet.url
+//   }
+//   return network
+// }
 
 function genCommands(){
   conf_path = __dirname+'/config/'
@@ -98,13 +87,11 @@ function genCommands(){
   }
                                     
   commands+=`\nmachine1:                deploy checkpoint smart contract\n` // 
-  commands+=`  cd ..\n`
-  commands+=`  docker run --env-file generated/common.env   \\
-    -v $(pwd)/generated/:/app/generated/       \\
+  commands+=`  docker run --env-file common.env   \\
+    -v $(pwd)/../generated/:/app/config       \\
     --network host                             \\
-    --entrypoint 'bash' xinfinorg/subnet-generator:v0.1.6 ./deploy_csc.sh \n`       
-  // commands+=`  make an edit to ./config/common.env to include values for CHECKPOINT_CONTRACT \n`
-  commands+=`  cd generated\n`
+    --entrypoint './docker/deploy_proxy.sh' xinfinorg/csc:${config.version.csc}\n`       
+  
   commands+=`\nmachine1:                start services and frontend\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services pull\n`
   commands+=`  docker compose --env-file docker-compose.env --profile services up -d\n`

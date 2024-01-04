@@ -19,9 +19,9 @@ Object.freeze(config)
 // const output_path = `${__dirname}/../generated/`
 
 
-keys = gen_other.genSubnetKeys()  
+let keys = gen_other.genSubnetKeys()  
 
-var num_per_machine = Array(config.num_machines)
+let num_per_machine = Array(config.num_machines)
 //integer division
 for (let i=0; i<config.num_machines; i++){
   num_per_machine[i] = Math.floor(config.num_subnet / config.num_machines) 
@@ -33,13 +33,13 @@ for (let i=0; i<config.num_subnet%config.num_machines; i++) {
 num_per_machine.reverse()  //let first machines host services, put fewer subnets
 
 //gen docker-compose
-doc = {
+let doc = {
   'version': '3.7',
   'services': {
   }
 }
 
-start_num = 1
+let start_num = 1
 for (let i=1; i<=config.num_machines; i++){
   var subnet_nodes = gen_compose.genSubnetNodes(machine_id=i, num=num_per_machine[i-1], start_num=start_num)
   start_num+=num_per_machine[i-1]
@@ -50,11 +50,13 @@ for (let i=1; i<=config.num_machines; i++){
 }
 
 //gen subnets configs
-subnet_services = gen_compose.genServices(machine_id=1)
+let subnet_services = gen_compose.genServices(machine_id=1)
 Object.entries(subnet_services).forEach(entry => {
   const [key, value] = entry;
   doc['services'][key]=value
 });
+//checkpoint smartcontract deployment config
+let deployment_json = gen_other.genDeploymentJson(keys)
 
 if (config.operating_system === 'mac'){
   doc, ip_record = gen_compose.injectMacConfig(doc)
@@ -63,30 +65,24 @@ if (config.operating_system === 'mac'){
   for (let i=1; i<=config.num_subnet; i++){
     subnetconf.push(gen_env.genSubnetConfigMac(i, keys, ip_record))
   }
-  //checkpoint smartcontract deployment config
-  deployment_json = gen_other.genDeploymentJsonMac(keys, ip_record)
-
 } else if(config.operating_system === 'linux'){
   commonconf = gen_env.genServicesConfig()
   subnetconf=[]
   for (let i=1; i<=config.num_subnet; i++){
     subnetconf.push(gen_env.genSubnetConfig(i, keys))
   }
-  //checkpoint smartcontract deployment config
-  deployment_json = gen_other.genDeploymentJson(keys)
-
 } else {
   console.log(`ERROR: unknown OS ${config.operating_system} not supported`)
   process.exit(1)
 }
 
-compose_content = yaml.dump(doc,{})
-compose_conf = gen_compose.genComposeEnv()
+let compose_content = yaml.dump(doc,{})
+let compose_conf = gen_compose.genComposeEnv()
 
 //deployment commands list 
-commands = gen_other.genCommands()
-genesis_input = gen_other.genGenesisInputFile(config.network_name, config.network_id, config.num_subnet, keys)
-genesis_input_file = yaml.dump(genesis_input, {})
+let commands = gen_other.genCommands()
+let genesis_input = gen_other.genGenesisInputFile(config.network_name, config.network_id, config.num_subnet, keys)
+let genesis_input_file = yaml.dump(genesis_input, {})
 
 writeGenerated(config.generator.output_path)
 
@@ -119,7 +115,7 @@ function writeGenerated(output_dir){
     }
   });
 
-  keys_json = JSON.stringify(keys, null, 2);
+  let keys_json = JSON.stringify(keys, null, 2);
   fs.writeFile(`${output_dir}/keys.json`, keys_json, (err) => {
       if (err) {
         console.error('Error writing key file:', err);

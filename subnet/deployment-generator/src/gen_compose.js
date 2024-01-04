@@ -81,6 +81,7 @@ function genServices(machine_id) {
     'image': `xinfinorg/xdc-relayer:${config.version.relayer}`,
     'restart': 'always',
     'env_file': config_path,
+    'ports': ['4000:4000'],
     'profiles': [machine]
   }
   stats = {
@@ -93,7 +94,7 @@ function genServices(machine_id) {
   },
 
   bootnode=genBootNode(machine_id),
-  observer=genObserver(machine_id),      
+  // observer=genObserver(machine_id),      
 
 
   services = {

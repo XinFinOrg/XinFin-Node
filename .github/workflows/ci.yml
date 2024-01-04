@@ -39,12 +39,6 @@ jobs:
             echo "name=xinfinorg/subnet-generator:${{github.ref_name}}" >> $GITHUB_OUTPUT
           fi
           
-      - name: Load Subnet commit/branch config (used for genesis gen)
-        id: commit
-        run: |
-          cat docker/puppeth_csc_commit.env 
-          echo commit=$(cat docker/puppeth_csc_commit.env) >> $GITHUB_OUTPUT
-
       - name: Build and push image
         run: |
           docker build . --file docker/Dockerfile                       \
