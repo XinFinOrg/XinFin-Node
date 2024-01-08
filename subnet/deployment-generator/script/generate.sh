@@ -1,7 +1,7 @@
 #!/bin/bash
-VERSION_GENERATOR="generator-csc"
-VERSION_CSC="generator-update"
-VERSION_SUBNET="feature-puppeth-docker-2"
+VERSION_GENERATOR="latest"
+VERSION_CSC="v0.1.1"
+VERSION_SUBNET="v0.2.2"
 
 current_dir="$(cd "$(dirname "$0")" && pwd)"
 echo 'checking for docker.env'
