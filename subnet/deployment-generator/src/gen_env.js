@@ -73,7 +73,6 @@ BOOTNODE_PORT=20301
 PARENTNET_URL=${url}
 PARENTNET_WALLET=${config.parentnet.pubkey}
 PARENTNET_WALLET_PK=${config.parentnet.privatekey}
-PARENTCHAIN_WALLET_PK=${config.parentnet.privatekey}
 SUBNET_URL=http://${config.ip_1}:8545
 RELAYER_MODE=${config.relayer_mode}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
