@@ -2,10 +2,10 @@
 if [ ! -d /work/xdcchain/XDC/chaindata ]
 then
   echo $PRIVATE_KEY >> /tmp/key
-  wallet=$(XDC account import --password .pwd --datadir /work/xdcchain /tmp/key | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account import --password .pwd --datadir /work/xdcchain /tmp/key | awk -F '[{}]' '{print $2}')
   XDC --datadir /work/xdcchain init /work/genesis.json
 else
-  wallet=$(XDC account list --datadir /work/xdcchain | head -n 1 | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account list --datadir /work/xdcchain | head -n 1 | awk -F '[{}]' '{print $2}')
 fi
 
 input="/work/bootnodes.list"
