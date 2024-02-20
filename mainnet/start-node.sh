@@ -2,7 +2,7 @@
 
 if [ ! -d /work/xdcchain/XDC/chaindata ]
 then
-  wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -F '[{}]' '{print $2}')
   echo "Initalizing Genesis Block"
   coinbaseaddr="$wallet"
   coinbasefile=/work/xdcchain/coinbase.txt
@@ -13,7 +13,7 @@ then
   fi
   XDC --datadir /work/xdcchain init /work/genesis.json
 else
-  wallet=$(XDC account list --datadir /work/xdcchain| head -n 1 | awk -v FS="({|})" '{print $2}')
+  wallet=$(XDC account list --datadir /work/xdcchain| head -n 1 | awk -F '[{}]' '{print $2}')
 fi
 
 input="/work/bootnodes.list"
