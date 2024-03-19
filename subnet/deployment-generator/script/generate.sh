@@ -16,16 +16,10 @@ if ! grep -q "CONFIG_PATH" "docker.env"; then
   echo 'added CONFIG_PATH to docker.env'
 fi
 
-echo 'checking docker images'
-if [[ -z "$(docker images -q xinfinorg/subnet-generator:$VERSION_GENERATOR)" ]]; then # || echo "doesn't exist"
-  docker pull xinfinorg/subnet-generator:$VERSION_GENERATOR
-fi
-if [[ -z "$(docker images -q xinfinorg/csc:$VERSION_CSC)" ]]; then # || echo "doesn't exist"
-  docker pull xinfinorg/csc:$VERSION_CSC
-fi
-if [[ -z "$(docker images -q xinfinorg/xdcsubnets:$VERSION_SUBNET)" ]]; then # || echo "doesn't exist"
-  docker pull xinfinorg/xdcsubnets:$VERSION_SUBNET
-fi
+echo 'pull docker images'
+docker pull xinfinorg/subnet-generator:$VERSION_GENERATOR
+docker pull xinfinorg/csc:$VERSION_CSC
+docker pull xinfinorg/xdcsubnets:$VERSION_SUBNET
 
 echo ''
 echo 'generating configs'
