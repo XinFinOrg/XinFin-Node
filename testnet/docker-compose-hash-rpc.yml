@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  xinfinnetwork:
+    image: ${RPC_IMAGE}
+    volumes:
+      - "./xdcchain-1:/work/xdcchain"
+    restart: "always"
+    env_file: "./.env"
+    ports:
+      - "30303:30303"
+      - "8545:8545"
+      - "8555:8555"

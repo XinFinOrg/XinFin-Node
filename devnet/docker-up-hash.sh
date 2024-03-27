@@ -7,4 +7,4 @@ if [[ $? != 0 ]]; then
     alias docker-compose='docker compose'
 fi
 
-docker-compose -f docker-compose.yml up -d --build --force-recreate
+docker-compose -f docker-compose-hash-rpc.yml up -d --build --force-recreate
