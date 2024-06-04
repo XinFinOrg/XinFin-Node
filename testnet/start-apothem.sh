@@ -39,7 +39,7 @@ XDC --ethstats ${netstats} --gcmode=archive \
     --datadir /work/xdcchain \
     --networkid 51 -port 30304 \
     --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 \
-    --rpcport 8555 --rpcapi admin,db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
+    --rpcport 8555 --rpcapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
     --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd \
     --mine --gasprice "1" --targetgaslimit "420000000" \
     --verbosity 2 --ws --wsaddr=0.0.0.0 --wsport 8556 \
