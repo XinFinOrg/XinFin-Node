@@ -23,7 +23,7 @@ BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 50a591723a5d@${config.ip_1}:20301
 NETWORK_ID=${config.network_id}
 SYNC_MODE=full
-RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
+RPC_API=db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
 STATS_SERVICE_ADDRESS=${config.ip_1}:3000
 STATS_SECRET=${config.secret_string}
 PORT=${port}
@@ -50,7 +50,7 @@ BOOTNODES=enode://cc566d1033f21c7eb0eb9f403bb651f3949b5f63b40683917\
 50a591723a5d@${ip_record["bootnode"]}:20301
 NETWORK_ID=${config.network_id}
 SYNC_MODE=full
-RPC_API=admin,db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
+RPC_API=db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS
 STATS_SERVICE_ADDRESS=${ip_record["stats"]}:3000
 STATS_SECRET=${config.secret_string}
 PORT=${port}
