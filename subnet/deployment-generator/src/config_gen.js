@@ -96,7 +96,7 @@ function configSanityCheck (config) {
       config.parentnet.network === 'mainnet' ){
     let official_urls = {
       'devnet':'https://devnetstats.apothem.network/devnet'  ,
-      'testnet':'https://erpc.apothem.network/' ,
+      'testnet':'https://devnetstats.apothem.network/testnet',
       'mainnet': 'https://devnetstats.apothem.network/mainnet' //confirm url
     }
     config.parentnet.url = official_urls[config.parentnet.network]
