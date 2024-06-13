@@ -1,0 +1,7 @@
+NODE_RPC = "http://0.0.0.0:8545"
+CONTRACT_JSON = "./build/contracts/XDCValidator.json"
+RICH_KEY="rich_key/RICH_KEY.txt"
+OWNER_KEY="owner_key/OWNER_KEY.txt"
+GENESIS="../genesis.json"
+MASTERNODE_KEY_FOLDER="masternode_keys"
+TRANSACTION_RECORD="transactions.txt"
