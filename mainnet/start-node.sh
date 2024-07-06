@@ -31,4 +31,4 @@ INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${INSTANCE_NAME}:xinfin_xdpos_hybrid_network_stats@stats.xinfin.network:3000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 50 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS --rpcvhosts "*"  --ws --wsaddr="0.0.0.0" --wsorigins "*" --wsport 8546 --wsapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS  --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+XDC --ethstats ${netstats} --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} --datadir /work/xdcchain --networkid 50 -port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 --rpcport 8545 --rpcvhosts "*"  --ws --wsaddr="0.0.0.0" --wsorigins "*" --wsport 8546 --unlock "${wallet}" --password /work/.pwd --mine --gasprice "1" --targetgaslimit "420000000" --verbosity 3 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
