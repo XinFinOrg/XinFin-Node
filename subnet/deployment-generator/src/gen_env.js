@@ -79,8 +79,9 @@ CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 CORS_ALLOW_ORIGIN=*
 
-# Frontend
-VITE_SUBNET_URL=http://${config.ip_1}:3000
+# Frontend 
+VITE_SUBNET_URL=http://${config.public_ip}:3000
+VITE_SUBNET_RPC=http://${config.public_ip}:8545
 
 # Share Variable
 STATS_SECRET=${config.secret_string}
@@ -110,6 +111,7 @@ CORS_ALLOW_ORIGIN=*
 
 # Frontend
 VITE_SUBNET_URL=http://127.0.0.1:3000
+VITE_SUBNET_RPC=http://127.0.0.1:8545
 
 # Share Variable
 STATS_SECRET=${config.secret_string}
