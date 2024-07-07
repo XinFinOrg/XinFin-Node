@@ -10,6 +10,7 @@ const config = {
   num_machines:  parseInt(process.env.NUM_MACHINE),
   num_subnet:         parseInt(process.env.NUM_SUBNET),
   ip_1:               (process.env.MAIN_IP                || ''),
+  public_ip:          (process.env.PUBLIC_IP ||  ''),
   network_name:       (process.env.NETWORK_NAME),
   network_id:         parseInt(process.env.NETWORK_ID     || Math.floor(Math.random() * (65536 - 1) + 1)),
   secret_string:      (process.env.SERVICES_SECRET        || crypto.randomBytes(10).toString('hex')),
@@ -17,17 +18,17 @@ const config = {
   docker_image_name:  (process.env.IMAGE_NAME             || 'xinfinorg/subnet-generator:latest'),
   operating_system:   (process.env.OS                     || 'linux'),
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'v0.2.1'),
+    subnet:   (process.env.VERSION_SUBNET   || 'v0.2.1'),   
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.2.1'),
     // observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer:  (process.env.VERSION_RELAYER  || 'v0.2.2'),
-    stats:    (process.env.VERSION_STATS    || 'v0.1.8'),
-    frontend: (process.env.VERSION_FRONTEND || 'v0.1.8'),
+    stats:    (process.env.VERSION_STATS    || 'v0.1.8'),   
+    frontend: (process.env.VERSION_FRONTEND || 'v0.1.9'),   
     csc:      (process.env.VERSION_CSC      || 'v0.1.1'),
     // zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet:{
-    network:    (process.env.PARENTNET              || 'devnet'),
+    network:    (process.env.PARENTNET              || 'testnet'),
     url:        '',
     pubkey:     ''                                                ,
     privatekey: (process.env.PARENTNET_WALLET_PK    || ''),
@@ -92,16 +93,14 @@ function configSanityCheck (config) {
   }
 
   if (config.parentnet.network === 'devnet'  || 
-      config.parentnet.network === 'testnet' || 
-      config.parentnet.network === 'mainnet' ){
+      config.parentnet.network === 'testnet'  ){
     let official_urls = {
       'devnet':'https://devnetstats.apothem.network/devnet'  ,
       'testnet':'https://erpc.apothem.network/' ,
-      'mainnet': 'https://devnetstats.apothem.network/mainnet' //confirm url
     }
     config.parentnet.url = official_urls[config.parentnet.network]
   } else {
-    console.log('PARENTNET must be devnet, testnet, or mainnet ')
+    console.log('PARENTNET must be devnet or testnet')
     process.exit(1)
   }
 
