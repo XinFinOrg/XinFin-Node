@@ -20,7 +20,7 @@ fi
 echo 'pull docker images'
 docker pull xinfinorg/subnet-generator:$VERSION_GENERATOR
 docker pull xinfinorg/csc:$VERSION_CSC
-docker pull xinfinorg/xdcsubnets:$VERSION_SUBNET
+docker pull xinfinorg/xdcsubnets:$VERSION_GENESIS
 
 
 echo ''
