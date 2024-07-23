@@ -2,11 +2,11 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    image: xinfinorg/xdposchain:v1.5.0
+    image: xinfinorg/xdposchain:v1.6.0
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
-      - "./start-node.sh:/work/start.sh"
+      - "./start-node.sh:/work/start-node.sh"
       - "./bootnodes.list:/work/bootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
