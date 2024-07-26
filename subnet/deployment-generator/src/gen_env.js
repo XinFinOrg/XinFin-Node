@@ -6,6 +6,9 @@ module.exports = {
   genSubnetConfigMac,
   genServicesConfig,
   genServicesConfigMac,
+  genContractDeployEnv,
+  genContractDeployEnvMac,
+
 };
 
 function genSubnetConfig(subnet_id, key) {
@@ -117,4 +120,35 @@ VITE_SUBNET_RPC=http://127.0.0.1:8545
 STATS_SECRET=${config.secret_string}
 `;
   return config_env;
+}
+
+function genContractDeployEnvMac(){
+  const config_deploy = `
+PARENTNET_URL=${config.parentnet.url}
+SUBNET_URL=http://${ip_record["subnet1"]}:8545
+
+PARENTNET_PK=${config.parentnet.privatekey}
+SUBNET_PK=
+GRANDMASTER_PK=??
+
+CSC=
+REVERSE_CSC=
+`
+  return config_deploy
+}
+
+function genContractDeployEnv(){
+  const config_deploy = `
+PARENTNET_URL=${config.parentnet.url}
+SUBNET_URL=http://${config.ip_1}:8545
+
+
+PARENTNET_PK=${config.parentnet.privatekey}
+SUBNET_PK=
+GRANDMASTER_PK=??
+
+CSC=
+REVERSE_CSC=
+`
+  return config_deploy
 }

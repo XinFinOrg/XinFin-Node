@@ -66,12 +66,14 @@ if (config.operating_system === "mac") {
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfigMac(i, keys, ip_record));
   }
+  deployconf = gen_env.genContractDeployEnvMac()
 } else if (config.operating_system === "linux") {
   commonconf = gen_env.genServicesConfig();
   subnetconf = [];
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfig(i, keys));
   }
+  deployconf = gen_env.genContractDeployEnv()
 } else {
   console.log(`ERROR: unknown OS ${config.operating_system} not supported`);
   process.exit(1);
@@ -91,6 +93,7 @@ const genesis_input = gen_other.genGenesisInputFile(
 const genesis_input_file = yaml.dump(genesis_input, {});
 
 writeGenerated(config.generator.output_path);
+copyScripts(config.generator.output_path);
 
 console.log("gen successful, follow the instructions in command.txt");
 
@@ -98,21 +101,32 @@ function writeGenerated(output_dir) {
   // writing files
   // fs.rmSync(`${output_path}`, { recursive: true, force: true }); //wont work with docker mount
   // fs.mkdirSync(`${output_path}`) //won't work with docker mount
-  fs.writeFile(`${output_dir}/placeholder.txt`, "-", (err) => {
+  fs.writeFileSync(`${output_dir}/placeholder.txt`, "-", (err) => {
     if (err) {
       console.error(err);
       exit();
     }
   });
 
-  fs.writeFile(`${output_dir}/docker-compose.yml`, compose_content, (err) => {
-    if (err) {
-      console.error(err);
-      exit();
+  fs.writeFileSync(
+    `${output_dir}/docker-compose.yml`,
+    compose_content,
+    (err) => {
+      if (err) {
+        console.error(err);
+        exit();
+      }
     }
-  });
+  );
 
   fs.writeFileSync(`${output_dir}/common.env`, commonconf, (err) => {
+    if (err) {
+      console.error(err);
+      exit();
+    }
+  });
+
+  fs.writeFileSync(`${output_dir}/contract_deploy.env`, deployconf, (err) => {
     if (err) {
       console.error(err);
       exit();
@@ -140,7 +154,7 @@ function writeGenerated(output_dir) {
     );
   }
 
-  fs.writeFile(`${output_dir}/docker-compose.env`, compose_conf, (err) => {
+  fs.writeFileSync(`${output_dir}/docker-compose.env`, compose_conf, (err) => {
     if (err) {
       console.error(err);
       exit();
@@ -148,7 +162,7 @@ function writeGenerated(output_dir) {
   });
 
   deployment_json = JSON.stringify(deployment_json, null, 2);
-  fs.writeFile(
+  fs.writeFileSync(
     `${output_dir}/deployment.config.json`,
     deployment_json,
     (err) => {
@@ -159,17 +173,35 @@ function writeGenerated(output_dir) {
     }
   );
 
-  fs.writeFile(`${output_dir}/genesis_input.yml`, genesis_input_file, (err) => {
-    if (err) {
-      console.error(err);
-      exit();
+  fs.writeFileSync(
+    `${output_dir}/genesis_input.yml`,
+    genesis_input_file,
+    (err) => {
+      if (err) {
+        console.error(err);
+        exit();
+      }
     }
-  });
+  );
 
-  fs.writeFile(`${output_dir}/commands.txt`, commands, (err) => {
+  fs.writeFileSync(`${output_dir}/commands.txt`, commands, (err) => {
     if (err) {
       console.error(err);
       exit();
     }
   });
+}
+
+function copyScripts(output_dir) {
+  fs.writeFileSync(`${output_dir}/scripts/placeholder.txt`, "-", (err) => {
+    if (err) {
+      console.error(err);
+      exit();
+    }
+  });
+  fs.copyFileSync(`${__dirname}/../scripts/check-mining.sh`, `${output_dir}/scripts/check-mining.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/check-peer.sh`, `${output_dir}/scripts/check-peer.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/docker-up.sh`, `${output_dir}/scripts/docker-up.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/docker-down.sh`, `${output_dir}/scripts/docker-down.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/csc.sh`, `${output_dir}/scripts/csc.sh`);
 }

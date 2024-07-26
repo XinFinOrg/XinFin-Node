@@ -10,26 +10,27 @@ const config = {
   num_machines: parseInt(process.env.NUM_MACHINE),
   num_subnet: parseInt(process.env.NUM_SUBNET),
   ip_1: process.env.MAIN_IP || "",
-  public_ip: process.env.PUBLIC_IP || "",
+  public_ip: process.env.PUBLIC_IP || process.env.MAIN_IP,
   network_name: process.env.NETWORK_NAME,
   network_id: parseInt(
     process.env.NETWORK_ID || Math.floor(Math.random() * (65536 - 1) + 1)
   ),
   secret_string:
     process.env.SERVICES_SECRET || crypto.randomBytes(10).toString("hex"),
-  relayer_mode: process.env.RELAYER_MODE || "full", //full or lite //in upgradable csc both are deployed
+  relayer_mode: process.env.RELAYER_MODE || "full", //full or lite or max //in upgradable csc both are deployed
   docker_image_name:
     process.env.IMAGE_NAME || "xinfinorg/subnet-generator:latest",
   operating_system: process.env.OS || "linux",
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'v0.2.2'),   
+    subnet:   (process.env.VERSION_SUBNET   || 'feature-v1-release'),   
     bootnode: (process.env.VERSION_BOOTNODE || 'v0.2.2'),
     // observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer: process.env.VERSION_RELAYER || "v0.2.2",
     stats: process.env.VERSION_STATS || "v0.1.8",
     frontend: process.env.VERSION_FRONTEND || "v0.1.9",
-    csc: process.env.VERSION_CSC || "v0.1.1",
-    // zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
+    // csc: process.env.VERSION_CSC || "v0.2.0",
+    csc: process.env.VERSION_CSC || "feature-v0.2.1",
+    zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet: {
     network: process.env.PARENTNET || "testnet",
@@ -76,6 +77,11 @@ function configSanityCheck(config) {
     process.exit(1);
   }
 
+  if (!net.isIP(config.public_ip)) {
+    console.log("PUBLIC_IP Invalid IP address");
+    process.exit(1);
+  }
+
   if (!config.network_name || config.network_name === "") {
     console.log("NETWORK_NAME cannot be empty");
     process.exit(1);
@@ -91,7 +97,7 @@ function configSanityCheck(config) {
     process.exit(1);
   }
 
-  if (!(config.relayer_mode === "full" || config.relayer_mode === "lite")) {
+  if (!(config.relayer_mode === "full" || config.relayer_mode === "lite" || config.relayer_mode === "temp" )) {
     console.log("RELAYER_MODE only accepts 'full' or 'lite' (default full)");
     process.exit(1);
   }
