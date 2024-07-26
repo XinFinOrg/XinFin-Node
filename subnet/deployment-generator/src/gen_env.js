@@ -1,20 +1,20 @@
-const config = require('./config_gen')
-Object.freeze(config)
+const config = require("./config_gen");
+Object.freeze(config);
 
 module.exports = {
   genSubnetConfig,
   genSubnetConfigMac,
   genServicesConfig,
-  genServicesConfigMac
-}
+  genServicesConfigMac,
+};
 
-function genSubnetConfig (subnet_id, key) {
-  const key_name = `key${subnet_id}`
-  let private_key = key[key_name]['PrivateKey']
-  private_key = private_key.slice(2, private_key.length) // remove 0x for subnet conf
-  const port = 20303 + subnet_id - 1
-  const rpcport = 8545 + subnet_id - 1
-  const wsport = 9555 + subnet_id - 1
+function genSubnetConfig(subnet_id, key) {
+  const key_name = `key${subnet_id}`;
+  let private_key = key[key_name]["PrivateKey"];
+  private_key = private_key.slice(2, private_key.length); // remove 0x for subnet conf
+  const port = 20303 + subnet_id - 1;
+  const rpcport = 8545 + subnet_id - 1;
+  const wsport = 9555 + subnet_id - 1;
   const config_env = `
 INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
@@ -30,18 +30,18 @@ PORT=${port}
 RPCPORT=${rpcport}
 WSPORT=${wsport}
 LOG_LEVEL=2
-`
+`;
 
-  return config_env
+  return config_env;
 }
 
-function genSubnetConfigMac (subnet_id, key, ip_record) {
-  const key_name = `key${subnet_id}`
-  let private_key = key[key_name]['PrivateKey']
-  private_key = private_key.slice(2, private_key.length) // remove 0x for subnet conf
-  const port = 20303 + subnet_id - 1
-  const rpcport = 8545 + subnet_id - 1
-  const wsport = 9555 + subnet_id - 1
+function genSubnetConfigMac(subnet_id, key, ip_record) {
+  const key_name = `key${subnet_id}`;
+  let private_key = key[key_name]["PrivateKey"];
+  private_key = private_key.slice(2, private_key.length); // remove 0x for subnet conf
+  const port = 20303 + subnet_id - 1;
+  const rpcport = 8545 + subnet_id - 1;
+  const wsport = 9555 + subnet_id - 1;
   const config_env = `
 INSTANCE_NAME=subnet${subnet_id}
 PRIVATE_KEY=${private_key}
@@ -57,14 +57,14 @@ PORT=${port}
 RPCPORT=${rpcport}
 WSPORT=${wsport}
 LOG_LEVEL=2
-`
+`;
 
-  return config_env
+  return config_env;
 }
 
-function genServicesConfig () {
-  const url = config.parentnet.url
-  const config_env=`
+function genServicesConfig() {
+  const url = config.parentnet.url;
+  const config_env = `
 # Bootnode
 EXTIP=${config.ip_1}
 BOOTNODE_PORT=20301
@@ -85,16 +85,16 @@ VITE_SUBNET_RPC=http://${config.public_ip}:8545
 
 # Share Variable
 STATS_SECRET=${config.secret_string}
-`
+`;
   // # Parent Chain Observe Node
   // PARENTNET_NODE_NAME=mainnet_observer
   // PRIVATE_KEYS=11111111111111111111111111111111111111111111111111111111111111
-  return config_env
+  return config_env;
 }
 
-function genServicesConfigMac (ip_record) {
-  const url = config.parentnet.url
-  const config_env=`
+function genServicesConfigMac(ip_record) {
+  const url = config.parentnet.url;
+  const config_env = `
 # Bootnode
 EXTIP=${ip_record["bootnode"]}
 BOOTNODE_PORT=20301
@@ -115,6 +115,6 @@ VITE_SUBNET_RPC=http://127.0.0.1:8545
 
 # Share Variable
 STATS_SECRET=${config.secret_string}
-`
-  return config_env
+`;
+  return config_env;
 }
