@@ -1,7 +1,6 @@
 #!/bin/bash
-VERSION_GENERATOR="v0.3.1"
-VERSION_CSC="v0.1.1"
-VERSION_GENESIS="v0.2.2"
+VERSION_GENERATOR="generator-v1-release"
+VERSION_GENESIS="feature-v1-release"
 
 current_dir="$(cd "$(dirname "$0")" && pwd)"
 echo 'checking for docker.env'
@@ -19,7 +18,6 @@ fi
 
 echo 'pull docker images'
 docker pull xinfinorg/subnet-generator:$VERSION_GENERATOR
-docker pull xinfinorg/csc:$VERSION_CSC
 docker pull xinfinorg/xdcsubnets:$VERSION_GENESIS
 
 
