@@ -106,12 +106,16 @@ function writeGenerated(output_dir) {
     }
   });
 
-  fs.writeFileSync(`${output_dir}/docker-compose.yml`, compose_content, (err) => {
-    if (err) {
-      console.error(err);
-      exit();
+  fs.writeFileSync(
+    `${output_dir}/docker-compose.yml`,
+    compose_content,
+    (err) => {
+      if (err) {
+        console.error(err);
+        exit();
+      }
     }
-  });
+  );
 
   fs.writeFileSync(`${output_dir}/common.env`, commonconf, (err) => {
     if (err) {
@@ -160,12 +164,16 @@ function writeGenerated(output_dir) {
     }
   );
 
-  fs.writeFileSync(`${output_dir}/genesis_input.yml`, genesis_input_file, (err) => {
-    if (err) {
-      console.error(err);
-      exit();
+  fs.writeFileSync(
+    `${output_dir}/genesis_input.yml`,
+    genesis_input_file,
+    (err) => {
+      if (err) {
+        console.error(err);
+        exit();
+      }
     }
-  });
+  );
 
   fs.writeFileSync(`${output_dir}/commands.txt`, commands, (err) => {
     if (err) {
@@ -175,7 +183,7 @@ function writeGenerated(output_dir) {
   });
 }
 
-function copyScripts(output_dir){
-  fs.copyFileSync(`${output_dir}/check_mining.sh`, "../script/check_mining.sh")
-  fs.copyFileSync(`${output_dir}/check_peer.sh`, "../script/check_peer.sh")
+function copyScripts(output_dir) {
+  fs.copyFileSync(`${__dirname}/../script/check_mining.sh`, `${output_dir}/check_mining.sh`);
+  fs.copyFileSync(`${__dirname}/../script/check_peer.sh`, `${output_dir}/check_peer.sh`);
 }
