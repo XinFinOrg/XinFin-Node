@@ -8,7 +8,7 @@ resp=$(curl -s --location 'http://localhost:8545' \
 num=$(echo $resp | jq -r .result.Number)
 echo $num
 
-if [[ $num == "null" ]]; then
+if [[ $num == "null" ]] || [[ $num == "" ]]; then
   echo "no block has been mined, please check if nodes are peering properly"
   exit
 else

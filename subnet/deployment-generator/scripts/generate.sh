@@ -23,7 +23,7 @@ docker pull xinfinorg/xdcsubnets:$VERSION_GENESIS
 
 echo ''
 echo 'generating configs'
-mkdir -p generated
+mkdir -p generated/scripts
 docker run --env-file docker.env -v $current_dir/generated:/app/generated xinfinorg/subnet-generator:$VERSION_GENERATOR || gen_success=false
 if [[ $gen_success == false ]]; then
   echo 'configs generation failed'
