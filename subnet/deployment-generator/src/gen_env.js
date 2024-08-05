@@ -118,3 +118,16 @@ STATS_SECRET=${config.secret_string}
 `;
   return config_env;
 }
+
+function genZeroEnv(){
+`
+PARENTNET_URL=${url}
+SUBNET_URL=http://${config.ip_1}:8545
+
+CSC=
+REVERSE_CSC=
+
+PARENTNET_PK=${config.parentnet.privatekey}
+SUBNET_PK=
+`
+}

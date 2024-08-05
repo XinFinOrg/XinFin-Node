@@ -101,7 +101,7 @@ function genCommands() {
   // commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
   commands += "\n4. Start services (relayer, backend, frontend)\n"
   commands += "  ./scripts/docker_up.sh services\n"
-  commands += "\n5. Confirm Subnet services through UI\n"
+  commands += "\n5. Confirm Subnet services through browser UI\n"
   commands += `  Frontend: ${config.public_ip}:6000\n`
   commands += `  Relayer: ${config.public_ip}:4000\n`
 
