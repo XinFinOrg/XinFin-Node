@@ -87,7 +87,7 @@ function genCommands() {
   //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
   //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n`; //composeV2
   // }
-  commands += "\n2. Confirm the Subnet is running correctly\n";
+  commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
   commands += "  ./scripts/check_mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
   commands += `  docker run --env-file common.env xinfinorg/csc:${config.version.csc} ${config.relayer_mode}\n`

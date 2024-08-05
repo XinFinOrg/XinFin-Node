@@ -126,6 +126,13 @@ function writeGenerated(output_dir) {
     }
   });
 
+  fs.writeFileSync(`${output_dir}/contract_deploy.env`, deployconf, (err) => {
+    if (err) {
+      console.error(err);
+      exit();
+    }
+  });
+
   const keys_json = JSON.stringify(keys, null, 2);
   fs.writeFile(`${output_dir}/keys.json`, keys_json, (err) => {
     if (err) {
