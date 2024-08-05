@@ -76,6 +76,11 @@ function configSanityCheck(config) {
     process.exit(1);
   }
 
+  if (!net.isIP(config.public_ip)) {
+    console.log("PUBLIC_IP Invalid IP address");
+    process.exit(1);
+  }
+
   if (!config.network_name || config.network_name === "") {
     console.log("NETWORK_NAME cannot be empty");
     process.exit(1);
