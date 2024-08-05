@@ -28,7 +28,8 @@ const config = {
     relayer: process.env.VERSION_RELAYER || "v0.2.2",
     stats: process.env.VERSION_STATS || "v0.1.8",
     frontend: process.env.VERSION_FRONTEND || "v0.1.9",
-    csc: process.env.VERSION_CSC || "v0.2.0",
+    // csc: process.env.VERSION_CSC || "v0.2.0",
+    csc: process.env.VERSION_CSC || "feature-v0.2.1",
     zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet: {

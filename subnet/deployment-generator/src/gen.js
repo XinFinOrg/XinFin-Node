@@ -66,12 +66,14 @@ if (config.operating_system === "mac") {
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfigMac(i, keys, ip_record));
   }
+  deployconf = gen_env.genContractDeployEnvMac()
 } else if (config.operating_system === "linux") {
   commonconf = gen_env.genServicesConfig();
   subnetconf = [];
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfig(i, keys));
   }
+  deployconf = gen_env.genContractDeployEnv()
 } else {
   console.log(`ERROR: unknown OS ${config.operating_system} not supported`);
   process.exit(1);
@@ -118,6 +120,13 @@ function writeGenerated(output_dir) {
   );
 
   fs.writeFileSync(`${output_dir}/common.env`, commonconf, (err) => {
+    if (err) {
+      console.error(err);
+      exit();
+    }
+  });
+
+  fs.writeFileSync(`${output_dir}/contract_deploy.env`, deployconf, (err) => {
     if (err) {
       console.error(err);
       exit();

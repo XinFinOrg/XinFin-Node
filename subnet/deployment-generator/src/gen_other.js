@@ -72,6 +72,10 @@ function genDeploymentJson(keys) {
 function genCommands() {
   const conf_path = __dirname + "/config/";
   const set_env = "SUBNET_CONFIG_PATH=" + conf_path;
+  let csc_mode = "full"
+  if (config.relayer_mode == "lite"){
+    csc_mode = "lite" 
+  }
   let commands = "";
 
   commands += "1. Deploy Subnet nodes\n";
@@ -87,10 +91,11 @@ function genCommands() {
   //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
   //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n`; //composeV2
   // }
-  commands += "\n2. Confirm the Subnet is running correctly\n";
+  commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
   commands += "  ./scripts/check_mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
-  commands += `  docker run --env-file common.env xinfinorg/csc:${config.version.csc} ${config.relayer_mode}\n`
+  // commands += `  docker pull xinfinorg/csc:${config.version_csc}` 
+  commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
   // commands += `\nmachine1:                deploy checkpoint smart contract\n`;
   // commands += `  docker run --env-file common.env   \\
   //   -v $(pwd)/../generated/:/app/config       \\
