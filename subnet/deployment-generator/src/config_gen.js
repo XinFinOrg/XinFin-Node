@@ -17,7 +17,7 @@ const config = {
   ),
   secret_string:
     process.env.SERVICES_SECRET || crypto.randomBytes(10).toString("hex"),
-  relayer_mode: process.env.RELAYER_MODE || "full", //full or lite //in upgradable csc both are deployed
+  relayer_mode: process.env.RELAYER_MODE || "full", //full or lite or max //in upgradable csc both are deployed
   docker_image_name:
     process.env.IMAGE_NAME || "xinfinorg/subnet-generator:latest",
   operating_system: process.env.OS || "linux",
