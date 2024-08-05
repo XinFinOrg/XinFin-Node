@@ -10,7 +10,7 @@ const config = {
   num_machines: parseInt(process.env.NUM_MACHINE),
   num_subnet: parseInt(process.env.NUM_SUBNET),
   ip_1: process.env.MAIN_IP || "",
-  public_ip: process.env.PUBLIC_IP || "",
+  public_ip: process.env.PUBLIC_IP || this.ip_1,
   network_name: process.env.NETWORK_NAME,
   network_id: parseInt(
     process.env.NETWORK_ID || Math.floor(Math.random() * (65536 - 1) + 1)
@@ -29,7 +29,7 @@ const config = {
     stats: process.env.VERSION_STATS || "v0.1.8",
     frontend: process.env.VERSION_FRONTEND || "v0.1.9",
     csc: process.env.VERSION_CSC || "v0.1.1",
-    // zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
+    zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
   },
   parentnet: {
     network: process.env.PARENTNET || "testnet",
