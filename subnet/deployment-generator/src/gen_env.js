@@ -123,7 +123,7 @@ STATS_SECRET=${config.secret_string}
 }
 
 function genContractDeployEnvMac(){
-`
+  const config_deploy = `
 PARENTNET_URL=${config.parentnet.url}
 SUBNET_URL=http://127.0.0.1:8545
 
@@ -134,10 +134,11 @@ GRANDMASTER_PK=??
 CSC=
 REVERSE_CSC=
 `
+  return config_deploy
 }
 
 function genContractDeployEnv(){
-`
+  const config_deploy = `
 PARENTNET_URL=${config.parentnet.url}
 SUBNET_URL=http://${config.ip_1}:8545
 
@@ -149,4 +150,5 @@ GRANDMASTER_PK=??
 CSC=
 REVERSE_CSC=
 `
+  return config_deploy
 }
