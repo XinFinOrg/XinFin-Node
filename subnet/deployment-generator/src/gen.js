@@ -184,6 +184,7 @@ function writeGenerated(output_dir) {
 }
 
 function copyScripts(output_dir) {
+  fs.mkdirSync(`${output_dir}/scripts`);
   fs.copyFileSync(`${__dirname}/../scripts/check_mining.sh`, `${output_dir}/scripts/check_mining.sh`);
   fs.copyFileSync(`${__dirname}/../scripts/check_peer.sh`, `${output_dir}/scripts/check_peer.sh`);
   fs.copyFileSync(`${__dirname}/../scripts/docker_up.sh`, `${output_dir}/scripts/docker_up.sh`);
