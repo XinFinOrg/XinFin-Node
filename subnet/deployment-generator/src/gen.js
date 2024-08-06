@@ -199,8 +199,9 @@ function copyScripts(output_dir) {
       exit();
     }
   });
-  fs.copyFileSync(`${__dirname}/../scripts/check_mining.sh`, `${output_dir}/scripts/check_mining.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/check_peer.sh`, `${output_dir}/scripts/check_peer.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/docker_up.sh`, `${output_dir}/scripts/docker_up.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/docker_down.sh`, `${output_dir}/scripts/docker_down.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/check-mining.sh`, `${output_dir}/scripts/check-mining.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/check-peer.sh`, `${output_dir}/scripts/check-peer.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/docker-up.sh`, `${output_dir}/scripts/docker-up.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/docker-down.sh`, `${output_dir}/scripts/docker-down.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/csc.sh`, `${output_dir}/scripts/csc.sh`);
 }

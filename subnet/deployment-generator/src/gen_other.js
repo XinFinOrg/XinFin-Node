@@ -77,42 +77,46 @@ function genCommands() {
     csc_mode = "lite" 
   }
   let commands = "";
-
-  commands += "1. Deploy Subnet nodes\n";
-  commands += "  ./scripts/docker_up.sh machine1\n"
-  // for (let i = 1; i <= config.num_machines; i++) {
-  //   const machine_name = "machine" + i.toString();
-  //   commands +=
-  //     machine_name + `:                deploy subnet on machine${i}\n`;
-  //   // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
-  //   if (i !== 1) {
-  //     commands += `  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`;
-  //   }
-  //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
-  //   commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n`; //composeV2
-  // }
+  commands += "Start under generated/ directory\n"
+  commands += "\n1. Deploy Subnet nodes\n";
+  for (let i = 1; i <= config.num_machines; i++) {
+    const machine_name = "machine" + i.toString();
+    if (config.num_machines > 1){
+    commands +=
+      machine_name + `:                deploy subnet on machine${i}\n`;
+    }
+    if (i !== 1) {
+      commands += `  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`;
+    }
+    commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
+    commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n`;
+  }
   commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
-  commands += "  ./scripts/check_mining.sh\n"
+  commands += "  ./scripts/check-mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
-  // commands += `  docker pull xinfinorg/csc:${config.version_csc}` 
-  commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
-  // commands += `\nmachine1:                deploy checkpoint smart contract\n`;
-  // commands += `  docker run --env-file common.env   \\
-  //   -v $(pwd)/../generated/:/app/config       \\
-  //   --network host                             \\
-  //   --entrypoint './docker/deploy_proxy.sh' xinfinorg/csc:${config.version.csc}\n`;
-  // commands += `\nmachine1:                start services and frontend\n`;
-  // commands += `  docker compose --env-file docker-compose.env --profile services pull\n`;
-  // commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
+  commands += `  docker pull xinfinorg/csc:${config.version.csc}\n`
+  if (config.operating_system == 'mac'){
+    commands += `  docker run --env-file contract_deploy.env --network generated_docker_net xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
+  } else {
+    commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
+  }
   commands += "\n4. Start services (relayer, backend, frontend)\n"
-  commands += "  ./scripts/docker_up.sh services\n"
+  commands += `  docker compose --env-file docker-compose.env --profile services pull\n`;
+  commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
   commands += "\n5. Confirm Subnet services through browser UI\n"
-  commands += `  Frontend: ${config.public_ip}:6000\n`
-  commands += `  Relayer: ${config.public_ip}:4000\n`
+  commands += `  Frontend: http://${config.public_ip}:6000\n`
+  commands += `  Relayer: http://${config.public_ip}:4000\n`
 
   if (config.relayer_mode == 'lite'){
 
-  } else if (config.relayer_mode == 'max'){
+  } else if (config.relayer_mode == 'full'){
+    commands += "\n  1. Deploy XDC-Zero\n"
+    commands += "\n  2. Add XDC-Zero Address to common.env\n" 
+    commands += "\n  3. Restart Relayer\n"
+    commands += "\n  4. Confirm Relayer is running  \n"
+    commands += `    Relayer: http://${config.public_ip}:4000\n`
+    commands += `    Frontend: http://${config.public_ip}:6000\n`
+  } else if (config.relayer_mode == 'temp'){
     commands += "\n\nOPTIONAL: Deploy XDC-Zero crosschain framework (Require RELAYER_MODE=full)\n" //there is a branch here: user can decide to deploy REVERSE or NOT ( subnet > mainnet or subnet <> mainnet)
     commands += "\n  1. Transfer funds to your SUBNET_WALLET\n"
     commands += "\n  2. Deploy Reverse Checkpoint Smart Contract (Reverse CSC)\n"
@@ -122,21 +126,10 @@ function genCommands() {
     commands += "\n  6. Confirm Relayer is running  \n"
     commands += `    Relayer: ${config.public_ip}:4000\n`
     commands += `    Frontend: ${config.public_ip}:6000\n`
-
-  } else if (config.relayer_mode == 'full'){
-    commands += "\n  1. Deploy XDC-Zero\n"
-    commands += "\n  2. Add XDC-Zero Address to common.env\n" 
-    commands += "\n  3. Restart Relayer\n"
-    commands += "\n  4. Confirm Relayer is running  \n"
-    commands += `    Relayer: ${config.public_ip}:4000\n`
-    commands += `    Frontend: ${config.public_ip}:6000\n`
-    
-
   } else {
     console.log("Error: Invalid Relayer Mode")
     exit()
   }
-
 
   return commands;
 }

@@ -125,7 +125,7 @@ STATS_SECRET=${config.secret_string}
 function genContractDeployEnvMac(){
   const config_deploy = `
 PARENTNET_URL=${config.parentnet.url}
-SUBNET_URL=http://127.0.0.1:8545
+SUBNET_URL=http://${ip_record["subnet1"]}:8545
 
 PARENTNET_PK=${config.parentnet.privatekey}
 SUBNET_PK=
