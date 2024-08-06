@@ -79,8 +79,17 @@ function genCommands() {
   let commands = "";
   commands += "Start under generated/scripts/ directory\n"
   commands += "\n1. Deploy Subnet nodes\n";
-  commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
-  commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n`;
+  for (let i = 1; i <= config.num_machines; i++) {
+    const machine_name = "machine" + i.toString();
+    commands +=
+      machine_name + `:                deploy subnet on machine${i}\n`;
+    // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
+    if (i !== 1) {
+      commands += `  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`;
+    }
+    commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} pull\n`;
+    commands += `  docker compose --env-file docker-compose.env --profile ${machine_name} up -d\n\n`;
+  }
   commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
   commands += "  ./scripts/check-mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
