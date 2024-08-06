@@ -97,7 +97,7 @@ function configSanityCheck(config) {
     process.exit(1);
   }
 
-  if (!(config.relayer_mode === "full" || config.relayer_mode === "lite")) {
+  if (!(config.relayer_mode === "full" || config.relayer_mode === "lite" || config.relayer_mode === "temp" )) {
     console.log("RELAYER_MODE only accepts 'full' or 'lite' (default full)");
     process.exit(1);
   }
