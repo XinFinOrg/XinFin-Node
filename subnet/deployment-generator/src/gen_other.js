@@ -142,16 +142,6 @@ function genCommands() {
 }
 
 function genGenesisInputFile(network_name, network_id, num_subnet, keys) {
-  // name: localNet
-  // certthreshold: 2
-  // grandmasters:
-  //   - "0x30f21E514A66732DA5Dff95340624fa808048601"
-  // masternodes:
-  //   - "0x25b4cbb9a7ae13feadc3e9f29909833d19d16de5"
-  //   - "0x3d9fd0c76bb8b3b4929ca861d167f3e05926cb68"
-  //   - "0x3c03a0abac1da8f2f419a59afe1c125f90b506c5"
-  // chainid: 29412
-
   const masternodes = [];
   const grandmasters = [];
   Object.keys(keys).forEach(function (k) {
@@ -165,7 +155,6 @@ function genGenesisInputFile(network_name, network_id, num_subnet, keys) {
 
   const config = {
     name: network_name,
-    certthreshold: Math.ceil((2 / 3) * num_subnet),
     grandmasters,
     masternodes,
     chainid: network_id,
