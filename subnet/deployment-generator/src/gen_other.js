@@ -81,7 +81,7 @@ function genCommands() {
   commands += "\n1. Deploy Subnet nodes\n";
   commands += "  ./docker-up.sh machine1\n"
   commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
-  commands += "  ./scripts/check-mining.sh\n"
+  commands += "  ./check-mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
   // commands += `  ./csc.sh ${config.version.csc} ${csc_mode}\n` 
   commands += `  docker pull xinfinorg/csc:${config.version_csc}`
