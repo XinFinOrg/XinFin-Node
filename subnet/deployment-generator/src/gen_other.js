@@ -77,13 +77,14 @@ function genCommands() {
     csc_mode = "lite" 
   }
   let commands = "";
-  commands += "Start under generated/scripts/ directory\n"
+  commands += "Start under generated/ directory\n"
   commands += "\n1. Deploy Subnet nodes\n";
   for (let i = 1; i <= config.num_machines; i++) {
     const machine_name = "machine" + i.toString();
+    if (config.num_machines > 1){
     commands +=
       machine_name + `:                deploy subnet on machine${i}\n`;
-    // commands+=`  docker-compose up -d --profile ${machine_name} -e ${set_env} \n`
+    }
     if (i !== 1) {
       commands += `  Prerequisite: copy docker-compose.yml,docker-compose.env,config/subnetX.env to ${machine_name}. Make sure docker-compose.env points to subnetX.env directory.\n`;
     }
