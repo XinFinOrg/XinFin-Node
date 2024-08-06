@@ -81,11 +81,15 @@ function genCommands() {
   commands += "\n1. Deploy Subnet nodes\n";
   commands += "  ./docker-up.sh machine1\n"
   commands += "\n2. After 60 seconds, confirm the Subnet is running correctly\n";
-  commands += "  ./check-mining.sh\n"
+  commands += "  ./scripts/check-mining.sh\n"
   commands += "\n3. Deploy Checkpoint Smart Contract (CSC)\n"
-  commands += `  ./csc.sh ${config.version.csc} ${csc_mode}\n` 
-  // commands += `  docker pull xinfinorg/csc:${config.version_csc}`
-  // commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
+  // commands += `  ./csc.sh ${config.version.csc} ${csc_mode}\n` 
+  commands += `  docker pull xinfinorg/csc:${config.version_csc}`
+  if (config.operating_system == 'mac'){
+    commands += `  docker run --env-file contract_deploy.env --network generated_docker_net xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
+  } else {
+    commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
+  }
   commands += "\n4. Start services (relayer, backend, frontend)\n"
   commands += "  ./docker-up.sh services\n"
   commands += "\n5. Confirm Subnet services through browser UI\n"
@@ -94,6 +98,13 @@ function genCommands() {
 
   if (config.relayer_mode == 'lite'){
 
+  } else if (config.relayer_mode == 'full'){
+    commands += "\n  1. Deploy XDC-Zero\n"
+    commands += "\n  2. Add XDC-Zero Address to common.env\n" 
+    commands += "\n  3. Restart Relayer\n"
+    commands += "\n  4. Confirm Relayer is running  \n"
+    commands += `    Relayer: ${config.public_ip}:4000\n`
+    commands += `    Frontend: ${config.public_ip}:6000\n`
   } else if (config.relayer_mode == 'temp'){
     commands += "\n\nOPTIONAL: Deploy XDC-Zero crosschain framework (Require RELAYER_MODE=full)\n" //there is a branch here: user can decide to deploy REVERSE or NOT ( subnet > mainnet or subnet <> mainnet)
     commands += "\n  1. Transfer funds to your SUBNET_WALLET\n"
@@ -104,15 +115,6 @@ function genCommands() {
     commands += "\n  6. Confirm Relayer is running  \n"
     commands += `    Relayer: ${config.public_ip}:4000\n`
     commands += `    Frontend: ${config.public_ip}:6000\n`
-
-  } else if (config.relayer_mode == 'full'){
-    commands += "\n  1. Deploy XDC-Zero\n"
-    commands += "\n  2. Add XDC-Zero Address to common.env\n" 
-    commands += "\n  3. Restart Relayer\n"
-    commands += "\n  4. Confirm Relayer is running  \n"
-    commands += `    Relayer: ${config.public_ip}:4000\n`
-    commands += `    Frontend: ${config.public_ip}:6000\n`
-    
 
   } else {
     console.log("Error: Invalid Relayer Mode")
