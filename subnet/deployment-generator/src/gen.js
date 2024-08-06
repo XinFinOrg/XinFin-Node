@@ -203,4 +203,5 @@ function copyScripts(output_dir) {
   fs.copyFileSync(`${__dirname}/../scripts/check-peer.sh`, `${output_dir}/scripts/check-peer.sh`);
   fs.copyFileSync(`${__dirname}/../scripts/docker-up.sh`, `${output_dir}/scripts/docker-up.sh`);
   fs.copyFileSync(`${__dirname}/../scripts/docker-down.sh`, `${output_dir}/scripts/docker-down.sh`);
+  fs.copyFileSync(`${__dirname}/../scripts/csc.sh`, `${output_dir}/scripts/csc.sh`);
 }
