@@ -66,14 +66,14 @@ if (config.operating_system === "mac") {
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfigMac(i, keys, ip_record));
   }
-  deployconf = gen_env.genContractDeployEnvMac()
+  deployconf = gen_env.genContractDeployEnvMac();
 } else if (config.operating_system === "linux") {
   commonconf = gen_env.genServicesConfig();
   subnetconf = [];
   for (let i = 1; i <= config.num_subnet; i++) {
     subnetconf.push(gen_env.genSubnetConfig(i, keys));
   }
-  deployconf = gen_env.genContractDeployEnv()
+  deployconf = gen_env.genContractDeployEnv();
 } else {
   console.log(`ERROR: unknown OS ${config.operating_system} not supported`);
   process.exit(1);
@@ -199,9 +199,24 @@ function copyScripts(output_dir) {
       exit();
     }
   });
-  fs.copyFileSync(`${__dirname}/../scripts/check-mining.sh`, `${output_dir}/scripts/check-mining.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/check-peer.sh`, `${output_dir}/scripts/check-peer.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/docker-up.sh`, `${output_dir}/scripts/docker-up.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/docker-down.sh`, `${output_dir}/scripts/docker-down.sh`);
-  fs.copyFileSync(`${__dirname}/../scripts/csc.sh`, `${output_dir}/scripts/csc.sh`);
+  fs.copyFileSync(
+    `${__dirname}/../scripts/check-mining.sh`,
+    `${output_dir}/scripts/check-mining.sh`
+  );
+  fs.copyFileSync(
+    `${__dirname}/../scripts/check-peer.sh`,
+    `${output_dir}/scripts/check-peer.sh`
+  );
+  fs.copyFileSync(
+    `${__dirname}/../scripts/docker-up.sh`,
+    `${output_dir}/scripts/docker-up.sh`
+  );
+  fs.copyFileSync(
+    `${__dirname}/../scripts/docker-down.sh`,
+    `${output_dir}/scripts/docker-down.sh`
+  );
+  fs.copyFileSync(
+    `${__dirname}/../scripts/csc.sh`,
+    `${output_dir}/scripts/csc.sh`
+  );
 }
