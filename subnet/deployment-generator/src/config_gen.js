@@ -23,11 +23,11 @@ const config = {
   operating_system: process.env.OS || "linux",
   version: {
     subnet:   (process.env.VERSION_SUBNET   || 'feature-v1-release'),   
-    bootnode: (process.env.VERSION_BOOTNODE || 'v0.2.2'),
+    bootnode: (process.env.VERSION_BOOTNODE || 'feature-v1-release'),
     // observer: (process.env.VERSION_OBSERVER || 'latest'),
-    relayer: process.env.VERSION_RELAYER || "v0.2.2",
-    stats: process.env.VERSION_STATS || "v0.1.8",
-    frontend: process.env.VERSION_FRONTEND || "v0.1.9",
+    relayer: process.env.VERSION_RELAYER || "feature-v1-release",
+    stats: process.env.VERSION_STATS || "reature-v1-release",
+    frontend: process.env.VERSION_FRONTEND || "feature-v1-release",
     // csc: process.env.VERSION_CSC || "v0.2.0",
     csc: process.env.VERSION_CSC || "feature-v0.2.1",
     zero:     (process.env.VERSION_ZERO     || 'v0.1.1')
