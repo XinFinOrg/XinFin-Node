@@ -100,32 +100,41 @@ function genCommands() {
   } else {
     commands += `  docker run --env-file contract_deploy.env xinfinorg/csc:${config.version.csc} ${csc_mode}\n`
   }
-  commands += "\n4. Start services (relayer, backend, frontend)\n"
+  commands += "\n4. Add CSC configuration to common.env\n"
+  commands += "  - copy step 3. output CHECKPOINT_CONTRACT to common.env\n"
+  commands += "\n5. Start services (relayer, backend, frontend)\n"
   commands += `  docker compose --env-file docker-compose.env --profile services pull\n`;
   commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
-  commands += "\n5. Confirm Subnet services through browser UI\n"
+  commands += "\n6. Confirm Subnet services through browser UI\n"
   commands += `  Frontend: http://${config.public_ip}:6000\n`
   commands += `  Relayer: http://${config.public_ip}:4000\n`
 
   if (config.relayer_mode == 'lite'){
 
   } else if (config.relayer_mode == 'full'){
-    commands += "\n  1. Deploy XDC-Zero\n"
-    commands += "\n  2. Add XDC-Zero Address to common.env\n" 
-    commands += "\n  3. Restart Relayer\n"
-    commands += "\n  4. Confirm Relayer is running  \n"
-    commands += `    Relayer: http://${config.public_ip}:4000\n`
-    commands += `    Frontend: http://${config.public_ip}:6000\n`
+    commands += "\n\nOPTIONAL: Deploy XDC-Zero crosschain framework\n" 
+    commands += "\n1. Add CSC configuration to contract_deploy.env\n"
+    commands += "  - copy CHECKPOINT_CONTRACT from common.env to CSC in contract_deploy.env\n"
+    commands += "  - copy CHECKPOINT_CONTRACT from common.env to REVERSE_CSC in contract_deploy.env\n"
+    commands += "\n1. Deploy XDC-Zero\n"
+    commands += `  docker pull xinfinorg/xdc-zero:${config.version.zero}\n`
+    commands += `  docker run --env-file contract_deploy.env --network generated_docker_net xinfinorg/xdc-zero:${config.version.zero} endpointandregisterchain\n`
+    commands += "  \n  (Optional) Deploy Subswap and Register Application to XDC-Zero\n"
+    commands += "  - copy SUBNET_ZERO_CONTRACT and PARENTNET_ZERO_CONTRACT to contract_deploy.env\n"
+    commands += "  docker run --env-file contract_deploy.env --network generated_docker_net xinfinorg/xdc-zero:v0.1.0 subswap\n"
+    commands += "  - copy SUBNET_APP and PARENTNET_APP to contract_deploy.env\n"
+    commands += "  docker run --env-file contract_deploy.env --network generated_docker_net xinfinorg/xdc-zero:v0.1.0 applicationregister\n"
+    commands += "\n2. Add XDC-Zero Configuration to common.env\n" 
+    commands += "  - copy step 1. output SUBNET_ZERO_CONTRACT and PARENTNET_ZERO_CONTRACT to common.env\n"
+    commands += "  - Add PARENTNET_ZERO_WALLET_PK to common.env, this should be different from PARENTNET_WALLET_PK\n"
+    commands += "\n3. Restart Relayer\n"
+    commands += `  docker compose --env-file docker-compose.env --profile services down\n`; 
+    commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`; 
+    commands += "\n4. Confirm Relayer is running  \n"
+    commands += `  Relayer: http://${config.public_ip}:4000\n`
+    commands += `  Frontend: http://${config.public_ip}:6000\n`
   } else if (config.relayer_mode == 'temp'){
-    commands += "\n\nOPTIONAL: Deploy XDC-Zero crosschain framework (Require RELAYER_MODE=full)\n" //there is a branch here: user can decide to deploy REVERSE or NOT ( subnet > mainnet or subnet <> mainnet)
-    commands += "\n  1. Transfer funds to your SUBNET_WALLET\n"
-    commands += "\n  2. Deploy Reverse Checkpoint Smart Contract (Reverse CSC)\n"
-    commands += "\n  3. Deploy XDC-Zero \n"
-    commands += "\n  4. Add XDC-Zero Address to common.env\n" 
-    commands += "\n  5. Restart Relayer\n"
-    commands += "\n  6. Confirm Relayer is running  \n"
-    commands += `    Relayer: ${config.public_ip}:4000\n`
-    commands += `    Frontend: ${config.public_ip}:6000\n`
+
   } else {
     console.log("Error: Invalid Relayer Mode")
     exit()

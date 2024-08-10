@@ -128,8 +128,7 @@ PARENTNET_URL=${config.parentnet.url}
 SUBNET_URL=http://${ip_record["subnet1"]}:8545
 
 PARENTNET_PK=${config.parentnet.privatekey}
-SUBNET_PK=
-GRANDMASTER_PK=??
+SUBNET_PK=${config.keys.grandmaster_pk}
 
 CSC=
 REVERSE_CSC=
@@ -144,8 +143,7 @@ SUBNET_URL=http://${config.ip_1}:8545
 
 
 PARENTNET_PK=${config.parentnet.privatekey}
-SUBNET_PK=
-GRANDMASTER_PK=??
+SUBNET_PK=${config.keys.grandmaster_pk}
 
 CSC=
 REVERSE_CSC=
