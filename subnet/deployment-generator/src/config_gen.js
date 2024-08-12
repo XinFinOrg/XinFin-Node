@@ -22,15 +22,15 @@ const config = {
     process.env.IMAGE_NAME || "xinfinorg/subnet-generator:latest",
   operating_system: process.env.OS || "linux",
   version: {
-    subnet:   (process.env.VERSION_SUBNET   || 'feature-v1-release'),   
-    bootnode: (process.env.VERSION_BOOTNODE || 'feature-v1-release'),
+    subnet: process.env.VERSION_SUBNET || "feature-v1-release",
+    bootnode: process.env.VERSION_BOOTNODE || "feature-v1-release",
     // observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer: process.env.VERSION_RELAYER || "feature-v1-release",
     stats: process.env.VERSION_STATS || "feature-v1-release",
     frontend: process.env.VERSION_FRONTEND || "feature-v1-release",
     // csc: process.env.VERSION_CSC || "v0.2.0",
     csc: process.env.VERSION_CSC || "feature-v0.2.1",
-    zero:     (process.env.VERSION_ZERO     || 'v0.1.0')
+    zero: process.env.VERSION_ZERO || "v0.1.0",
   },
   parentnet: {
     network: process.env.PARENTNET || "testnet",
@@ -97,7 +97,13 @@ function configSanityCheck(config) {
     process.exit(1);
   }
 
-  if (!(config.relayer_mode === "full" || config.relayer_mode === "lite" || config.relayer_mode === "temp" )) {
+  if (
+    !(
+      config.relayer_mode === "full" ||
+      config.relayer_mode === "lite" ||
+      config.relayer_mode === "temp"
+    )
+  ) {
     console.log("RELAYER_MODE only accepts 'full' or 'lite' (default full)");
     process.exit(1);
   }

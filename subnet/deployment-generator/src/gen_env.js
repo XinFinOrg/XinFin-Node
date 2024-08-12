@@ -8,7 +8,6 @@ module.exports = {
   genServicesConfigMac,
   genContractDeployEnv,
   genContractDeployEnvMac,
-
 };
 
 function genSubnetConfig(subnet_id, key) {
@@ -148,7 +147,7 @@ PARENTNET_WALLET_PK=${config.parentnet.privatekey}
   return config_env;
 }
 
-function genContractDeployEnvMac(){
+function genContractDeployEnvMac() {
   const config_deploy = `
 PARENTNET_URL=${config.parentnet.url}
 SUBNET_URL=http://${ip_record["subnet1"]}:8545
@@ -164,11 +163,11 @@ REVERSE_CSC=0x0000000000000000000000000000000000000000
 # PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
 # SUBNET_APP=0x0000000000000000000000000000000000000000
 # PARENTNET_APP=0x0000000000000000000000000000000000000000
-`
-  return config_deploy
+`;
+  return config_deploy;
 }
 
-function genContractDeployEnv(){
+function genContractDeployEnv() {
   const config_deploy = `
 PARENTNET_URL=${config.parentnet.url}
 SUBNET_URL=http://${config.ip_1}:8545
@@ -185,6 +184,6 @@ REVERSE_CSC=0x0000000000000000000000000000000000000000
 # PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
 # SUBNET_APP=0x0000000000000000000000000000000000000000
 # PARENTNET_APP=0x0000000000000000000000000000000000000000
-`
-  return config_deploy
+`;
+  return config_deploy;
 }

@@ -78,9 +78,9 @@ function genServices(machine_id) {
     restart: "always",
     env_file: config_path, // not used directly (injected via volume) but required to trigger restart if common.env changes
     volumes: [`${config_path}:/app/.env.local`],
-    ports: ['6000:6000'],
-    profiles: [machine]
-  }
+    ports: ["6000:6000"],
+    profiles: [machine],
+  };
   const relayer = {
     image: `xinfinorg/xdc-relayer:${config.version.relayer}`,
     restart: "always",
