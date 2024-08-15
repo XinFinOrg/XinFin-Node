@@ -40,6 +40,7 @@ XDC \
 --bootnodes ${bootnodes} \
 --syncmode ${NODE_TYPE} \
 --datadir /work/xdcchain \
+--XDCx.datadir /work/xdcchain/XDCx \
 --networkid 51 \
 --port 30304 \
 --rpc \
