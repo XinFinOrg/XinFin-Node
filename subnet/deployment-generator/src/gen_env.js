@@ -66,7 +66,7 @@ LOG_LEVEL=2
 
 function genServicesConfig() {
   const url = config.parentnet.url;
-  const config_env = `
+  let config_env = `
 # Bootnode
 EXTIP=${config.ip_1}
 BOOTNODE_PORT=20301
@@ -90,17 +90,29 @@ STATS_SECRET=${config.secret_string}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 PARENTNET_WALLET_PK=${config.parentnet.privatekey}
 
+`;
+
+if (config.zero.zero_mode == 'one-directional'){
+  config_env += `
 # # XDC-ZERO. It's optional. Don't uncomment it if not planning to enable it
 # SUBNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
 # PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
-# PARENTNET_ZERO_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
+# PARENTNET_ZERO_WALLET_PK=${config.zero.parentnet_zero_wallet_pk}
+  `
+
+} else if (config.zero.zero_mode == 'bi-directional'){
+  config_env += `
+# # XDC-ZERO. It's optional. Don't uncomment it if not planning to enable it
+# SUBNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
+# PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
+# PARENTNET_ZERO_WALLET_PK=${config.zero.parentnet_zero_wallet_pk}
 
 # # Reverse-XDC-ZERO. optional.
 # REVERSE_CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
-# SUBNET_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
-# SUBNET_ZERO_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
-
-`;
+# SUBNET_WALLET_PK=${config.zero.subnet_wallet_pk}
+# SUBNET_ZERO_WALLET_PK=${config.zero.subnet_zero_wallet_pk}
+  `
+}
   // # Parent Chain Observe Node
   // PARENTNET_NODE_NAME=mainnet_observer
   // PRIVATE_KEYS=11111111111111111111111111111111111111111111111111111111111111
@@ -109,7 +121,7 @@ PARENTNET_WALLET_PK=${config.parentnet.privatekey}
 
 function genServicesConfigMac(ip_record) {
   const url = config.parentnet.url;
-  const config_env = `
+  let config_env = `
 # Bootnode
 EXTIP=${ip_record["bootnode"]}
 BOOTNODE_PORT=20301
@@ -133,17 +145,28 @@ STATS_SECRET=${config.secret_string}
 CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
 PARENTNET_WALLET_PK=${config.parentnet.privatekey}
 
+`;
+if (config.zero.zero_mode == 'one-directional'){
+  config_env += `
 # # XDC-ZERO. It's optional. Don't uncomment it if not planning to enable it
 # SUBNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
 # PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
-# PARENTNET_ZERO_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
+# PARENTNET_ZERO_WALLET_PK=${config.zero.parentnet_zero_wallet_pk}
+  `
+
+} else if (config.zero.zero_mode == 'bi-directional'){
+  config_env += `
+# # XDC-ZERO. It's optional. Don't uncomment it if not planning to enable it
+# SUBNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
+# PARENTNET_ZERO_CONTRACT=0x0000000000000000000000000000000000000000
+# PARENTNET_ZERO_WALLET_PK=${config.zero.parentnet_zero_wallet_pk}
 
 # # Reverse-XDC-ZERO. optional.
 # REVERSE_CHECKPOINT_CONTRACT=0x0000000000000000000000000000000000000000
-# SUBNET_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
-# SUBNET_ZERO_WALLET_PK=0x0000000000000000000000000000000000000000000000000000000000000000
-
-`;
+# SUBNET_WALLET_PK=${config.zero.subnet_wallet_pk}
+# SUBNET_ZERO_WALLET_PK=${config.zero.subnet_zero_wallet_pk}
+  `
+}
   return config_env;
 }
 

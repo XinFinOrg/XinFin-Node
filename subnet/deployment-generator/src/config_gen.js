@@ -17,18 +17,16 @@ const config = {
   ),
   secret_string:
     process.env.SERVICES_SECRET || crypto.randomBytes(10).toString("hex"),
-  relayer_mode: process.env.RELAYER_MODE || "full", //full or lite or max //in upgradable csc both are deployed
+  relayer_mode: process.env.RELAYER_MODE || "full",
   docker_image_name:
     process.env.IMAGE_NAME || "xinfinorg/subnet-generator:latest",
   operating_system: process.env.OS || "linux",
   version: {
     subnet: process.env.VERSION_SUBNET || "feature-v1-release",
     bootnode: process.env.VERSION_BOOTNODE || "feature-v1-release",
-    // observer: (process.env.VERSION_OBSERVER || 'latest'),
     relayer: process.env.VERSION_RELAYER || "feature-v1-release",
     stats: process.env.VERSION_STATS || "feature-v1-release",
-    frontend: process.env.VERSION_FRONTEND || "feature-v1-release",
-    // csc: process.env.VERSION_CSC || "v0.2.0",
+    frontend: process.env.VERSION_FRONTEND || "v0.1.10",
     csc: process.env.VERSION_CSC || "feature-v0.2.1",
     zero: process.env.VERSION_ZERO || "v0.1.0",
   },
@@ -43,6 +41,14 @@ const config = {
     subnets_pk: process.env.SUBNETS_PK || "",
     grandmaster_addr: "",
     grandmaster_pk: process.env.GRANDMASTER_PK || "",
+  },
+  zero: {
+    zero_mode: process.env.XDC_ZERO || "",
+    subnet_wallet_pk: process.env.SUBNET_WALLET_PK || "",
+    subnet_zero_wallet_pk: process.env.SUBNET_ZERO_WALLET_PK || "",
+    parentnet_zero_wallet_pk: process.env.PARENTNET_ZERO_WALLET_PK || "",
+    subswap: process.env.SUBSWAP || "" 
+
   },
   generator: {
     output_path: `${__dirname}/../generated/`,
@@ -110,11 +116,13 @@ function configSanityCheck(config) {
 
   if (
     config.parentnet.network === "devnet" ||
-    config.parentnet.network === "testnet"
+    config.parentnet.network === "testnet" ||
+    config.parentnet.network === "mainnet" 
   ) {
     let official_urls = {
       devnet: "https://devnetstats.apothem.network/devnet",
       testnet: "https://erpc.apothem.network/",
+      mainnet: "https://rpc.xdc.org"
     };
     config.parentnet.url = official_urls[config.parentnet.network];
   } else {
@@ -197,9 +205,28 @@ function configSanityCheck(config) {
       );
       process.exit();
     }
-    console.log(
-      "OS=mac specified, this option is intended for single machine testing environment only. Due to Docker network limitation, Subnets on MacOS can only communicate within its own machine."
-    );
   }
+
+  if (config.zero.zero_mode == "one-directional"){
+    try {
+      validatePK(config.zero.parentnet_zero_wallet_pk);
+    } catch {
+      console.log("Invalid PARENTNET_ZERO_WALLET_PK");
+      process.exit(1);
+    }
+  }
+
+  if (config.zero.zero_mode === "bi-directional"){
+    try {
+      validatePK(config.zero.subnet_wallet_pk);
+      validatePK(config.zero.subnet_zero_wallet_pk);
+      validatePK(config.zero.parentnet_zero_wallet_pk);
+    } catch {
+      console.log("Invalid SUBNET_WALLET_PK or SUBNET_ZERO_WALLET_PK or PARENTNET_ZERO_WALLET_PK");
+      process.exit(1);
+    }
+  }
+
+
   return true;
 }

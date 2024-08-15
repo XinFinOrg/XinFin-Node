@@ -1,0 +1,142 @@
+#myForm {
+  margin-left: 200px;
+  /* margin-right: 200px; */
+  max-width: 1100px;
+}
+
+.content {
+  display: none;
+  background-color: #f0f0f0;
+  margin-right: 100px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#toggle:checked ~ .content {
+  display: block;
+}
+
+#toggle2:checked ~ .grayedout{
+  background-color: gray
+  disabled
+}
+
+#lite-mode-extra-info{
+  color:red
+}
+
+#incomplete-required-warning{
+  color:red
+}
+
+/* hover trick */
+.info-container {
+  position: relative;
+  display: inline-block;
+}
+
+.info-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+.info-icon-all-gray{
+  color: #f0f0f0;
+  background-color: #f0f0f0;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+.info-icon:hover + .tooltip,
+.info-icon:focus + .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+#information1{
+  display:none;
+}
+#expand1:hover + #information1{
+  display:block;
+}
+
+/* expanding after selection */
+#linuxoption{
+  display:none;
+}
+#os-radio-linux:checked+#linuxoption{
+  display:block;
+}
+
+#customkeys{
+  display:none;
+}
+#customkeys-checkbox:checked+#customkeys{
+  display:block;
+}
+
+#customversion{
+  display:none;
+}
+#customversion-checkbox:checked+#customversion{
+  display:block;
+}
+
+#xdczero{
+  display:none;
+}
+#xdczero-checkbox:checked+#xdczero{
+  display:block;
+}
+
+/* #rm-radio-full:checked ~ #xdczero-upper{
+  display:block;
+}
+#rm-radio-lite:checked ~ #xdczero-upper{
+  display:block;
+} */
+
+#zerobidi{
+  display:none;
+}
+#zm-radio-bi:checked ~ #zerobidi{
+  display:block;
+}
+#zm-radio-one:checked ~ #zerobidi{
+  display:none;
+}

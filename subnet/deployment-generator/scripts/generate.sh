@@ -1,20 +1,8 @@
 #!/bin/bash
-VERSION_GENERATOR="generator-v1-release"
+VERSION_GENERATOR="generator-ui-concept"
 VERSION_GENESIS="feature-v1-release"
 
 current_dir="$(cd "$(dirname "$0")" && pwd)"
-echo 'checking for docker.env'
-if [ ! -f "docker.env" ]; then
-  echo 'docker.env not found'
-  exit 1
-fi
-
-if ! grep -q "CONFIG_PATH" "docker.env"; then
-  line="#current directory"$'\n'"CONFIG_PATH=$(pwd)"
-  echo "$line" | cat - "docker.env" > temp && mv temp "docker.env"
-  echo 'added CONFIG_PATH to docker.env'
-fi
-
 
 echo 'pull docker images'
 docker pull xinfinorg/subnet-generator:$VERSION_GENERATOR
@@ -22,13 +10,12 @@ docker pull xinfinorg/xdcsubnets:$VERSION_GENESIS
 
 
 echo ''
-echo 'generating configs'
+echo 'go to http://localhost:3000 to access Subnet Configuration Generator UI'
+echo 'or use ssh tunnel if this is running on your server'
+echo 'ssh -N -L localhost:3000:localhost:3000 <username>@<ip_address> -i <private_key_file>'
 mkdir -p generated/scripts
-docker run --env-file docker.env -v $current_dir/generated:/app/generated xinfinorg/subnet-generator:$VERSION_GENERATOR || gen_success=false
-if [[ $gen_success == false ]]; then
-  echo 'configs generation failed'
-  exit 1
-fi
+docker run -p 3000:3000 -v $current_dir/generated:/app/generated xinfinorg/subnet-generator:$VERSION_GENERATOR || gen_success=false
+
 
 echo 'generating genesis.json'
 docker run -v $current_dir/generated/:/app/generated/ --entrypoint 'bash' xinfinorg/xdcsubnets:$VERSION_GENESIS /work/puppeth.sh || pup_success=false
