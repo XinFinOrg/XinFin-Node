@@ -34,13 +34,28 @@ INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC --ethstats ${netstats} --gcmode=archive \
-    --bootnodes ${bootnodes} --syncmode ${NODE_TYPE} \
-    --datadir /work/xdcchain \
-    --networkid 51 -port 30304 \
-    --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 \
-    --rpcport 8555 \
-    --rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd \
-    --mine --gasprice "1" --targetgaslimit "420000000" \
-    --verbosity 2 --ws --wsaddr=0.0.0.0 --wsport 8556 \
-    --wsorigins "*" 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+XDC \
+--ethstats ${netstats} \
+--gcmode=archive \
+--bootnodes ${bootnodes} \
+--syncmode ${NODE_TYPE} \
+--datadir /work/xdcchain \
+--networkid 51 \
+--port 30304 \
+--rpc \
+--rpccorsdomain "*" \
+--rpcaddr 0.0.0.0 \
+--rpcport 8555 \
+--rpcvhosts "*" \
+--unlock "${wallet}" \
+--password /work/.pwd \
+--mine \
+--gasprice "1" \
+--targetgaslimit "420000000" \
+--verbosity 2 \
+--ws \
+--wsaddr=0.0.0.0 \
+--wsport 8556 \
+--wsorigins "*" \
+2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+

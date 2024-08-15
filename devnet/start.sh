@@ -25,13 +25,29 @@ netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats
 
 echo "Starting nodes with $bootnodes ..."
 
-XDC --ethstats ${netstats} --gcmode=archive \
---bootnodes ${bootnodes} --syncmode ${NODE_TYPE} \
---datadir /work/xdcchain --networkid 551 \
--port 30303 --rpc --rpccorsdomain "*" --rpcaddr 0.0.0.0 \
+XDC \
+--ethstats ${netstats} \
+--gcmode=archive \
+--bootnodes ${bootnodes} \
+--syncmode ${NODE_TYPE} \
+--datadir /work/xdcchain \
+--networkid 551 \
+--port 30303 \
+--rpc \
+--rpccorsdomain "*" \
+--rpcaddr 0.0.0.0 \
 --rpcport 8545 \
 --rpcapi db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS \
---rpcvhosts "*" --unlock "${wallet}" --password /work/.pwd --mine \
---gasprice "1" --targetgaslimit "420000000" --verbosity 3 \
---ws --wsaddr=0.0.0.0 --wsport 8555 \
---wsorigins "*" 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+--rpcvhosts "*" \
+--unlock "${wallet}" \
+--password /work/.pwd \
+--mine \
+--gasprice "1" \
+--targetgaslimit "420000000" \
+--verbosity 3 \
+--ws \
+--wsaddr=0.0.0.0 \
+--wsport 8555 \
+--wsorigins "*" \
+2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+
