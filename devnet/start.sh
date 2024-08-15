@@ -32,6 +32,7 @@ XDC \
 --syncmode ${NODE_TYPE} \
 --datadir /work/xdcchain \
 --networkid 551 \
+--XDCx.datadir /work/xdcchain/XDCx \
 --port 30303 \
 --rpc \
 --rpccorsdomain "*" \
