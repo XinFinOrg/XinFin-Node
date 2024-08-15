@@ -17,3 +17,4 @@ node_modules
 package-lock.json
 generated
 *.env
+temp

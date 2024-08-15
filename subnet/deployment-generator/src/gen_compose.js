@@ -71,7 +71,7 @@ function genServices (machine_id) {
     restart: 'always',
     env_file: config_path, // not used directly (injected via volume) but required to trigger restart if common.env changes
     volumes: [`${config_path}:/app/.env.local`],
-    ports: ['5000:5000'],
+    ports: ['5555:5555'],
     profiles: [machine]
   }
   const relayer = {
