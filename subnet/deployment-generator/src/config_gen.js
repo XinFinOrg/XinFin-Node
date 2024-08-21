@@ -10,7 +10,7 @@ const config = {
   num_machines:  parseInt(process.env.NUM_MACHINE),
   num_subnet:         parseInt(process.env.NUM_SUBNET),
   ip_1:               (process.env.MAIN_IP                || ''),
-  public_ip:          (process.env.PUBLIC_IP ||  ''),
+  public_ip:          (process.env.PUBLIC_IP || process.env.MAIN_IP),
   network_name:       (process.env.NETWORK_NAME),
   network_id:         parseInt(process.env.NETWORK_ID     || Math.floor(Math.random() * (65536 - 1) + 1)),
   secret_string:      (process.env.SERVICES_SECRET        || crypto.randomBytes(10).toString('hex')),
