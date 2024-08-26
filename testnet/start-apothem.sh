@@ -44,6 +44,7 @@ XDC \
 --networkid 51 \
 --port 30304 \
 --rpc \
+--rpcapi eth,net,web3,XDPoS \
 --rpccorsdomain "*" \
 --rpcaddr 0.0.0.0 \
 --rpcport 8555 \
