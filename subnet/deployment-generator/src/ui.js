@@ -1,6 +1,7 @@
 process.chdir(__dirname);
 const { execSync } = require("child_process");
 const fs = require("fs");
+const ethers = require('ethers');
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -46,6 +47,14 @@ router.post("/confirm", (req, res) => {
   console.log(req.body)
   res.render("confirm", { title: "Hey", message: "this is submit" });
 });
+
+router.get("/address", (req,res) => {
+  const randomWallet = ethers.Wallet.createRandom()
+  res.json({
+    "publicKey": randomWallet.address,
+    "privateKey": randomWallet.privateKey
+  });
+})
  
 app.use("/", router);
 app.listen(process.env.port || 3000);

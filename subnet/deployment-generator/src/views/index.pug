@@ -12,7 +12,7 @@ body
 
   //- form.pure-form.pure-form-aligned#myForm(onsubmit="return validateForm()")
   form.pure-form.pure-form-aligned#myForm(action="/submit" method="post" onsubmit="return validateForm()")
-    center 
+    center   
       h3 Subnet Configuration
     fieldset
       .pure-control-group 
@@ -236,6 +236,29 @@ body
     .pure-controls
       button.pure-button.pure-button-primary(type='submit') Submit
 
+    center
+      h3#helper-title Helpers
+    .helper-block
+      h4 Address Generator
+      p#address-gen-pub Address:  
+      p#address-gen-pk Private Key: 
+      #disclaim-wrap
+        button.pure-button.pure-button-primary(type="button" onclick="genAddress()") Generate Address 
+        h8#disclaimer  *Generation is done locally on your machine, fully offline.
+    .helper-block
+      h4 XDC Faucet
+      p
+        a(href="https://faucet.apothem.network/") Testnet(Apothem) Faucet
+      p
+        a(href="https://faucet.blocksscan.io/ ") Testnet and Devnet Faucet by BlocksScan
+    .helper-block
+      h4 Documentation
+      p 
+        a(href="https://xinfinorg.github.io/xdc-subnet-docs/deployment/launch_subnet") Official Subnet Documentation 
+      p
+        a(href="https://github.com/XinFinOrg/XDC-Subnet") XDC-Subnet Github
+    
+
 script.
   function customSubnetKeyJs(){
     const parent = document.getElementById("custom-subnet-key-placeholder")
@@ -322,4 +345,18 @@ script.
     document.getElementById("incomplete-required-warning").innerHTML=""
     console.log("pass")    
     return true
+  }
+
+  function genAddress(){
+    fetch('/address')
+      .then(response => response.json())
+        .then(data => {
+          document.getElementById("address-gen-pub").innerHTML="Address: "+data["publicKey"]
+          document.getElementById("address-gen-pk").innerHTML="Private Key: "+data["privateKey"]
+          })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById("address-gen-pub").innerHTML="Error Generating Address"
+          document.getElementById("address-gen-pk").innerHTML="Error Generating Address"
+          });
   }
