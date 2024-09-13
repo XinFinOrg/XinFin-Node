@@ -10,11 +10,11 @@ docker pull xinfinorg/xdcsubnets:$VERSION_GENESIS
 
 
 echo ''
-echo 'go to http://localhost:3000 to access Subnet Configuration Generator UI'
+echo 'go to http://localhost:5210 to access Subnet Configuration Generator UI'
 echo 'or use ssh tunnel if this is running on your server'
-echo 'ssh -N -L localhost:3000:localhost:3000 <username>@<ip_address> -i <private_key_file>'
+echo 'ssh -N -L localhost:5210:localhost:5210 <username>@<ip_address> -i <private_key_file>'
 mkdir -p generated/scripts
-docker run -p 3000:3000 -v $current_dir/generated:/app/generated xinfinorg/subnet-generator:$VERSION_GENERATOR || gen_success=false
+docker run -p 5210:5210 -v $current_dir/generated:/app/generated xinfinorg/subnet-generator:$VERSION_GENERATOR || gen_success=false
 
 
 echo 'generating genesis.json'

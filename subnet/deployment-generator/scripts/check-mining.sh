@@ -5,7 +5,7 @@ resp=$(curl -s --location 'http://localhost:8545' \
 --header 'Content-Type: application/json' \
 --data '{"jsonrpc":"2.0","method":"XDPoS_getV2BlockByNumber","params":["latest"],"id":1}')
 
-num=$(echo $resp | jq -r .result.Number)
+num=$(echo $resp | grep -o '"Number":[0-9]*' | cut -d':' -f2 | tr -d ' ')
 echo $num
 
 if [[ $num == "null" ]] || [[ $num == "" ]]; then
@@ -19,7 +19,7 @@ else
     resp=$(curl -s --location 'http://localhost:8545' \
   --header 'Content-Type: application/json' \
   --data '{"jsonrpc":"2.0","method":"XDPoS_getV2BlockByNumber","params":["latest"],"id":1}')
-    nextnum=$(echo $resp | jq -r .result.Number)
+    nextnum=$(echo $resp | grep -o '"Number":[0-9]*' | cut -d':' -f2 | tr -d ' ')
     echo $nextnum
   done
 fi

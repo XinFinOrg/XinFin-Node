@@ -78,14 +78,14 @@ function genServices(machine_id) {
     restart: "always",
     env_file: config_path, // not used directly (injected via volume) but required to trigger restart if common.env changes
     volumes: [`${config_path}:/app/.env.local`],
-    ports: ["5555:5555"],
+    ports: ["5214:5214"],
     profiles: [machine],
   };
   const relayer = {
     image: `xinfinorg/xdc-relayer:${config.version.relayer}`,
     restart: "always",
     env_file: config_path,
-    ports: ["4000:4000"],
+    ports: ["5215:5215"],
     profiles: [machine],
   };
   const stats = {
@@ -93,7 +93,7 @@ function genServices(machine_id) {
     restart: "always",
     env_file: config_path,
     volumes: ["./stats-service/logs:/app/logs"],
-    ports: ["3000:3000"],
+    ports: ["5213:5213"],
     profiles: [machine],
   };
   const bootnode = genBootNode(machine_id);

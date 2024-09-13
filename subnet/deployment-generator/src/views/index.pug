@@ -18,7 +18,7 @@ body
       .pure-control-group 
         .info-container 
           .info-icon(tabindex="0" role="button" aria-label="more info") ?
-          .tooltip extra info
+          .tooltip This cannot be changed later.
         label() Network Name
         input#text-subnet-name(type='text' placeholder='myxdcsubnet' name="text-subnet-name")
         span.pure-form-message-inline Required
@@ -26,7 +26,7 @@ body
       .pure-control-group
         .info-container 
           .info-icon(tabindex="0" role="button" aria-label="more info") ?
-          .tooltip extra info
+          .tooltip At least 2/3 of nodes must be online to have consensus and make the blockchain run.
         label() Number of Subnet Nodes
         input#text-num-subnet(type='number' placeholder='3' name="text-num-subnet")
         span.pure-form-message-inline Required
@@ -52,20 +52,20 @@ body
           .pure-control-group 
             .info-container 
               .info-icon(tabindex="0" role="button" aria-label="more info") ?
-              .tooltip extra info
+              .tooltip Private IP is used for Subnet nodes communication.
             label() Private IP
             input#text-private-ip(type='text' placeholder='192.168.1.1' name="text-private-ip")
             span.pure-form-message-inline Required.
           .pure-control-group 
             .info-container 
               .info-icon(tabindex="0" role="button" aria-label="more info") ?
-              .tooltip extra info
+              .tooltip Public IP is used for accessing Subnet services, eg. Frontend.
             label() Public IP
             input#text-public-ip(type='text' placeholder='1.1.1.1' name="text-public-ip")
           .pure-control-group 
             .info-container
               .info-icon(tabindex="0" role="button" aria-label="more info") ?
-              .tooltip extra info
+              .tooltip The generated configs will evenly spread the nodes across the machines.
             label() Number of Machines
             input#text-num-machine(type='number' placeholder='1' name="text-num-machine")
               
@@ -124,7 +124,7 @@ body
       .pure-control-group 
         .info-container 
           .info-icon(tabindex="0" role="button" aria-label="more info") ?
-          .tooltip extra
+          .tooltip Testnet is recommended for testing.
         label() Parent Network
         br
         br
@@ -147,7 +147,7 @@ body
       .pure-control-group 
         .info-container 
           .info-icon(tabindex="0" role="button" aria-label="more info") ?
-          .tooltip extra
+          .tooltip This Parentchain wallet will be used to deploy the Checkpoint Smart Contract(CSC) on the Parentchain and used by the Relayer to checkpoint Subnet block headers at regular intervals.
         label() Parentnet Wallet PK
         input#parentnet-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="parentnet-wallet-pk")
         span.pure-form-message-inline Required
@@ -155,7 +155,9 @@ body
       .pure-control-group 
         .info-container 
           .info-icon(tabindex="0" role="button" aria-label="more info") ?
-          .tooltip extra
+          .tooltip 
+            p - Full: All Subnet block headers are checkpointed on the Parentchain.
+            p - Lite: Lite mode reduces gas cost by checkpointing only Gap block(450) and Epoch block(900) are checkpointed on the Parentchain.
         label() Relayer Mode
         br
         br
@@ -183,14 +185,14 @@ body
             .pure-control-group
               .info-container 
                 .info-icon(tabindex="0" role="button" aria-label="more info") ?
-                .tooltip extra
+                .tooltip This Parentchain Zero Wallet is used for pushing cross-chain communication tx
               label() Parentnet Zero Wallet PK
               input#parentnet-zero-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="parentnet-zero-wallet-pk")
               span.pure-form-message-inline Required
             .pure-control-group 
               .info-container 
                 .info-icon(tabindex="0" role="button" aria-label="more info") ?
-                .tooltip extra
+                .tooltip In Bi-Directional mode, Reverse CSC and Reverse XDC-Zero are also deployed
               label() XDC-Zero Mode
               br
               br
@@ -210,14 +212,14 @@ body
                 .pure-control-group
                   .info-container 
                     .info-icon(tabindex="0" role="button" aria-label="more info") ?
-                    .tooltip extra
+                    .tooltip This Subnet wallet will be used to checkpoint the Parentchain to Subnet. You can transfer Subnet tokens to this wallet after Subnet is launched.
                   label() Subnet Wallet PK
                   input#subnet-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="subnet-wallet-pk")
                   span.pure-form-message-inline Required
                 .pure-control-group
                   .info-container 
                     .info-icon(tabindex="0" role="button" aria-label="more info") ?
-                    .tooltip extra
+                    .tooltip The Subnet Zero Wallet will be used to submit cross-chain tx to the Subnet. You can transfer Subnet tokens to this wallet after Subnet is launched.
                   label() Subnet Zero Wallet PK
                   input#subnet-zero-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="subnet-zero-wallet-pk")
                   span.pure-form-message-inline Required

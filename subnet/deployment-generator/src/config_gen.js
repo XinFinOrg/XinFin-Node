@@ -26,7 +26,7 @@ const config = {
     bootnode: process.env.VERSION_BOOTNODE || "feature-v1-release",
     relayer: process.env.VERSION_RELAYER || "feature-v1-release",
     stats: process.env.VERSION_STATS || "feature-v1-release",
-    frontend: process.env.VERSION_FRONTEND || "v0.1.10",
+    frontend: process.env.VERSION_FRONTEND || "feature-v1-release",
     csc: process.env.VERSION_CSC || "feature-v0.2.1",
     zero: process.env.VERSION_ZERO || "v0.1.0",
   },

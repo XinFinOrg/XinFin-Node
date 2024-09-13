@@ -107,8 +107,8 @@ function genCommands() {
   commands += `  docker compose --env-file docker-compose.env --profile services pull\n`;
   commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
   commands += "\n6. Confirm Subnet services through browser UI\n";
-  commands += `  Frontend: http://${config.public_ip}:5555\n`;
-  commands += `  Relayer: http://${config.public_ip}:4000\n`;
+  commands += `  Frontend: http://${config.public_ip}:5214\n`;
+  commands += `  Relayer: http://${config.public_ip}:5215\n`;
 
   if (config.zero.zero_mode == "") {
   } else if (config.zero.zero_mode == "one-directional") {
@@ -141,8 +141,8 @@ function genCommands() {
     commands += `  docker compose --env-file docker-compose.env --profile services down\n`;
     commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
     commands += "\n5. Confirm Relayer is running  \n";
-    commands += `  Relayer: http://${config.public_ip}:4000\n`;
-    commands += `  Frontend: http://${config.public_ip}:5555\n`;
+    commands += `  Relayer: http://${config.public_ip}:5215\n`;
+    commands += `  Frontend: http://${config.public_ip}:5214\n`;
 
   } else if (config.zero.zero_mode == "bi-directional") {
     commands += "\n\nDeploy XDC-Zero crosschain framework (bi-directional)\n";
@@ -178,12 +178,16 @@ function genCommands() {
       "  - Add SUBNET_WALLET_PK and SUBNET_ZERO_WALLET_PK to common.env, they should be different from each other\n";
     commands +=
       "  - Add PARENTNET_ZERO_WALLET_PK to common.env, this should be different from PARENTNET_WALLET_PK\n";
-    commands += "\n5. Restart Relayer\n";
+    commands += "\n5. Transfer Subnet tokens to SUBNET_WALLET_PK and SUBNET_ZERO_WALLET_PK\n";
+    commands += "  ./scripts/faucet.sh\n"
+    commands += "  - check keys.json for the Grandmaster Key as the source wallet\n"
+    commands += "  - for the destination wallet you should use the public address of SUBNET_WALLET_PK and SUBNET_ZERO_WALLET_PK\n"
+    commands += "\n6. Restart Relayer\n";
     commands += `  docker compose --env-file docker-compose.env --profile services down\n`;
     commands += `  docker compose --env-file docker-compose.env --profile services up -d\n`;
-    commands += "\n6. Confirm Relayer is running  \n";
-    commands += `  Relayer: http://${config.public_ip}:4000\n`;
-    commands += `  Frontend: http://${config.public_ip}:5555\n`;
+    commands += "\n7. Confirm Relayer is running  \n";
+    commands += `  Relayer: http://${config.public_ip}:5215\n`;
+    commands += `  Frontend: http://${config.public_ip}:5214\n`;
   } else {
     console.log("Error: Invalid XDC-Zero mode");
     exit();

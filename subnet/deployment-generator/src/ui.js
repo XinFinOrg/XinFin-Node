@@ -57,9 +57,9 @@ router.get("/address", (req,res) => {
 })
  
 app.use("/", router);
-app.listen(process.env.port || 3000);
+app.listen(process.env.port || 5210);
  
-console.log("Running at Port 3000");
+console.log("Running at Port 5210");
 
 
 function callExec(command) {

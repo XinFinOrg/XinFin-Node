@@ -10,6 +10,4 @@ RUN chmod +x /app/start.sh
 
 RUN cd src && npm install
 
-RUN cd src/faucet && npm install
-
 ENTRYPOINT ["bash","/app/start.sh"]

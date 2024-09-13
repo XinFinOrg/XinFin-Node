@@ -1,0 +1,29 @@
+#myForm {
+  margin-left: 15%;
+  /* margin-right: 200px; */
+  max-width: 1100px;
+}
+
+
+#helper{
+  margin-left: 15%;
+  margin-top: 50px;
+  max-width: 1100px;
+}
+#helper-title{
+  margin-right:10%; 
+}
+.helper-block{
+  padding: 10px;
+}
+
+
+#final {
+  margin-left: 175px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+#error {
+  color: red;
+}
+    
