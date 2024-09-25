@@ -106,8 +106,7 @@ function configSanityCheck(config) {
   if (
     !(
       config.relayer_mode === "full" ||
-      config.relayer_mode === "lite" ||
-      config.relayer_mode === "temp"
+      config.relayer_mode === "lite" 
     )
   ) {
     console.log("RELAYER_MODE only accepts 'full' or 'lite' (default full)");

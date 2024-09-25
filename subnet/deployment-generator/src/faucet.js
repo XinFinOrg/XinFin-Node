@@ -79,8 +79,8 @@ async function processTransfer(inputs) {
       let toBalance = await provider.getBalance(toAddress);
       toBalance = ethers.formatEther(toBalance);
       console.log("Current balance");
-      console.log(fromWallet.address + ":", fromBalance);
-      console.log(toAddress + ":", toBalance);
+      console.log(`${fromWallet.address}: ${fromBalance}`);
+      console.log(`${toAddress}: ${toBalance}`);
       return {
         fromBalance: fromBalance,
         toBalance: toBalance,
@@ -100,12 +100,13 @@ async function faucetServer(inputs) {
     fromPK = inputs[3];
     fromWallet = new ethers.Wallet(fromPK);
 
-    if (command != "server") throw Error("Invalid command");
+    if (command != "server") {throw Error("Invalid command")};
   } catch (error) {
     console.log(error);
     console.log(
       "Usage: SUBNET_URL=<subnet_url> node faucet.js server <from wallet pk>"
     );
+    process.exit()
   }
   app.set("view engine", "pug");
   app.set("views", path.join(__dirname, "views_faucet"));
@@ -160,10 +161,6 @@ async function faucetServer(inputs) {
         message: error.message 
       })
     }
-    // res.json({
-    //   "publicKey": randomWallet.address,
-    //   "privateKey": randomWallet.privateKey
-    // });
   });
 
   app.use("/", router);

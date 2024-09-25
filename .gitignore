@@ -11,6 +11,7 @@ subnet/logs
 subnet/relayer
 subnet/stats-service
 subnet/deployment-generator/script/gen.env*
+.DS_Store
 XDC-Subnet
 keys.json
 node_modules

@@ -6,7 +6,7 @@ cd ..
 
 read -p "Input Grandmaster PK (or any source wallet with funds): " SOURCE_PK
 read -p "Input destination wallet address: " DEST_ADDR
-read -p "Input transfer amount " AMOUNT
+read -p "Input transfer amount: " AMOUNT
 
 extra=""
 if [[ "$OSTYPE" == "darwin"* ]]; then
