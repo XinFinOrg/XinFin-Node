@@ -53,6 +53,6 @@ XDC \
 --mine \
 --gasprice "1" \
 --targetgaslimit "420000000" \
---verbosity 3 \
+--verbosity 2 \
 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
 
