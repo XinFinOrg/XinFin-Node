@@ -1,6 +1,6 @@
 #!/bin/bash
-VERSION_GENERATOR="generator-ui-concept"
-VERSION_GENESIS="feature-v1-release"
+VERSION_GENERATOR="v1.0.0"
+VERSION_GENESIS="v0.3.1"
 
 current_dir="$(cd "$(dirname "$0")" && pwd)"
 

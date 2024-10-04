@@ -22,12 +22,12 @@ const config = {
     process.env.IMAGE_NAME || "xinfinorg/subnet-generator:latest",
   operating_system: process.env.OS || "linux",
   version: {
-    subnet: process.env.VERSION_SUBNET || "feature-v1-release",
-    bootnode: process.env.VERSION_BOOTNODE || "feature-v1-release",
-    relayer: process.env.VERSION_RELAYER || "feature-v1-release",
-    stats: process.env.VERSION_STATS || "feature-v1-release",
-    frontend: process.env.VERSION_FRONTEND || "feature-v1-release",
-    csc: process.env.VERSION_CSC || "feature-v0.2.1",
+    subnet: process.env.VERSION_SUBNET || "v0.3.1",
+    bootnode: process.env.VERSION_BOOTNODE || "v0.3.1",
+    relayer: process.env.VERSION_RELAYER || "v0.3.1",
+    stats: process.env.VERSION_STATS || "v0.1.11",
+    frontend: process.env.VERSION_FRONTEND || "v0.1.11",
+    csc: process.env.VERSION_CSC || "v0.2.1",
     zero: process.env.VERSION_ZERO || "v0.1.0",
   },
   parentnet: {

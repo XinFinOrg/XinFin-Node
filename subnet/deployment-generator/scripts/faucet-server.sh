@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION_GENERATOR="generator-ui-concept"
+VERSION_GENERATOR="v1.0.0"
 
 cd "$(dirname "$0")"
 cd ..
