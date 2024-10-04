@@ -1,0 +1,364 @@
+head
+  meta(charset='utf-8')
+  title Subnet Configuration Generator
+  style
+    include ./pure-min.css
+    include ./custom.css
+
+
+body
+  center
+    h1 Subnet Configuration Generator
+
+  //- form.pure-form.pure-form-aligned#myForm(onsubmit="return validateForm()")
+  form.pure-form.pure-form-aligned#myForm(action="/submit" method="post" onsubmit="return validateForm()")
+    center   
+      h3 Subnet Configuration
+    fieldset
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip This cannot be changed later.
+        label() Network Name
+        input#text-subnet-name(type='text' placeholder='myxdcsubnet' name="text-subnet-name")
+        span.pure-form-message-inline Required
+
+      .pure-control-group
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip At least 2/3 of nodes must be online to have consensus and make the blockchain run.
+        label() Number of Subnet Nodes
+        input#text-num-subnet(type='number' placeholder='3' name="text-num-subnet")
+        span.pure-form-message-inline Required
+        
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip
+            p - WSL is not supported yet
+            p - Mac is only suitable for testing purposes
+        label() Operating System
+        br
+        br
+        label.pure-radio(for='os-radio-mac')
+        input#os-radio-mac(type='radio' name='osradio' value='os-radio-mac' checked)
+        |   Mac
+        br
+        br
+        label.pure-radio(for='os-radio-linux')
+        input#os-radio-linux(type='radio' name='osradio' value='os-radio-linux')
+        |   Linux
+        #linuxoption.content
+          .pure-control-group 
+            .info-container 
+              .info-icon(tabindex="0" role="button" aria-label="more info") ?
+              .tooltip Private IP is used for Subnet nodes communication.
+            label() Private IP
+            input#text-private-ip(type='text' placeholder='192.168.1.1' name="text-private-ip")
+            span.pure-form-message-inline Required.
+          .pure-control-group 
+            .info-container 
+              .info-icon(tabindex="0" role="button" aria-label="more info") ?
+              .tooltip Public IP is used for accessing Subnet services, eg. Frontend.
+            label() Public IP
+            input#text-public-ip(type='text' placeholder='1.1.1.1' name="text-public-ip")
+          .pure-control-group 
+            .info-container
+              .info-icon(tabindex="0" role="button" aria-label="more info") ?
+              .tooltip The generated configs will evenly spread the nodes across the machines.
+            label() Number of Machines
+            input#text-num-machine(type='number' placeholder='1' name="text-num-machine")
+              
+
+
+        
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip Default is random
+        label.pure-checkbox(for='customkeys-checkbox') Custom Subnet Keys
+        input#customkeys-checkbox.checkbox-indent(type='checkbox' name="customkeys-cheeckbox")
+        #customkeys.content
+          .pure-control-group 
+            label() Grandmaster PK
+            input#grandmaster-pk.pure-input-2-3(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="grandmaster-pk")
+          center
+            button.pure-button.pure-button-primary#button-custom-subnet-key(type="button" onclick="customSubnetKeyJs()") Custom Subnet Node Keys
+          #custom-subnet-key-placeholder
+
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip Default to stable
+        label.pure-checkbox(for='customversion-checkbox') Custom Version
+        input#customversion-checkbox.checkbox-indent(type='checkbox' name="customversion-checkbox")
+        #customversion.content
+          center 
+            p Changelog: 
+          .pure-control-group 
+            label() Subnet Node Version
+            input#customversion-subnet.pure-input(type='text' placeholder='latest' name="customversion-subnet")
+          .pure-control-group 
+            label() Bootnode Version
+            input#customversion-bootnode.pure-input(type='text' placeholder='latest' name="customversion-bootnode")
+          .pure-control-group 
+            label() Relayer Version
+            input#customversion-relayer.pure-input(type='text' placeholder='latest' name="customversion-relayer")
+          .pure-control-group 
+            label() Backend Stats Server Version
+            input#customversion-stats.pure-input(type='text' placeholder='latest' name="customversion-stats")
+          .pure-control-group 
+            label() Frontend Version
+            input#customversion-frontend.pure-input(type='text' placeholder='latest' name="customversion-frontend")
+          .pure-control-group 
+            label() CSC Version
+            input#customversion-csc.pure-input(type='text' placeholder='latest' name="customversion-csc")
+          .pure-control-group 
+            label() XDC-Zero Version
+            input#customversion-zero.pure-input(type='text' placeholder='latest' name="customversion-zero")
+
+ 
+    center 
+      h3 Cross-Chain Configuration
+    fieldset
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip Testnet is recommended for testing.
+        label() Parent Network
+        br
+        br
+        label.pure-radio(for='pn-radio-testnet')
+        input#pn-radio-testnet(type='radio' name='pnradio' value='pn-radio-testnet' checked)
+        |  XDC-Testnet/Apothem
+        //- |  XDC-Testnet/Apothem &nbsp;&nbsp;&nbsp;&nbsp; faucet:
+        br
+        br
+        label.pure-radio(for='pn-radio-devnet')
+        input#pn-radio-devnet(type='radio' name='pnradio' value='pn-radio-devnet')
+        //- |   XDC-Devnet &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; faucet:
+        |   XDC-Devnet
+        br
+        br
+        label.pure-radio(for='pn-radio-mainnet')
+        input#pn-radio-mainnet(type='radio' name='pnradio' value='pn-radio-mainnet') 
+        |   XDC-Mainnet
+
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip This Parentchain wallet will be used to deploy the Checkpoint Smart Contract(CSC) on the Parentchain and used by the Relayer to checkpoint Subnet block headers at regular intervals.
+        label() Parentnet Wallet PK
+        input#parentnet-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="parentnet-wallet-pk")
+        span.pure-form-message-inline Required
+
+      .pure-control-group 
+        .info-container 
+          .info-icon(tabindex="0" role="button" aria-label="more info") ?
+          .tooltip 
+            p - Full: All Subnet block headers are checkpointed on the Parentchain.
+            p - Lite: Lite mode reduces gas cost by checkpointing only Gap block(450) and Epoch block(900) are checkpointed on the Parentchain.
+        label() Relayer Mode
+        br
+        br
+        label.pure-radio(for='rm-radio-full')
+        input#rm-radio-full(type='radio' name='rmradio' value='rm-radio-full' onclick="relayerFullClicked(this)" checked)
+        |   Full
+        br
+        br
+        label.pure-radio(for='rm-radio-lite')
+        input#rm-radio-lite(type='radio' name='rmradio' value='rm-radio-lite' onclick="relayerLiteClicked(this)")
+        |   Lite
+        br
+        br
+        center
+          #lite-mode-extra-info
+        #xdczero-upper
+          .info-container 
+            .info-icon(tabindex="0" role="button" aria-label="more info") ?
+            .tooltip XDC-Zero is a Cross-Chain communication framework
+          label.pure-checkbox(for='xdczero-checkbox') XDC-Zero
+          input#xdczero-checkbox.checkbox-indent(type='checkbox' name="xdczero-checkbox")
+          #xdczero.content
+            center 
+              p Extra Info:
+            .pure-control-group
+              .info-container 
+                .info-icon(tabindex="0" role="button" aria-label="more info") ?
+                .tooltip This Parentchain Zero Wallet is used for pushing cross-chain communication tx
+              label() Parentnet Zero Wallet PK
+              input#parentnet-zero-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="parentnet-zero-wallet-pk")
+              span.pure-form-message-inline Required
+            .pure-control-group 
+              .info-container 
+                .info-icon(tabindex="0" role="button" aria-label="more info") ?
+                .tooltip In Bi-Directional mode, Reverse CSC and Reverse XDC-Zero are also deployed
+              label() XDC-Zero Mode
+              br
+              br
+              label.pure-radio(for='zm-radio-one')
+              input#zm-radio-one(type='radio' name='zmradio' value='zm-radio-one' checked)
+              |   One-Directional (Subnet -> Parentnet)
+              br
+              br
+              label.pure-radio(for='zm-radio-bi')
+              input#zm-radio-bi(type='radio' name='zmradio' value='zm-radio-bi')
+              |   Bi-Directional (Subnet <-> Parentnet)
+              br 
+              br
+              #zerobidi.content
+                //- center 
+                  //- p Faucet:
+                .pure-control-group
+                  .info-container 
+                    .info-icon(tabindex="0" role="button" aria-label="more info") ?
+                    .tooltip This Subnet wallet will be used to checkpoint the Parentchain to Subnet. You can transfer Subnet tokens to this wallet after Subnet is launched.
+                  label() Subnet Wallet PK
+                  input#subnet-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="subnet-wallet-pk")
+                  span.pure-form-message-inline Required
+                .pure-control-group
+                  .info-container 
+                    .info-icon(tabindex="0" role="button" aria-label="more info") ?
+                    .tooltip The Subnet Zero Wallet will be used to submit cross-chain tx to the Subnet. You can transfer Subnet tokens to this wallet after Subnet is launched.
+                  label() Subnet Zero Wallet PK
+                  input#subnet-zero-wallet-pk.pure-input-1-2(type='text' placeholder='0x1111111111111111111111111111111111111111111111111111111111111111' name="subnet-zero-wallet-pk")
+                  span.pure-form-message-inline Required
+            .pure-control-group 
+              .info-container 
+                .info-icon(tabindex="0" role="button" aria-label="more info") ?
+                .tooltip Subswap is XDC provided default cross-chain application to handle token transfers between Subnet and Parentnet 
+              label.pure-checkbox(for='subswap-checkbox') Subswap 
+              input#subswap-checkbox.checkbox-indent(type='checkbox' name="subswap-checkbox")
+
+
+
+
+    center
+      #incomplete-required-warning
+    .pure-controls
+      button.pure-button.pure-button-primary(type='submit') Submit
+
+    center
+      h3#helper-title Helpers
+    .helper-block
+      h4 Address Generator
+      p#address-gen-pub Address:  
+      p#address-gen-pk Private Key: 
+      #disclaim-wrap
+        button.pure-button.pure-button-primary(type="button" onclick="genAddress()") Generate Address 
+        h8#disclaimer  *Generation is done locally on your machine, fully offline.
+    .helper-block
+      h4 XDC Faucet
+      p
+        a(href="https://faucet.apothem.network/"  target="_blank") Testnet(Apothem) Faucet
+      p
+        a(href="https://faucet.blocksscan.io/ "  target="_blank") Testnet and Devnet Faucet by BlocksScan
+    .helper-block
+      h4 Documentation
+      p 
+        a(href="https://xinfinorg.github.io/xdc-subnet-docs/deployment/launch_subnet" target="_blank") Official Subnet Documentation 
+      p
+        a(href="https://github.com/XinFinOrg/XDC-Subnet"  target="_blank") XDC-Subnet Github
+    
+
+script.
+  function customSubnetKeyJs(){
+    const parent = document.getElementById("custom-subnet-key-placeholder")
+    const count = document.getElementById("text-num-subnet").value
+    if (!count) {
+      parent.innerHTML = '';
+      const cen = document.createElement("center")
+      const para = document.createElement("p")
+      para.innerHTML = "Please first input 'Number of Subnet Nodes'"
+      cen.appendChild(para)
+      parent.appendChild(cen)
+    } else {
+      parent.innerHTML = '';
+      for (i=1;i<=count;i++){
+        var d = document.createElement("div")
+        d.setAttribute("class", "pure-control-group")
+        const label = document.createElement("label")
+        label.innerHTML = "Subnet Node " + i + " PK"
+        const input = document.createElement("input")
+        const id = "subnet-key"+i
+        input.setAttribute("id", id)
+        input.setAttribute("name", id)
+        input.setAttribute("class", "pure-input-2-3")
+        input.setAttribute("type", "text")
+        input.setAttribute("placeholder", "0x1111111111111111111111111111111111111111111111111111111111111111")
+
+        d.appendChild(label)
+        d.appendChild(input)
+        parent.appendChild(d)
+      }
+    }
+  }
+  function relayerLiteClicked(radio){
+    const checkbox = document.getElementById("xdczero-checkbox")
+    checkbox.checked = false;
+    checkbox.disabled = true;
+    //- document.getElementById("lite-mode-extra-info").innerHTML="Cannot use XDC-Zero with Lite Relayer"
+  }
+
+  function relayerFullClicked(radio){
+    const checkbox = document.getElementById("xdczero-checkbox")
+    checkbox.disabled = false;
+  }
+
+  function validateForm(){
+    const form = document.forms["myForm"]
+
+    const name = form["text-subnet-name"].value;
+    const num = form["text-num-subnet"].value;
+    const pn_pk = form["parentnet-wallet-pk"].value;
+    if (name == "" || num == "" || pn_pk == ""){
+      document.getElementById("incomplete-required-warning").innerHTML="Please fill in all required fields"
+      return false
+    }
+
+    const linux = form["os-radio-linux"].checked;
+    if (linux){
+      const private_ip = form["text-private-ip"].value;
+      if (private_ip == ""){
+        document.getElementById("incomplete-required-warning").innerHTML="Please fill in all required fields"
+        return false
+      }
+    }
+    const zero = form["xdczero-checkbox"].checked;
+    if (zero){
+      const zero_pk = form["parentnet-zero-wallet-pk"].value;
+      if (zero_pk == ""){
+        document.getElementById("incomplete-required-warning").innerHTML="Please fill in all required fields"
+        return false
+      }
+      
+      const bidi = form["zm-radio-bi"].checked
+      if (bidi){
+        const subnet_pk = form["subnet-wallet-pk"].value;
+        const subnet_zero_pk = form["subnet-zero-wallet-pk"].value;
+        if (subnet_pk == "" || subnet_zero_pk == ""){
+          document.getElementById("incomplete-required-warning").innerHTML="Please fill in all required fields"
+          return false
+        }
+      }
+    }
+
+
+    document.getElementById("incomplete-required-warning").innerHTML=""
+    console.log("pass")    
+    return true
+  }
+
+  function genAddress(){
+    fetch('/address')
+      .then(response => response.json())
+        .then(data => {
+          document.getElementById("address-gen-pub").innerHTML="Address: "+data["publicKey"]
+          document.getElementById("address-gen-pk").innerHTML="Private Key: "+data["privateKey"]
+          })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById("address-gen-pub").innerHTML="Error Generating Address"
+          document.getElementById("address-gen-pk").innerHTML="Error Generating Address"
+          });
+  }
