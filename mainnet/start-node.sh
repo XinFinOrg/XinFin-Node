@@ -40,11 +40,13 @@ XDC \
 --networkid 50 \
 --port 30303 \
 --rpc \
+--rpcapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
 --rpccorsdomain "*" \
 --rpcaddr 0.0.0.0 \
 --rpcport 8545 \
 --rpcvhosts "*" \
 --ws \
+--wsapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
 --wsaddr="0.0.0.0" \
 --wsorigins "*" \
 --wsport 8546 \
