@@ -26,9 +26,9 @@ const config = {
     bootnode: process.env.VERSION_BOOTNODE || "v0.3.1",
     relayer: process.env.VERSION_RELAYER || "v0.3.1",
     stats: process.env.VERSION_STATS || "v0.1.11",
-    frontend: process.env.VERSION_FRONTEND || "v0.1.11",
+    frontend: process.env.VERSION_FRONTEND || "v0.1.12",
     csc: process.env.VERSION_CSC || "v0.2.1",
-    zero: process.env.VERSION_ZERO || "v0.1.0",
+    zero: process.env.VERSION_ZERO || "v0.2.1",
   },
   parentnet: {
     network: process.env.PARENTNET || "testnet",
