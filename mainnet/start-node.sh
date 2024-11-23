@@ -41,6 +41,7 @@ XDC \
     --rpcaddr 0.0.0.0 \
     --rpcport 8545 \
     --rpcvhosts "*" \
+    --store-reward \
     --ws \
     --wsapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
     --wsaddr="0.0.0.0" \
