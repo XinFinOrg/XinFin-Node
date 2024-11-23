@@ -43,6 +43,7 @@ XDC \
     --gasprice "1" \
     --targetgaslimit "420000000" \
     --verbosity 3 \
+    --store-reward \
     --ws \
     --wsaddr=0.0.0.0 \
     --wsport 8555 \
