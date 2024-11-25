@@ -18,7 +18,7 @@ while IFS= read -r line; do
 done <"$input"
 
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
-netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats.apothem.network:2000"
+netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats.hashlabs.apothem.network:1999"
 
 echo "Starting nodes with $bootnodes ..."
 
