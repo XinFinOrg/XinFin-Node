@@ -227,4 +227,8 @@ function copyScripts(output_dir) {
     `${__dirname}/../scripts/faucet-server.sh`,
     `${output_dir}/scripts/faucet-server.sh`
   );
+  fs.copyFileSync(
+    `${__dirname}/../scripts/add-node.sh`,
+    `${output_dir}/scripts/add-node.sh`
+  );
 }
