@@ -48,7 +48,7 @@ XDC \
     --password /work/.pwd \
     --mine \
     --gasprice "1" \
-    --targetgaslimit "420000000" \
+    --targetgaslimit "50000000" \
     --verbosity 3 \
     --store-reward \
     --ws \
