@@ -16,13 +16,6 @@ while IFS= read -r line; do
         bootnodes="${bootnodes},$line"
     fi
 done <"$input"
-#check last line since it's not included in "read" command https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
-if [ -z "${bootnodes}" ]
-then
-    bootnodes=$line
-else
-    bootnodes="${bootnodes},$line"
-fi
 
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats.hashlabs.apothem.network:1999"
