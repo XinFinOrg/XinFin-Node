@@ -17,6 +17,15 @@ while IFS= read -r line; do
     fi
 done <"$input"
 
+log_level=2
+if test -z "$LOG_LEVEL"
+then
+  echo "Log level not set, default to verbosity of $log_level"
+else
+  echo "Log level found, set to $LOG_LEVEL"
+  log_level=$LOG_LEVEL
+fi
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats.hashlabs.apothem.network:1999"
 
@@ -42,7 +51,7 @@ XDC \
     --mine \
     --gasprice "1" \
     --targetgaslimit "50000000" \
-    --verbosity 3 \
+    --verbosity ${log_level} \
     --store-reward \
     --ws \
     --wsaddr=0.0.0.0 \
