@@ -200,6 +200,7 @@ Public discussions on the technical issues, post articles and request for Enhanc
 - [Discord](https://discord.com/invite/KZdD6pkFxp)
 - [Telegram](https://t.me/xinfintalk)
 - [X (Twitter)](https://x.com/XDC_Network_)
+- [YouTube](https://www.youtube.com/channel/UCQaL6FixEQ80RJC0B2egX6g)
 - [Reddit](https://www.reddit.com/r/xinfin/)
 - [GitHub](https://github.com/XinFinorg)
 - [XinFin FAQs](https://xdc.org/resources/faqs)
