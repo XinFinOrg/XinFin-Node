@@ -33,6 +33,10 @@ else
   log_level=$LOG_LEVEL
 fi
 
+# create log file with timestamp
+DATE="$(date +%Y%m%d-%H%M%S)"
+LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${INSTANCE_NAME}:xinfin_xdpos_hybrid_network_stats@stats.xinfin.network:3000"
 
@@ -63,4 +67,4 @@ XDC \
     --gasprice "1" \
     --targetgaslimit "420000000" \
     --verbosity ${log_level} \
-    2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+    2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
