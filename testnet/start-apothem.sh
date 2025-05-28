@@ -36,6 +36,10 @@ else
   log_level=$LOG_LEVEL
 fi
 
+# create log file with timestamp
+DATE="$(date +%Y%m%d-%H%M%S)"
+LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
@@ -66,4 +70,4 @@ XDC \
     --wsaddr=0.0.0.0 \
     --wsport 8556 \
     --wsorigins "*" \
-    2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+    2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
