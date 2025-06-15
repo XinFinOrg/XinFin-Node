@@ -1,3 +1,195 @@
+## Securing Your XDC Network Node
+
+Before deploying your XDC Network Node, it is critical to secure the server, especially for validator or standby nodes that do not require RPC/WebSocket access. There are two deployment scenarios:
+
+* **RPC Node**: Exposes necessary ports to allow DApps and users to interact with the blockchain.
+* **Validator/Standby Node**: Only communicates with the network and should block unnecessary ports for better security.
+
+This guide provides instructions for securing your server, changing the default SSH port, and enabling a firewall for validator/standby nodes.
+
+---
+
+### Initial Server Setup
+
+1. **Log in to your server** using credentials provided by your cloud provider:
+
+   ```bash
+   ssh user@your-server-ip
+   ```
+
+2. **Update OS packages**:
+
+   ```bash
+   sudo apt update -y && sudo apt upgrade -y && sudo apt autoremove -y
+   ```
+
+---
+
+### Setting Up SSH Key Authentication
+
+**Step 1: Generate SSH Key (on your local machine or computer)**
+
+If you don’t already have an SSH key:
+
+```bash
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+
+* Save the key in the default path (usually `~/.ssh/id_rsa`)
+* You may optionally add a passphrase
+
+**Step 2: Upload the Public Key to the Server**
+
+```bash
+ssh-copy-id -i ~/.ssh/id_rsa.pub user@your-server-ip
+```
+
+**Step 3: Test Login**
+
+```bash
+ssh user@your-server-ip
+```
+
+**Optional: Disable Password Authentication**
+
+Edit the SSH config file:
+
+```bash
+sudo nano /etc/ssh/sshd_config
+```
+
+Set the following:
+
+```
+PasswordAuthentication no
+```
+
+Restart the SSH service:
+
+```bash
+sudo systemctl restart ssh
+```
+
+Keep your private key (`~/.ssh/id_rsa`) safe. You will need it for all future logins. 
+**Do not upload it to the server**
+
+---
+
+### Locking Down Validator/Standby Nodes
+
+If your masternode is being used only for the purpose of maintaining the XDC blockchain and does not require RPC/WebSocket access, the following hardening steps are recommended:
+
+1. Change the default SSH port
+2. Block all incoming traffic using a firewall
+3. Open only the required ports (30303 for XDC P2P and your new SSH port)
+
+---
+
+### Change the SSH Port
+
+1. Edit the SSH config file:
+
+   ```bash
+   sudo nano /etc/ssh/sshd_config
+   ```
+
+2. Find the line:
+
+   ```
+   #Port 22
+   ```
+
+3. Remove the `#` and change `22` to a new custom port (for example, 2222):
+
+   ```
+   Port 2222
+   ```
+
+4. Save and exit:
+
+   * Press `CTRL+X`, then `Y`, then `ENTER`
+
+5. Restart the SSH service:
+
+   ```bash
+   sudo systemctl restart ssh
+   ```
+
+To connect from now on:
+
+```bash
+ssh -p 2222 user@your-server-ip
+```
+
+---
+
+### Configure UFW (Uncomplicated Firewall)
+
+1. **Install UFW**:
+
+   ```bash
+   sudo apt install ufw
+   ```
+
+2. **Set default policies**:
+
+   ```bash
+   sudo ufw default deny incoming
+   sudo ufw default allow outgoing
+   ```
+
+3. **Allow XDC P2P port**:
+
+   ```bash
+   sudo ufw allow 30303
+   ```
+
+4. **Allow your SSH port** (replace `2222` with your actual port):
+
+   ```bash
+   sudo ufw allow 2222
+   ```
+
+5. **Enable UFW**:
+
+   ```bash
+   sudo ufw enable
+   ```
+
+6. **Reboot the server**:
+
+   ```bash
+   reboot
+   ```
+
+---
+
+### Testing Access
+
+After rebooting, reconnect to your server using the new SSH port:
+
+```bash
+ssh -p 2222 user@your-server-ip
+```
+
+If you are unable to connect, use your VPS provider’s web console to access the server and make the necessary firewall or SSH configuration changes.
+
+---
+
+### RPC Node Exception
+
+If you are deploying an RPC node (e.g., for public dApp or API access), you must also allow the following ports:
+
+```bash
+sudo ufw allow 8888
+sudo ufw allow 8989
+```
+
+---
+
+Once your server is secured and accessible, proceed with the standard masternode setup below.
+
+---
 
 ## How to Setup XinFin Masternode
 
