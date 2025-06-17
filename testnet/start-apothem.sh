@@ -46,7 +46,7 @@ netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:20
 echo "Starting nodes with $bootnodes ..."
 XDC \
     --ethstats ${netstats} \
-    --gcmode=archive \
+    --nodiscover \
     --bootnodes ${bootnodes} \
     --syncmode ${NODE_TYPE} \
     --datadir /work/xdcchain \
