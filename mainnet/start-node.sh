@@ -41,18 +41,39 @@ INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${INSTANCE_NAME}:xinfin_xdpos_hybrid_network_stats@stats.xinfin.network:3000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC \
-    --ethstats ${netstats} \
-    --bootnodes ${bootnodes} \
-    --syncmode ${NODE_TYPE} \
-    --datadir /work/xdcchain \
-    --XDCx.datadir /work/xdcchain/XDCx \
-    --networkid 50 \
-    --port 30303 \
-    --unlock "${wallet}" \
-    --password /work/.pwd \
-    --mine \
-    --gasprice "1" \
-    --targetgaslimit "420000000" \
-    --verbosity ${log_level} \
-    2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
+args=(
+    --ethstats "${netstats}"
+    --bootnodes "${bootnodes}"
+    --syncmode "${NODE_TYPE}"
+    --datadir /work/xdcchain
+    --XDCx.datadir /work/xdcchain/XDCx
+    --networkid 50
+    --port 30303
+    --unlock "${wallet}"
+    --password /work/.pwd
+    --mine
+    --gasprice "1"
+    --targetgaslimit "420000000"
+    --verbosity "${log_level}"
+)
+
+# if ENABLE_RPC is true, add RPC related parameters
+if [ "$(echo $ENABLE_RPC | tr '[:upper:]' '[:lower:]')" = "true" ]; then
+    args+=(
+        --rpc
+        --rpcaddr "${RPC_ADDR}"
+        --rpcport "${RPC_PORT}"
+        --rpcapi "${RPC_API}"
+        --rpccorsdomain "${RPC_CORS_DOMAIN}"
+        --rpcvhosts "${RPC_VHOSTS}"
+        --store-reward
+        --ws
+        --wsaddr "${WS_ADDR}"
+        --wsport "${WS_PORT}"
+        --wsapi "${WS_API}"
+        --wsorigins "${WS_ORIGINS}"
+    )
+fi
+
+
+XDC "${args[@]}" 2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
