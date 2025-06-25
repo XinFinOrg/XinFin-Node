@@ -52,7 +52,7 @@ XDC \
     --datadir /work/xdcchain \
     --XDCx.datadir /work/xdcchain/XDCx \
     --networkid 51 \
-    --port 30311 \
+    --port 30312 \
     --rpc \
     --rpcapi eth,net,web3,XDPoS \
     --rpccorsdomain "*" \
