@@ -206,7 +206,7 @@ All RPC-related configurations are located in the `mainnet/rpc.env` file. You ca
 
 **RPC API Configuration**
 
-- `RPC_API`: List of RPC APIs (Default: db,eth,debug,net,shh,txpool,personal,web3,XDPoS)
+- `RPC_API`: List of RPC APIs (Default: db,eth,net,txpool,web3,XDPoS)
 - `RPC_CORS_DOMAIN`: CORS domain settings (Default: \*)
 - `RPC_ADDR`: RPC listening address (Default: 0.0.0.0)
 - `RPC_PORT`: RPC port (Default: 8545)
@@ -214,7 +214,7 @@ All RPC-related configurations are located in the `mainnet/rpc.env` file. You ca
 
 **WebSocket Configuration**
 
-- `WS_API`: List of WebSocket APIs (Default: db,eth,debug,net,shh,txpool,personal,web3,XDPoS)
+- `WS_API`: List of WebSocket APIs (Default: db,eth,net,txpool,web3,XDPoS)
 - `WS_ADDR`: WebSocket listening address (Default: 0.0.0.0)
 - `WS_ORIGINS`: Allowed WebSocket origins (Default: \*)
 - `WS_PORT`: WebSocket port (Default: 8546)
