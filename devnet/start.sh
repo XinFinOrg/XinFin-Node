@@ -48,7 +48,7 @@ XDC \
     --rpccorsdomain "*" \
     --rpcaddr 0.0.0.0 \
     --rpcport 8545 \
-    --rpcapi db,eth,debug,miner,net,shh,txpool,personal,web3,XDPoS \
+    --rpcapi db,eth,miner,net,txpool,web3,XDPoS \
     --rpcvhosts "*" \
     --unlock "${wallet}" \
     --password /work/.pwd \
