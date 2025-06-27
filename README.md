@@ -202,7 +202,7 @@ By default, RPC is disabled. To enable RPC, follow these steps:
 
 ### Configure RPC Parameters
 
-All RPC-related configurations are located in the `mainnet/rpc.env` file. You can modify the following parameters as needed:
+All RPC-related configurations are located in the `.env` file. You can modify the following parameters as needed:
 
 **RPC API Configuration**
 
@@ -219,9 +219,6 @@ All RPC-related configurations are located in the `mainnet/rpc.env` file. You ca
 - `WS_ORIGINS`: Allowed WebSocket origins (Default: \*)
 - `WS_PORT`: WebSocket port (Default: 8546)
 
-**Other Configuration**
-
-- `STORE_REWARD`: Whether to store reward information (Default: true)
 
 ## Troubleshooting
 
