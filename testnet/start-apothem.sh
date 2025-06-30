@@ -44,30 +44,38 @@ INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC \
-    --ethstats ${netstats} \
-    --nodiscover \
-    --bootnodes ${bootnodes} \
-    --syncmode ${NODE_TYPE} \
-    --datadir /work/xdcchain \
-    --XDCx.datadir /work/xdcchain/XDCx \
-    --networkid 51 \
-    --port 30312 \
-    --rpc \
-    --rpcapi eth,net,web3,XDPoS \
-    --rpccorsdomain "*" \
-    --rpcaddr 0.0.0.0 \
-    --rpcport 8555 \
-    --rpcvhosts "*" \
-    --unlock "${wallet}" \
-    --password /work/.pwd \
-    --mine \
-    --gasprice "1" \
-    --targetgaslimit "420000000" \
-    --verbosity ${log_level} \
-    --store-reward \
-    --ws \
-    --wsaddr=0.0.0.0 \
-    --wsport 8556 \
-    --wsorigins "*" \
-    2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
+args=(
+    --ethstats "${netstats}"
+    --nodiscover
+    --bootnodes "${bootnodes}"
+    --syncmode "${NODE_TYPE}"
+    --datadir /work/xdcchain
+    --XDCx.datadir /work/xdcchain/XDCx
+    --networkid 51
+    --port 30312
+    --unlock "${wallet}"
+    --password /work/.pwd
+    --mine
+    --gasprice "1"
+    --targetgaslimit "420000000"
+    --verbosity "${log_level}"
+    --store-reward
+)
+
+if echo "${ENABLE_RPC}" | grep -iq "true"; then
+    args+=(
+        --rpc
+        --rpcaddr "${RPC_ADDR}"
+        --rpcport "${RPC_PORT}"
+        --rpcapi "${RPC_API}"
+        --rpccorsdomain "${RPC_CORS_DOMAIN}"
+        --rpcvhosts "${RPC_VHOSTS}"
+        --ws
+        --wsaddr "${WS_ADDR}"
+        --wsport "${WS_PORT}"
+        --wsapi "${WS_API}"
+        --wsorigins "${WS_ORIGINS}"
+    )
+fi
+
+XDC "${args[@]}" 2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"

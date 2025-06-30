@@ -13,7 +13,6 @@ services:
     restart: "always"
     env_file:
       - .env
-      - rpc.env
     ports:
       - "30303:30303"
       - "8989:8545"

@@ -58,7 +58,7 @@ args=(
 )
 
 # if ENABLE_RPC is true, add RPC related parameters
-if [ "$(echo $ENABLE_RPC | tr '[:upper:]' '[:lower:]')" = "true" ]; then
+if echo "${ENABLE_RPC}" | grep -iq "true"; then
     args+=(
         --rpc
         --rpcaddr "${RPC_ADDR}"
