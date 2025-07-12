@@ -30,15 +30,33 @@ fi
 DATE="$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
+# Set sync_mode from SYNC_MODE env or default to 'full'
+sync_mode=full
+if test -z "$SYNC_MODE"; then
+    echo "SYNC_MODE not set, default to $sync_mode" # full or fast
+else
+    echo "SYNC_MODE found, set to $SYNC_MODE"
+    sync_mode=$SYNC_MODE
+fi
+
+# Set gc_mode from GC_MODE env or default to 'archive'
+gc_mode=archive
+if test -z "$GC_MODE"; then
+    echo "GC_MODE not set, default to archive" # full or archive
+else
+    echo "GC_MODE found, set to $GC_MODE"
+    gc_mode=$GC_MODE
+fi
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${wallet}_${INSTANCE_IP}:xinfin_xdpos_hybrid_network_stats@devnetstats.hashlabs.apothem.network:1999"
 
 echo "Starting nodes with $bootnodes ..."
 args=(
     --ethstats "${netstats}"
-    --gcmode=archive
+    --gcmode "${gc_mode}"
     --bootnodes "${bootnodes}"
-    --syncmode "${NODE_TYPE}"
+    --syncmode "${sync_mode}"
     --datadir /work/xdcchain
     --networkid 551
     --XDCx.datadir /work/xdcchain/XDCx
