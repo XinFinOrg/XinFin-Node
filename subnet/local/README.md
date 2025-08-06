@@ -3,7 +3,7 @@
 This README is an extension of the README in the upper /subnet directory.
 The purpose of this directory is for locally hosting subnet with multiple nodes.
 
-1. Build a local docker image with `./build_local_img.sh`. You can use `./build_local_img.sh <branch name>` to build from a differrent subnet branch. 
+1. Build a local docker image with `./build_local_img.sh`. You can use `./build_local_img.sh <branch name>` to build from a different subnet branch. 
 
 2. In `docker-compose.yml` you can specify the image you require. For example, `localbuild-subnet:latest` - from step 1, `xinfinorg/xdcsubnets:latest` - latest master build, or another local build image.
 
@@ -20,7 +20,7 @@ Bootnode doesn't work as expected. It doesn't care about `enode_id` if just the 
 * Additionally `./debug/attach` is for troubleshooting node state(of subnet node 1). 
    - The default is `XDPoS.getV2Block()`. If followed by a number like `./debug/attach 100` then it is `XDPoS.getV2Block(100)` returning contents of the 100th block. 
    - If followed by words then it will issue that command, for example `./debug/attach admin.peers` return peers of that node. 
-   - Use singe quotes `'` to wrap over commands that doesn't work work eg `./debug/attach 'XDPoS.getV2Block("committed")'`
+   - Use single quotes `'` to wrap over commands that doesn't work work eg `./debug/attach 'XDPoS.getV2Block("committed")'`
 
 * `./cleanup.sh` helps with deleting subnet files and the cloned XDC-Subnet directory.
 
