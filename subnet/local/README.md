@@ -20,7 +20,7 @@ Bootnode doesn't work as expected. It doesn't care about `enode_id` if just the 
 * Additionally `./debug/attach` is for troubleshooting node state(of subnet node 1). 
    - The default is `XDPoS.getV2Block()`. If followed by a number like `./debug/attach 100` then it is `XDPoS.getV2Block(100)` returning contents of the 100th block. 
    - If followed by words then it will issue that command, for example `./debug/attach admin.peers` return peers of that node. 
-   - Use singe quotes `'` to wrap over commands that doesn't work work eg `./debug/attach 'XDPoS.getV2Block("committed")'`
+   - Use singe quotes `'` to wrap over commands that doesn't work eg `./debug/attach 'XDPoS.getV2Block("committed")'`
 
 * `./cleanup.sh` helps with deleting subnet files and the cloned XDC-Subnet directory.
 
