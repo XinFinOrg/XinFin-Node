@@ -1,5 +1,7 @@
-version: "3.4"
+name: XDC
 
+include:
+  - ./../observability/dozzle.yaml
 services:
   xinfinnetwork1:
     build:
