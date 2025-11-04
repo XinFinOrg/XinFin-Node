@@ -2,6 +2,8 @@ name: XDC
 
 include:
   - ./../observability/dozzle.yaml
+  - ./../observability/prometheus.yml
+  - ./../observability/grafana.yml
 services:
   xinfinnetwork1:
     build:
