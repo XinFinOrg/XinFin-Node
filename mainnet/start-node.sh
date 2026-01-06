@@ -72,7 +72,7 @@ args=(
     --password /work/.pwd
     --mine
     --gasprice "1"
-    --targetgaslimit "420000000"
+    --targetgaslimit "50000000"
     --verbosity "${log_level}"
 )
 
