@@ -2,6 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
+    container_name: xdcnetwork-testnet-node
     image: xinfinorg/xdposchain:v2.6.7-testnet
     volumes:
       - "./xdcchain-testnet:/work/xdcchain"
