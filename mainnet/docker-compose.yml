@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   xinfinnetwork:
-    container_name: xdcnetwork-mainnnet-node
+    container_name: xdcnetwork-mainnet-node
     image: xinfinorg/xdposchain:v2.6.8
     volumes:
       - "./xdcchain:/work/xdcchain"
