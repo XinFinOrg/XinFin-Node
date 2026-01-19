@@ -3,8 +3,8 @@ version: "3.4"
 services:
   xinfinnetwork1:
     build:
-        context: .
-        dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./Dockerfile
     volumes:
       - "./xdcchain-1:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
