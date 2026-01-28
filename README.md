@@ -1,116 +1,6 @@
 ## How to Setup XinFin Masternode
 
-### Method 1:- Setup XinFin's XDC Masternode One-click Installer ###
-
-To qualify for Masternode on XinFin Network, you need at least **10,000,000 XDC, for the long term.**
-
-
-**Operating System**:
-
-* Apple Mac
-* Windows
-* Linux - Ubuntu
-
-**Step 1: Download [XinFin One-Click Installer](https://xinfin.org/setup-masternode) (to setup Masternode) for Windows, Linux, and Mac OS and Install on your local machine.**
-
-**Step 2: Now Run the One Click Installer, Make sure you read the Terms properly then click on I Agree button.**
-
-* **"C:\Program Files\XinFin-Network"** this will be your destination folder and this **"C:\Users\...\AppData\Roaming\XDCChain"** will contain your Keystore folder.
-* Make sure, you create a backup of your Keystore folder.
-* Now click on "XinFin Network" One click installer.
-* You can see the address of One Click Installer in left side, Also you can change the Network.
-* For changing the Network, click on "Develop" then select "Network" (XinFin - Main Network/ XinFin Apothem Network)
-* You can check the Node status under the **[stats.xinfin.network](http://stats.xinfin.network/)**
-
-
-
-https://user-images.githubusercontent.com/92325549/137081568-f1c99c1f-b035-4ef1-8576-04e327056064.mp4
-
-
-
-**Step 3: Create a wallet for Masternode**
-
-* Create your wallet address with Mnemonic Phrase or with Keystore. We always recommend to use Keystore for running a Masternode.
-* Enter a strong password while creating the wallet.
-* **Don't lose your Keystore file**
-* **Don't share it with anyone**
-* **Always take a backup of your Keystore file.**
-* **If you lose it, all your funds will get locked.**
-* After creating backup, Download your Keystore file.
-* Now Access your wallet with Keystore and enter a valid password properly to access your wallet.
-* If you are hosting a Masternode on Testnet then copy the Wallet address and paste it on **[XDC Faucet](https://faucet.apothem.network/)** for the Testnet XDC
-
-
-
-https://user-images.githubusercontent.com/92325549/137081588-b644bef6-5b5c-43c6-a703-6459b82db483.mp4
-
-
-
-**Step 4: Host your Masternode**
-
-* For hosting the Masternode, you need to copy the private key and login the Masternode.
-* For uploading the KYC, click on the "Become a Masternode"
-* Check the KYC criteria, the KYC file should be in pdf format only.
-* Once you upload your KYC, you need to enter the "Coinbase Address" which is in One Click Installer after that click on Apply button.
-* Now you will be notify with sucessful toaster i.e **"You have successfully applied for Masternode"**
-* You can check all the status regarding your Masternode here: **[master.apothem.network](https://master.apothem.network/)**.
-
-
-
-
-https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-84f6-bc32aac8d681.mp4
-
-
-
-
----------------------------------
-
-### Method 2 :- Setup XinFin Masternode Bootstrap Script ###
-
-**For Mainnet**
-
-Bootstrap Command XinFin Node Setup:-
-
-```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
-```
-
-Examples:-
-```
-$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
-[sudo] password for user:
-Please enter your XinFin Network (mainnet/testnet/devnet) :- mainnet
-Your running network is mainnet
-Please enter your XinFin MasterNode Name :- Demo_Server
-Your Masternode Name is Demo_Server
-
-```
-
-
-**For Testnet**
-```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
-Please enter your XinFin Network (mainnet/testnet/devnet) :- testnet
-Your running network is testnet
-Please enter your XinFin MasterNode Name :- test01
-Your Masternode Name is test01
-```
-
-**For Devnet**
-```
-sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
-Please enter your XinFin Network (mainnet/testnet/devnet) :- devnet
-Your running network is devnet
-Please enter your XinFin MasterNode Name :- test01
-Your Masternode Name is test01
-Generate new private key and wallet address.
-If you have your own key, you can change after this and restart the node
-Type 'Y' or 'y' to continue:
-```
-
----------------------------------
-
-### Method 3:- Setup XinFin Masternode Docker ###
+### Method 1:- Setup XinFin Masternode Docker ###
 
 **Operating System**: Ubuntu 20.04 64-bit or higher
 
@@ -190,6 +80,184 @@ To stop the node or if you encounter any issues use:
 cd testnet
 sudo docker-compose -f docker-compose.yml down
 ```
+
+---------------------------------
+
+### Method 2 :- Setup XinFin Masternode Bootstrap Script ###
+
+**For Mainnet**
+
+Bootstrap Command XinFin Node Setup:-
+
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+```
+
+Examples:-
+```
+$ sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+[sudo] password for user:
+Please enter your XinFin Network (mainnet/testnet/devnet) :- mainnet
+Your running network is mainnet
+Please enter your XinFin MasterNode Name :- Demo_Server
+Your Masternode Name is Demo_Server
+
+```
+
+
+**For Testnet**
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+Please enter your XinFin Network (mainnet/testnet/devnet) :- testnet
+Your running network is testnet
+Please enter your XinFin MasterNode Name :- test01
+Your Masternode Name is test01
+```
+
+**For Devnet**
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+Please enter your XinFin Network (mainnet/testnet/devnet) :- devnet
+Your running network is devnet
+Please enter your XinFin MasterNode Name :- test01
+Your Masternode Name is test01
+Generate new private key and wallet address.
+If you have your own key, you can change after this and restart the node
+Type 'Y' or 'y' to continue:
+```
+
+---------------------------------
+
+### Method 3:- Setup XinFin's XDC Masternode One-click Installer(Deprecated) ###
+
+To qualify for Masternode on XinFin Network, you need at least **10,000,000 XDC, for the long term.**
+
+
+**Operating System**:
+
+* Apple Mac
+* Windows
+* Linux - Ubuntu
+
+**Step 1: Download [XinFin One-Click Installer](https://xinfin.org/setup-masternode) (to setup Masternode) for Windows, Linux, and Mac OS and Install on your local machine.**
+
+**Step 2: Now Run the One Click Installer, Make sure you read the Terms properly then click on I Agree button.**
+
+* **"C:\Program Files\XinFin-Network"** this will be your destination folder and this **"C:\Users\...\AppData\Roaming\XDCChain"** will contain your Keystore folder.
+* Make sure, you create a backup of your Keystore folder.
+* Now click on "XinFin Network" One click installer.
+* You can see the address of One Click Installer in left side, Also you can change the Network.
+* For changing the Network, click on "Develop" then select "Network" (XinFin - Main Network/ XinFin Apothem Network)
+* You can check the Node status under the **[stats.xinfin.network](http://stats.xinfin.network/)**
+
+
+
+https://user-images.githubusercontent.com/92325549/137081568-f1c99c1f-b035-4ef1-8576-04e327056064.mp4
+
+
+
+**Step 3: Create a wallet for Masternode**
+
+* Create your wallet address with Mnemonic Phrase or with Keystore. We always recommend to use Keystore for running a Masternode.
+* Enter a strong password while creating the wallet.
+* **Don't lose your Keystore file**
+* **Don't share it with anyone**
+* **Always take a backup of your Keystore file.**
+* **If you lose it, all your funds will get locked.**
+* After creating backup, Download your Keystore file.
+* Now Access your wallet with Keystore and enter a valid password properly to access your wallet.
+* If you are hosting a Masternode on Testnet then copy the Wallet address and paste it on **[XDC Faucet](https://faucet.apothem.network/)** for the Testnet XDC
+
+
+
+https://user-images.githubusercontent.com/92325549/137081588-b644bef6-5b5c-43c6-a703-6459b82db483.mp4
+
+
+
+**Step 4: Host your Masternode**
+
+* For hosting the Masternode, you need to copy the private key and login the Masternode.
+* For uploading the KYC, click on the "Become a Masternode"
+* Check the KYC criteria, the KYC file should be in pdf format only.
+* Once you upload your KYC, you need to enter the "Coinbase Address" which is in One Click Installer after that click on Apply button.
+* Now you will be notify with sucessful toaster i.e **"You have successfully applied for Masternode"**
+* You can check all the status regarding your Masternode here: **[master.apothem.network](https://master.apothem.network/)**.
+
+
+
+
+https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-84f6-bc32aac8d681.mp4
+
+---------------------------------
+
+### Method 4:- Setup XinFin Masternode Using Snapshot ###
+
+This method allows you to quickly sync your node by downloading a pre-synced blockchain snapshot instead of syncing from scratch.
+
+**For Mainnet**
+
+**Step 1: Run Bootstrap Script**
+```
+sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
+```
+
+**Step 2: Verify Setup**
+```
+bash xdc-attach.sh
+```
+Verify everything works fine, then stop the node:
+```
+bash docker-down.sh
+```
+
+**Step 3: Download and Extract Snapshot**
+Navigate to the xdcchain directory:
+```
+cd XinFin-Node/mainnet/xdcchain
+```
+
+Remove the existing XDC directory (if present):
+```
+rm -rf XDC
+```
+
+Download the snapshot download script:
+```
+wget https://rpc.xdc.network/scripts/smart-download-extract-simultaneously.py
+chmod +x smart-download-extract-simultaneously.py
+```
+
+Run the snapshot download script (replace `/your/xdcchain/directory` with your actual xdcchain directory path):
+```
+python3 smart-download-extract-simultaneously.py https://rpc.xdc.network/snapshots/mainnet/archive/mainnet_archive_latest.tar /your/xdcchain/directory
+```
+
+**Step 4: Clean Up and Configure**
+Remove unnecessary files from the XDC directory:
+```
+rm -rf XDC/nodekey
+rm -rf XDC/transactions.rlp
+```
+
+**Step 5: Enable RPC (Optional)**
+If you need RPC access, add the following to your `.env` file:
+```
+ENABLE_RPC=true
+```
+
+**Step 6: Start the Node**
+```
+bash docker-up.sh
+```
+
+**Step 7: Connect to Network**
+```
+bash peer.sh
+```
+
+**Note**: Make sure to replace `/your/xdcchain/directory` with the actual path to your xdcchain directory (typically `XinFin-Node/mainnet/xdcchain`).
+
+---------------------------------
 
 ## How to setting RPC
 By default, RPC is disabled. To enable RPC, follow these steps:
