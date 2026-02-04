@@ -2,7 +2,7 @@
 
 if [ ! -d /work/xdcchain/XDC/chaindata ]; then
     wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -F '[{}]' '{print $2}')
-    echo "Initalizing Genesis Block"
+    echo "Initializing Genesis Block"
     coinbaseaddr="$wallet"
     coinbasefile=/work/xdcchain/coinbase.txt
     touch $coinbasefile
@@ -65,12 +65,10 @@ args=(
     --syncmode "${sync_mode}"
     --gcmode "${gc_mode}"
     --datadir /work/xdcchain
-    --XDCx.datadir /work/xdcchain/XDCx
     --networkid 50
     --port 30303
     --unlock "${wallet}"
     --password /work/.pwd
-    --mine
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
