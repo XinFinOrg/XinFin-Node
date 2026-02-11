@@ -221,15 +221,16 @@ Remove the existing XDC directory (if present):
 rm -rf XDC
 ```
 
-Download the snapshot download script:
+Start a new tmux session and run the downloader:
 ```
-wget https://rpc.xdc.network/scripts/smart-download-extract-simultaneously.py
-chmod +x smart-download-extract-simultaneously.py
-```
+# Start a new tmux session
+tmux new -s download
 
-Run the snapshot download script (replace `/your/xdcchain/directory` with your actual xdcchain directory path):
-```
-python3 smart-download-extract-simultaneously.py https://rpc.xdc.network/snapshots/mainnet/archive/mainnet_archive_latest.tar /your/xdcchain/directory
+# Then run the downloader
+curl -fsSL https://rpc.xdc.network/download | bash
+
+# To detach (leave running): Press Ctrl+B, then D
+# To reconnect later: tmux attach -t download
 ```
 
 **Step 4: Clean Up and Configure**
