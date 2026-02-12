@@ -275,7 +275,7 @@ All RPC-related configurations are located in the `.env` file. You can modify th
 
 **RPC API Configuration**
 
-- `RPC_API`: List of RPC APIs (Default: db,eth,net,txpool,web3,XDPoS)
+- `RPC_API`: List of RPC APIs (Default: eth,net,txpool,web3,XDPoS)
 - `RPC_CORS_DOMAIN`: CORS domain settings (Default: \*)
 - `RPC_ADDR`: RPC listening address (Default: 0.0.0.0)
 - `RPC_PORT`: RPC port (Default: 8545)
@@ -283,10 +283,32 @@ All RPC-related configurations are located in the `.env` file. You can modify th
 
 **WebSocket Configuration**
 
-- `WS_API`: List of WebSocket APIs (Default: db,eth,net,txpool,web3,XDPoS)
+- `WS_API`: List of WebSocket APIs (Default: eth,net,txpool,web3,XDPoS)
 - `WS_ADDR`: WebSocket listening address (Default: 0.0.0.0)
 - `WS_ORIGINS`: Allowed WebSocket origins (Default: \*)
 - `WS_PORT`: WebSocket port (Default: 8546)
+
+### RPC Namespaces
+
+#### Current Available Namespaces
+
+The following RPC namespaces are currently available and supported:
+- `XDPoS` - XDPoS consensus methods
+- `admin` - Admin operations of geth instance like addPeer, nodeInfo, peers etc
+- `debug` - Debugging utilities like blockProfile, cpuProfile
+- `eth` - Ethereum-compatible methods
+- `net` - Network aspects
+- `rpc` - RPC metadata
+- `txpool` - Transaction pool operations
+- `web3` - Web3 utility methods
+
+#### Deprecated Namespaces
+
+- `miner` - Remote control of node's mining operations and mining-specific settings
+
+#### Removed Namespaces
+
+- `personal` - Account management and wallet operations (unlock accounts, sign transactions, etc.)
 
 
 ## Troubleshooting
