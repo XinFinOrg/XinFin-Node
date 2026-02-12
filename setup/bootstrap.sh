@@ -66,7 +66,7 @@ function configureXinFinNode(){
 
     echo ""
     echo "Starting Xinfin Node ..."
-    sudo docker-compose -f docker-compose.yml up --build --force-recreate -d
+    sudo docker compose -f docker-compose.yml up --build --force-recreate -d
 }
 
 function main(){

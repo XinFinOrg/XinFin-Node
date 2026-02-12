@@ -59,11 +59,9 @@ args=(
     --syncmode "${sync_mode}"
     --datadir /work/xdcchain
     --networkid 551
-    --XDCx.datadir /work/xdcchain/XDCx
     --port 30303
     --unlock "${wallet}"
     --password /work/.pwd
-    --mine
     --gasprice "1"
     --targetgaslimit "50000000"
     --verbosity "${log_level}"
@@ -72,17 +70,17 @@ args=(
 
 if echo "${ENABLE_RPC}" | grep -iq "true"; then
     args+=(
-        --rpc
-        --rpcaddr "${RPC_ADDR}"
-        --rpcport "${RPC_PORT}"
-        --rpcapi "${RPC_API}"
-        --rpccorsdomain "${RPC_CORS_DOMAIN}"
-        --rpcvhosts "${RPC_VHOSTS}"
+        --http
+        --http-addr "${RPC_ADDR}"
+        --http-port "${RPC_PORT}"
+        --http-api "${RPC_API}"
+        --http-corsdomain "${RPC_CORS_DOMAIN}"
+        --http-vhosts "${RPC_VHOSTS}"
         --ws
-        --wsaddr "${WS_ADDR}"
-        --wsport "${WS_PORT}"
-        --wsapi "${WS_API}"
-        --wsorigins "${WS_ORIGINS}"
+        --ws-addr "${WS_ADDR}"
+        --ws-port "${WS_PORT}"
+        --ws-api "${WS_API}"
+        --ws-origins "${WS_ORIGINS}"
     )
 fi
 
