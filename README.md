@@ -58,8 +58,7 @@ https://user-images.githubusercontent.com/92325549/137081588-b644bef6-5b5c-43c6-
 
 
 
-https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-84f6-bc32aac8d681.mp4
-
+https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-84f6-bc32aac8b681.mp4
 
 
 
@@ -114,9 +113,11 @@ Type 'Y' or 'y' to continue:
 
 **Operating System**: Ubuntu 20.04 64-bit or higher
 
-Should be facing internet directly with **public IP** & **without NAT**
+**Requirements**:
+- Docker Engine 24.0+ (includes Docker Compose v2)
+- Docker Compose v2.20+
 
-**Tools**: Docker, Docker Compose(1.27.4+)
+Should be facing internet directly with **public IP** & **without NAT**
 
 Setup (For Ubuntu 20.04 64-bit or higher Operating System)
 
@@ -131,7 +132,7 @@ cd XinFin-Node
 ```
 
 
-**Step 1: Install docker & docker-compose**
+**Step 1: Install Docker**
     sudo ./setup/install_docker.sh
 
 **Step 2: Update .env file with details**
@@ -153,7 +154,7 @@ nano .env
 
 Run:
 ```
-sudo docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 You should be able to see your node listed on the [XinFin Network](https://XinFin.network/) page.
@@ -163,7 +164,7 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 
 To stop the node or if you encounter any issues use:
 ```
-sudo docker-compose -f docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 Attach XDC Console:
 ```
@@ -177,7 +178,7 @@ sudo bash xdc-attach.sh
 Run:
 ```
 cd testnet
-sudo docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d
 ```
 
 You should be able to see your node listed on the [Apothem Network](https://apothem.network/#stats) page.
@@ -188,7 +189,7 @@ Your coinbase address can be found in xdcchain/coinbase.txt file.
 To stop the node or if you encounter any issues use:
 ```
 cd testnet
-sudo docker-compose -f docker-compose.yml down
+docker compose -f docker-compose.yml down
 ```
 
 ## How to setting RPC
