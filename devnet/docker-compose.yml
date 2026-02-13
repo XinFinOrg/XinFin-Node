@@ -1,7 +1,15 @@
-version: "3.4"
+name: XDC
 
+include:
+  - ./../observability/dozzle.yaml
+  - ./../observability/prometheus.yml
+  - ./../observability/grafana.yml
 services:
   xinfinnetwork1:
+    labels:
+      - "com.xinfin.project=XinFin-Node"
+      - "com.xinfin.service=xinfinnetwork1"
+      - "com.xinfin.environment=devnet"
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -18,3 +26,22 @@ services:
       - "30303:30303"
       - "8545:8545"
       - "8555:8555"
+    healthcheck:
+      test: >
+        sh -c '
+          if nc -z 127.0.0.1 8545 2>/dev/null; then
+            if curl -s -X POST -H "Content-Type: application/json" \
+              --data "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"XDPoS_getV2BlockByNumber\",\"params\":[\"latest\"]}" \
+              http://127.0.0.1:8545 | grep -q "\"result\""; then
+                exit 0;  # Healthy
+            else
+                exit 1;   # Unhealthy
+            fi
+          else
+            exit 0;
+          fi
+        '
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s

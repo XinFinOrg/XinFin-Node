@@ -68,6 +68,12 @@ args=(
     --targetgaslimit "50000000"
     --verbosity "${log_level}"
     --store-reward
+    --log-format json
+    --log-maxsize 50
+    --log-maxbackups 3
+    --metrics
+    --metrics.addr "0.0.0.0"
+    --metrics.port 6060
 )
 
 if echo "${ENABLE_RPC}" | grep -iq "true"; then
