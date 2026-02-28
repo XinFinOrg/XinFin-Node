@@ -64,7 +64,6 @@ netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:20
 echo "Starting nodes with $bootnodes ..."
 args=(
     --ethstats "${netstats}"
-    --nodiscover
     --bootnodes "${bootnodes}"
     --syncmode "${sync_mode}"
     --gcmode "${gc_mode}"
