@@ -52,7 +52,7 @@ https://user-images.githubusercontent.com/92325549/137081588-b644bef6-5b5c-43c6-
 * For uploading the KYC, click on the "Become a Masternode"
 * Check the KYC criteria, the KYC file should be in pdf format only.
 * Once you upload your KYC, you need to enter the "Coinbase Address" which is in One Click Installer after that click on Apply button.
-* Now you will be notify with sucessful toaster i.e **"You have successfully applied for Masternode"**
+* Now you will be notify with successful toaster i.e **"You have successfully applied for Masternode"**
 * You can check all the status regarding your Masternode here: **[master.apothem.network](https://master.apothem.network/)**.
 
 
