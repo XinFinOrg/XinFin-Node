@@ -1,0 +1,10 @@
+
+users:
+  admin:
+    email: me@xfin.net
+    name: xfinadmin
+    password: $2a$11$W3bx/Ejk7vxtUGtyfKWudeXv3oGKW4H7gnYS49oh0pPJMcXBwNb.a
+
+# docker run -it --rm amir20/dozzle generate --name xfinadmin --email me@xfin.net --password secret admin
+# login username: admin
+# login password: secret

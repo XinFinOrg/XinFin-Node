@@ -31,12 +31,35 @@ function configureXinFinNode(){
     sudo apt-get install docker-ce -y
 
     echo "Installing Docker-Compose"
-    
+
     curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        
+
     chmod +x /usr/local/bin/docker-compose
     sleep 5
     echo "Docker Compose Installed successfully"
+
+    configureDockerLogging
+}
+
+function configureDockerLogging() {
+    echo "Configuring Docker log rotation..."
+
+    sudo mkdir -p /etc/docker
+
+    cat <<EOF | sudo tee /etc/docker/daemon.json > /dev/null
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50m",
+    "max-file": "3"
+  }
+}
+EOF
+
+    echo "Restarting Docker to apply log configuration..."
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
+    echo "Docker log configuration applied successfully."
 }
 
 function init(){
