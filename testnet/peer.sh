@@ -1,5 +1,5 @@
 #!/bin/bash
-container_name="testnet_xinfinnetwork_1"
+container_name="xdcnetwork-testnet-node"
 filename="bootnodes.list"
 
 while IFS= read -r line || [[ -n "$line" ]]; do
