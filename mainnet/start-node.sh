@@ -2,7 +2,7 @@
 
 if [ ! -d /work/xdcchain/XDC/chaindata ]; then
     wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -F '[{}]' '{print $2}')
-    echo "Initalizing Genesis Block"
+    echo "Initializing Genesis Block"
     coinbaseaddr="$wallet"
     coinbasefile=/work/xdcchain/coinbase.txt
     touch $coinbasefile
@@ -65,12 +65,10 @@ args=(
     --syncmode "${sync_mode}"
     --gcmode "${gc_mode}"
     --datadir /work/xdcchain
-    --XDCx.datadir /work/xdcchain/XDCx
     --networkid 50
     --port 30303
     --unlock "${wallet}"
     --password /work/.pwd
-    --mine
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
@@ -79,18 +77,17 @@ args=(
 # if ENABLE_RPC is true, add RPC related parameters
 if echo "${ENABLE_RPC}" | grep -iq "true"; then
     args+=(
-        --rpc
-        --rpcaddr "${RPC_ADDR}"
-        --rpcport "${RPC_PORT}"
-        --rpcapi "${RPC_API}"
-        --rpccorsdomain "${RPC_CORS_DOMAIN}"
-        --rpcvhosts "${RPC_VHOSTS}"
-        --store-reward
+        --http
+        --http-addr "${RPC_ADDR}"
+        --http-port "${RPC_PORT}"
+        --http-api "${RPC_API}"
+        --http-corsdomain "${RPC_CORS_DOMAIN}"
+        --http-vhosts "${RPC_VHOSTS}"
         --ws
-        --wsaddr "${WS_ADDR}"
-        --wsport "${WS_PORT}"
-        --wsapi "${WS_API}"
-        --wsorigins "${WS_ORIGINS}"
+        --ws-addr "${WS_ADDR}"
+        --ws-port "${WS_PORT}"
+        --ws-api "${WS_API}"
+        --ws-origins "${WS_ORIGINS}"
     )
 fi
 
