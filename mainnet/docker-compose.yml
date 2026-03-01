@@ -1,5 +1,3 @@
-version: "3.4"
-
 services:
   xinfinnetwork:
     container_name: xdcnetwork-mainnet-node
