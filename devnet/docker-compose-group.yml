@@ -32,5 +32,3 @@ services:
     env_file: "./envs/${HOSTIP}-2"
     ports:
       - "30304:30304"
-      - "8546:8546"
-      - "8556:8556"
