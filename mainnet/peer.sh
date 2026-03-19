@@ -1,5 +1,5 @@
 #!/bin/bash
-container_name="mainnet_xinfinnetwork_1"
+container_name="xdcnetwork-mainnet-node"
 filename="enode.txt"
 
 while IFS= read -r line || [[ -n "$line" ]]; do
