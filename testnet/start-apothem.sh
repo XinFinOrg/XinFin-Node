@@ -36,34 +36,64 @@ else
   log_level=$LOG_LEVEL
 fi
 
+# create log file with timestamp
+DATE="$(date +%Y%m%d-%H%M%S)"
+LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
+
+# Set sync_mode from SYNC_MODE env or default to 'full'
+sync_mode=full
+if test -z "$SYNC_MODE"; then
+    echo "SYNC_MODE not set, default to full" # full or fast
+else
+    echo "SYNC_MODE found, set to $SYNC_MODE"
+    sync_mode=$SYNC_MODE
+fi
+
+# Set gc_mode from GC_MODE env or default to 'archive'
+gc_mode=archive
+if test -z "$GC_MODE"; then
+    echo "GC_MODE not set, default to archive" # full or archive
+else
+    echo "GC_MODE found, set to $GC_MODE"
+    gc_mode=$GC_MODE
+fi
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC \
-    --ethstats ${netstats} \
-    --gcmode=archive \
-    --bootnodes ${bootnodes} \
-    --syncmode ${NODE_TYPE} \
-    --datadir /work/xdcchain \
-    --XDCx.datadir /work/xdcchain/XDCx \
-    --networkid 51 \
-    --port 30304 \
-    --rpc \
-    --rpcapi eth,net,web3,XDPoS \
-    --rpccorsdomain "*" \
-    --rpcaddr 0.0.0.0 \
-    --rpcport 8555 \
-    --rpcvhosts "*" \
-    --unlock "${wallet}" \
-    --password /work/.pwd \
-    --mine \
-    --gasprice "1" \
-    --targetgaslimit "420000000" \
-    --verbosity ${log_level} \
-    --store-reward \
-    --ws \
-    --wsaddr=0.0.0.0 \
-    --wsport 8556 \
-    --wsorigins "*" \
-    2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+args=(
+    --ethstats "${netstats}"
+    --bootnodes "${bootnodes}"
+    --syncmode "${sync_mode}"
+    --gcmode "${gc_mode}"
+    --datadir /work/xdcchain
+    --XDCx.datadir /work/xdcchain/XDCx
+    --networkid 51
+    --port 30312
+    --unlock "${wallet}"
+    --password /work/.pwd
+    --mine
+    --gasprice "1"
+    --targetgaslimit "420000000"
+    --verbosity "${log_level}"
+    --store-reward
+)
+
+if echo "${ENABLE_RPC}" | grep -iq "true"; then
+    args+=(
+        --rpc
+        --rpcaddr "${RPC_ADDR}"
+        --rpcport "${RPC_PORT}"
+        --rpcapi "${RPC_API}"
+        --rpccorsdomain "${RPC_CORS_DOMAIN}"
+        --rpcvhosts "${RPC_VHOSTS}"
+        --ws
+        --wsaddr "${WS_ADDR}"
+        --wsport "${WS_PORT}"
+        --wsapi "${WS_API}"
+        --wsorigins "${WS_ORIGINS}"
+    )
+fi
+
+XDC "${args[@]}" 2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"

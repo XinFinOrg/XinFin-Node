@@ -1,8 +1,7 @@
-version: "3.4"
-
 services:
   xinfinnetwork:
-    image: xinfinorg/xdposchain:v2.4.1
+    container_name: xdcnetwork-mainnet-node
+    image: xinfinorg/xdposchain:v2.6.8
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
@@ -11,8 +10,7 @@ services:
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
     restart: "always"
-    env_file: .env
+    env_file:
+      - .env
     ports:
       - "30303:30303"
-      - "8989:8545"
-      - "8888:8546"

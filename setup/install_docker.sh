@@ -2,7 +2,6 @@
 
 function installDocker(){
 
-
     echo "Installing Docker"
 
     sudo apt-get update
@@ -22,14 +21,11 @@ function installDocker(){
 
     sudo apt-get update
 
-    sudo apt-get install docker-ce -y
+    # Install Docker Engine 24.0+ which includes Docker Compose v2
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
     
-    curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        
-
-    chmod +x /usr/local/bin/docker-compose
     sleep 5
-    echo "Docker Installed successfully"
+    echo "Docker and Docker Compose v2 installed successfully"
 }
 
 function init(){
@@ -47,4 +43,3 @@ function main(){
 }
 
 main
-

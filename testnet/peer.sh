@@ -1,6 +1,6 @@
 #!/bin/bash
-container_name="mainnet_xinfinnetwork_1"
-filename="enode.txt"
+container_name="testnet_xinfinnetwork_1"
+filename="bootnodes.list"
 
 while IFS= read -r line || [[ -n "$line" ]]; do
   echo $line

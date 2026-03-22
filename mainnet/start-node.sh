@@ -33,34 +33,65 @@ else
   log_level=$LOG_LEVEL
 fi
 
+# create log file with timestamp
+DATE="$(date +%Y%m%d-%H%M%S)"
+LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
+
+# Set sync_mode from SYNC_MODE env or default to 'full'
+sync_mode=full
+if test -z "$SYNC_MODE"; then
+    echo "SYNC_MODE not set, default to full" # full or fast
+else
+    echo "SYNC_MODE found, set to $SYNC_MODE"
+    sync_mode=$SYNC_MODE
+fi
+
+# Set gc_mode from GC_MODE env or default to 'archive'
+gc_mode=archive
+if test -z "$GC_MODE"; then
+    echo "GC_MODE not set, default to archive" # full or archive
+else
+    echo "GC_MODE found, set to $GC_MODE"
+    gc_mode=$GC_MODE
+fi
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${INSTANCE_NAME}:xinfin_xdpos_hybrid_network_stats@stats.xinfin.network:3000"
 
 echo "Starting nodes with $bootnodes ..."
-XDC \
-    --ethstats ${netstats} \
-    --bootnodes ${bootnodes} \
-    --syncmode ${NODE_TYPE} \
-    --datadir /work/xdcchain \
-    --XDCx.datadir /work/xdcchain/XDCx \
-    --networkid 50 \
-    --port 30303 \
-    --rpc \
-    --rpcapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
-    --rpccorsdomain "*" \
-    --rpcaddr 0.0.0.0 \
-    --rpcport 8545 \
-    --rpcvhosts "*" \
-    --store-reward \
-    --ws \
-    --wsapi db,eth,debug,net,shh,txpool,personal,web3,XDPoS \
-    --wsaddr="0.0.0.0" \
-    --wsorigins "*" \
-    --wsport 8546 \
-    --unlock "${wallet}" \
-    --password /work/.pwd \
-    --mine \
-    --gasprice "1" \
-    --targetgaslimit "420000000" \
-    --verbosity ${log_level} \
-    2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
+args=(
+    --ethstats "${netstats}"
+    --bootnodes "${bootnodes}"
+    --syncmode "${sync_mode}"
+    --gcmode "${gc_mode}"
+    --datadir /work/xdcchain
+    --XDCx.datadir /work/xdcchain/XDCx
+    --networkid 50
+    --port 30303
+    --unlock "${wallet}"
+    --password /work/.pwd
+    --mine
+    --gasprice "1"
+    --targetgaslimit "420000000"
+    --verbosity "${log_level}"
+)
+
+# if ENABLE_RPC is true, add RPC related parameters
+if echo "${ENABLE_RPC}" | grep -iq "true"; then
+    args+=(
+        --rpc
+        --rpcaddr "${RPC_ADDR}"
+        --rpcport "${RPC_PORT}"
+        --rpcapi "${RPC_API}"
+        --rpccorsdomain "${RPC_CORS_DOMAIN}"
+        --rpcvhosts "${RPC_VHOSTS}"
+        --store-reward
+        --ws
+        --wsaddr "${WS_ADDR}"
+        --wsport "${WS_PORT}"
+        --wsapi "${WS_API}"
+        --wsorigins "${WS_ORIGINS}"
+    )
+fi
+
+XDC "${args[@]}" 2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
