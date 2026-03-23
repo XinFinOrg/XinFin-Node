@@ -1,3 +1,58 @@
+## XDC Network Masternodes
+
+XDC Network Masternodes are the pillars of blockchain performance, ensuring high-speed transaction validation, network security, and decentralized governance. The XDC Network runs on a globally distributed system of masternodes that participate in a [XDC 2.0 consensus](https://xinfin.org/xdpos) mechanism. To enhance network integrity and security, Masternodes are required to complete a KYC process and stake 10,000,000 XDC.
+Read more [here](https://docs.xdc.network/xdcchain/developers/node_operators/masternode/)
+
+### Rewards Mechanism
+
+Rewards on the XDC Network are distributed on an epoch basis (900 blocks), based on validator participation such as block production and signatures. Earnings are shared between masternodes, delegators, and the foundation, ensuring fair and performance-driven incentives.
+Read more [here](https://docs.xdc.network/xdcchain/rewards)...
+
+### Masternode vs Standby Node Behaviour
+
+XDC Masternodes actively participate in consensus by producing and validating blocks, while standby nodes remain synchronized as backup validators ready to replace inactive nodes. This structure ensures high availability, fault tolerance, and continuous network operation.
+
+### Masternodes (Validator Nodes)
+
+**Role:**
+- Validate transactions
+- Produce blocks
+- Participate in consensus (XDPoS)
+- Vote on governance
+
+**Requirements:**
+
+Minimum 10 million XDC stake
+
+**Behavior:**
+- Selected in a round-robin / sequential order for block production
+- **If selected:**
+   - Must produce block within time window (~seconds)
+- **Earn:**
+   - Full validator rewards based on activity
+
+### Standby Nodes (Backup Validators)
+**Role:**
+- Act as backup validators
+- Replace inactive or failing masternodes
+
+**Behavior:**
+- Do not actively produce blocks unless promoted
+- Stay synchronized with network
+- Provide resilience & fault tolerance
+
+**Key Mechanism:**
+If a masternode fails:
+- Next node (standby) takes over after delay (~10 seconds)
+- Protector nodes act as standby validators ensuring uptime
+
+### Slashing
+
+The XDC Network follows a performance-based penalty model where inactive or misbehaving nodes lose rewards and may be replaced by standby nodes. Future upgrades aim to introduce stricter slashing mechanisms to enhance validator accountability and network security.
+Read more [here](https://docs.xdc.network/xdcchain/developers/node_operators/slashing/)
+
+---
+
 ## Securing Your XDC Network Node
 
 Before deploying your XDC Network Node, it is critical to secure the server, especially for validator or standby nodes that do not require RPC/WebSocket access. There are two deployment scenarios:
@@ -191,75 +246,13 @@ Once your server is secured and accessible, proceed with the standard masternode
 
 ---
 
-## How to Setup XinFin Masternode
+## How to Setup XDC Masternode
 
-### Method 1:- Setup XinFin's XDC Masternode One-click Installer ###
-
-To qualify for Masternode on XinFin Network, you need at least **10,000,000 XDC, for the long term.**
-
-
-**Operating System**:
-
-* Apple Mac
-* Windows
-* Linux - Ubuntu
-
-**Step 1: Download [XinFin One-Click Installer](https://xinfin.org/setup-masternode) (to setup Masternode) for Windows, Linux, and Mac OS and Install on your local machine.**
-
-**Step 2: Now Run the One Click Installer, Make sure you read the Terms properly then click on I Agree button.**
-
-* **"C:\Program Files\XinFin-Network"** this will be your destination folder and this **"C:\Users\...\AppData\Roaming\XDCChain"** will contain your Keystore folder.
-* Make sure, you create a backup of your Keystore folder.
-* Now click on "XinFin Network" One click installer.
-* You can see the address of One Click Installer in left side, Also you can change the Network.
-* For changing the Network, click on "Develop" then select "Network" (XinFin - Main Network/ XinFin Apothem Network)
-* You can check the Node status under the **[stats.xinfin.network](http://stats.xinfin.network/)**
-
-
-
-https://user-images.githubusercontent.com/92325549/137081568-f1c99c1f-b035-4ef1-8576-04e327056064.mp4
-
-
-
-**Step 3: Create a wallet for Masternode**
-
-* Create your wallet address with Mnemonic Phrase or on a hardware wallet. We always recommend to use a hardware wallet for running a Masternode.
-* Enter a strong password while creating the wallet.
-* **Don't lose your keyphrases**
-* **Don't share them with anyone**
-* **Always write your a backup or keyphrases and do not store them online.**
-* **If you lose them, all your funds will be lost.**
-* If you are hosting a Masternode on Testnet then copy the Wallet address and paste it on **[XDC Faucet](https://faucet.apothem.network/)** for the Testnet XDC
-
-
-
-https://user-images.githubusercontent.com/92325549/137081588-b644bef6-5b5c-43c6-a703-6459b82db483.mp4
-
-
-
-**Step 4: Host your Masternode**
-
-* For hosting the Masternode, you need to log in to your wallet and login the Masternode.
-* For uploading the KYC, click on the "Become a Masternode"
-* Check the KYC criteria, the KYC file should be in pdf format only.
-* Once you upload your KYC, you need to enter the "Coinbase Address" which is in One Click Installer after that click on Apply button.
-* Now you will be notify with sucessful toaster i.e **"You have successfully applied for Masternode"**
-* You can check all the status regarding your Masternode here: **[master.apothem.network](https://master.apothem.network/)**.
-
-
-
-
-https://user-images.githubusercontent.com/92325549/137086528-4a8c5c44-ce89-4a70-84f6-bc32aac8b681.mp4
-
-
-
----------------------------------
-
-### Method 2 :- Setup XinFin Masternode Bootstrap Script ###
+### Method 1: Setup XDC Masternode using Bootstrap Script ###
 
 **For Mainnet**
 
-Bootstrap Command XinFin Node Setup:-
+Bootstrap Command for XDC Node Setup:-
 
 ```
 sudo su -c "bash <(wget -qO- https://raw.githubusercontent.com/XinFinOrg/XinFin-Node/master/setup/bootstrap.sh)" root
@@ -300,7 +293,7 @@ Type 'Y' or 'y' to continue:
 
 ---------------------------------
 
-### Method 3:- Setup XinFin Masternode Docker ###
+### Method 2: Setup XDC Masternode with Docker ###
 
 **Operating System**: Ubuntu 20.04 64-bit or higher
 
@@ -419,7 +412,7 @@ Public discussions on the technical issues, post articles and request for Enhanc
 
 - [Discord](https://discord.com/invite/KZdD6pkFxp)
 - [Telegram](https://t.me/xinfintalk)
-- [X (Twitter)](https://x.com/XDC_Network_)
+- [X (Twitter)](https://x.com/XDCNetwork)
 - [Reddit](https://www.reddit.com/r/xinfin/)
 - [GitHub](https://github.com/XinFinorg)
 - [XinFin FAQs](https://xdc.org/resources/faqs)
