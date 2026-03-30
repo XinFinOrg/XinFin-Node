@@ -2,7 +2,7 @@
 if [ ! -d /work/xdcchain/XDC/chaindata ]; then
     echo $PRIVATE_KEY >>/tmp/key
     wallet=$(XDC account import --password .pwd --datadir /work/xdcchain /tmp/key | awk -F '[{}]' '{print $2}')
-    XDC init --datadir /work/xdcchain /work/genesis.json
+    XDC --datadir /work/xdcchain init /work/genesis.json 2>&1 | tee /work/xdcchain/init.log
 else
     wallet=$(XDC account list --datadir /work/xdcchain | head -n 1 | awk -F '[{}]' '{print $2}')
 fi
