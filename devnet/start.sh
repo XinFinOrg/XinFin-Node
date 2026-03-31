@@ -3,6 +3,11 @@ if [ ! -d /work/xdcchain/XDC/chaindata ]; then
     echo $PRIVATE_KEY >>/tmp/key
     wallet=$(XDC account import --password .pwd --datadir /work/xdcchain /tmp/key | awk -F '[{}]' '{print $2}')
     XDC --datadir /work/xdcchain init /work/genesis.json 2>&1 | tee /work/xdcchain/init.log
+    init_status=${PIPESTATUS[0]}
+    if [ "$init_status" -ne 0 ]
+    then
+      exit "$init_status"
+    fi
 else
     wallet=$(XDC account list --datadir /work/xdcchain | head -n 1 | awk -F '[{}]' '{print $2}')
 fi
