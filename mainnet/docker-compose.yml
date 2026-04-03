@@ -5,11 +5,13 @@ services:
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
+      - "./entry.sh:/work/entry.sh"
       - "./start-node.sh:/work/start.sh"
       - "./bootnodes.list:/work/bootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
     restart: "always"
+    stop_grace_period: 60s
     env_file:
       - .env
     ports:

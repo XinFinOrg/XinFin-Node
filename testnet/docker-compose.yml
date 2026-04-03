@@ -4,7 +4,9 @@ services:
     image: xinfinorg/xdposchain:v2.6.7-testnet
     volumes:
       - "./xdcchain-testnet:/work/xdcchain"
+      - "./entry.sh:/work/entry.sh"
       - "./start-apothem.sh:/work/start.sh"
     restart: "always"
+    stop_grace_period: 60s
     env_file: .env
     network_mode: "host"
