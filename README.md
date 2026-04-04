@@ -70,7 +70,7 @@ Restart the SSH service:
 sudo systemctl restart ssh
 ```
 
-Keep your private key (`~/.ssh/id_rsa`) safe. You will need it for all future logins. 
+Keep your private key (`~/.ssh/id_rsa`) safe. You will need it for all future logins.
 **Do not upload it to the server**
 
 ---
@@ -188,6 +188,17 @@ sudo ufw allow 8989
 ---
 
 Once your server is secured and accessible, proceed with the standard masternode setup.
+
+### Log Retention Settings
+
+The startup scripts for `mainnet`, `testnet`, and `devnet` support two log retention environment variables:
+
+* `LOG_KEEP_DAYS`: total number of calendar days of node logs to retain. Minimum value: `3`.
+* `LOG_UNCOMPRESSED_DAYS`: number of recent calendar days to keep as plain `.log` files before older retained logs are compressed to `.log.gz`. Minimum value: `2`.
+
+Default values are `LOG_KEEP_DAYS=30` and `LOG_UNCOMPRESSED_DAYS=3`. If `LOG_KEEP_DAYS` is below `3`, or `LOG_UNCOMPRESSED_DAYS` is below `2`, or `LOG_UNCOMPRESSED_DAYS` is greater than `LOG_KEEP_DAYS`, the node exits during startup with an error.
+
+Mainnet and testnet read these values from their `.env` files. Devnet reads them from the per-node files under `devnet/envs/${HOSTIP}-1` and `devnet/envs/${HOSTIP}-2`. Old `.log` files are compressed only after rotation, and the original file is removed only after the `.log.gz` file has been written successfully.
 
 ---
 

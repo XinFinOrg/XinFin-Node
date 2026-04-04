@@ -4,6 +4,7 @@ services:
     volumes:
       - "./xdcchain-1:/work/xdcchain"
     restart: "always"
+    stop_grace_period: 60s
     env_file: "./.env"
     ports:
       - "30303:30303"
