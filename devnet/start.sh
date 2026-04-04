@@ -27,10 +27,21 @@ else
 fi
 
 log_dir=/work/xdcchain
+log_keep_days=30
 stream_chunk_size=4096
 stream_chunk_timeout=0.2
 initial_log_day=""
 initial_log_path=""
+
+if [[ -z "${LOG_KEEP_DAYS}" ]]; then
+    echo "LOG_KEEP_DAYS not set, default to ${log_keep_days}"
+elif [[ "${LOG_KEEP_DAYS}" =~ ^[0-9]+$ && "${LOG_KEEP_DAYS}" -ge 3 ]]; then
+    echo "LOG_KEEP_DAYS found, set to ${LOG_KEEP_DAYS}"
+    log_keep_days=${LOG_KEEP_DAYS}
+else
+    echo "Invalid LOG_KEEP_DAYS: ${LOG_KEEP_DAYS}. Expected an integer greater than or equal to 3." >&2
+    exit 1
+fi
 
 read_stream_chunk() {
     local stream_fd=$1
@@ -45,6 +56,30 @@ read_stream_chunk() {
     return "${read_status}"
 }
 
+cleanup_old_logs() {
+    local retention_start_date=""
+    local deleted_logs=0
+    local log_file=""
+    local log_name=""
+    local log_date=""
+
+    retention_start_date="$(date -d "-$((log_keep_days - 1)) days" +%Y%m%d)"
+
+    while IFS= read -r -d '' log_file; do
+        log_name="$(basename "${log_file}")"
+        if [[ "${log_name}" =~ ^xdc-([0-9]{8})-[0-9]{6}\.log$ ]]; then
+            log_date="${BASH_REMATCH[1]}"
+            if [[ "${log_date}" < "${retention_start_date}" ]]; then
+                echo "Deleting expired log file: ${log_file}"
+                rm -f -- "${log_file}"
+                deleted_logs=$((deleted_logs + 1))
+            fi
+        fi
+    done < <(find "${log_dir}" -maxdepth 1 -type f -name 'xdc-*.log' -print0)
+
+    echo "Log retention: kept ${log_keep_days} day(s), removed ${deleted_logs} expired log file(s)"
+}
+
 prepare_initial_log_file() {
     local timestamp=""
     local log_fd=""
@@ -57,6 +92,7 @@ prepare_initial_log_file() {
 
     exec {log_fd}>>"${initial_log_path}" || return 1
     exec {log_fd}>&-
+    cleanup_old_logs
 }
 
 write_rotated_log_stream() {
@@ -93,6 +129,7 @@ write_rotated_log_stream() {
             current_day="${timestamp%%-*}"
             log_path="${log_dir}/xdc-${timestamp}.log"
             exec {log_fd}>>"${log_path}" || return 1
+            cleanup_old_logs
         fi
 
         printf '%s' "${chunk}" >&${log_fd} || return 1
