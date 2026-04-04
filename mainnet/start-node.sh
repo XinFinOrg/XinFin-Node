@@ -24,7 +24,7 @@ while IFS= read -r line; do
     fi
 done <"$input"
 
-log_level=2
+log_level=3
 if test -z "$LOG_LEVEL"
 then
   echo "Log level not set, default to verbosity of $log_level"
