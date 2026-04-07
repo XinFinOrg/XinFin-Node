@@ -1,1 +1,1 @@
-sudo docker exec -it devnet_xinfinnetwork2_1 XDC attach /work/xdcchain/XDC.ipc
+sudo docker exec -it xdcnetwork-devnet-node-2 XDC attach /work/xdcchain/XDC.ipc
