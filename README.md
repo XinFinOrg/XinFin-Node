@@ -404,7 +404,7 @@ All API-related configurations are located in the `.env` file. You can modify th
 **API Configuration (shared by both RPC and WebSocket)**
 
 - `API`: List of APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `ADDR`: Listening address (Default: 0.0.0.0)
+- `LISTEN_ADDR`: Listening address (Default: 0.0.0.0)
 - `ORIGINS`: Allowed origins (Default: \*)
 - `RPC_PORT`: RPC port (Default: 8545)
 - `WS_PORT`: WebSocket port (Default: 8546)

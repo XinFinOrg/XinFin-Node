@@ -74,7 +74,7 @@ args=(
 if [[ "${ENABLE_RPC}" == "true" ]]; then
     args+=(
         --rpc
-        --rpcaddr "${ADDR}"
+        --rpcaddr "${LISTEN_ADDR}"
         --rpcport "${RPC_PORT}"
         --rpcapi "${API}"
         --rpccorsdomain "*"
@@ -95,7 +95,7 @@ fi
 if [[ "${ENABLE_WS}" == "true" ]]; then
     args+=(
         --ws
-        --wsaddr "${ADDR}"
+        --wsaddr "${LISTEN_ADDR}"
         --wsport "${WS_PORT}"
         --wsapi "${API}"
         --wsorigins "${ORIGINS}"
