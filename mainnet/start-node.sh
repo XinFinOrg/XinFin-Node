@@ -79,18 +79,22 @@ args=(
 # if ENABLE_RPC is true, add RPC related parameters
 if echo "${ENABLE_RPC}" | grep -iq "true"; then
     args+=(
-        --rpc
         --rpcaddr "${RPC_ADDR}"
         --rpcport "${RPC_PORT}"
         --rpcapi "${RPC_API}"
         --rpccorsdomain "${RPC_CORS_DOMAIN}"
         --rpcvhosts "${RPC_VHOSTS}"
         --store-reward
-        --ws
         --wsaddr "${WS_ADDR}"
         --wsport "${WS_PORT}"
         --wsapi "${WS_API}"
         --wsorigins "${WS_ORIGINS}"
+    )
+else
+    # RPC disabled - explicitly disable HTTP and WebSocket
+    args+=(
+        --http=false
+        --ws=false
     )
 fi
 
