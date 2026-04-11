@@ -392,24 +392,24 @@ By default, RPC is disabled. To enable RPC, follow these steps:
    ENABLE_RPC=true
    ```
 
-### Configure RPC Parameters
+### Configure RPC and WebSocket Parameters
 
-All RPC-related configurations are located in the `.env` file. You can modify the following parameters as needed:
+All API-related configurations are located in the `.env` file. You can modify the following parameters as needed:
 
-**RPC API Configuration**
+**Enable/Disable API Endpoints**
 
-- `RPC_API`: List of RPC APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `RPC_CORS_DOMAIN`: CORS domain settings (Default: \*)
-- `RPC_ADDR`: RPC listening address (Default: 0.0.0.0)
+- `ENABLE_RPC`: Enable RPC endpoint (Default: false)
+- `ENABLE_WS`: Enable WebSocket endpoint (Default: false)
+
+**API Configuration (shared by both RPC and WebSocket)**
+
+- `API`: List of APIs (Default: db,eth,net,txpool,web3,XDPoS)
+- `ADDR`: Listening address (Default: 0.0.0.0)
+- `ORIGINS`: Allowed origins (Default: \*)
 - `RPC_PORT`: RPC port (Default: 8545)
-- `RPC_VHOSTS`: Virtual host settings (Default: \*)
-
-**WebSocket Configuration**
-
-- `WS_API`: List of WebSocket APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `WS_ADDR`: WebSocket listening address (Default: 0.0.0.0)
-- `WS_ORIGINS`: Allowed WebSocket origins (Default: \*)
 - `WS_PORT`: WebSocket port (Default: 8546)
+
+> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8, the old environment variables (`RPC_API`, `WS_API`, `RPC_ADDR`, `WS_ADDR`, `RPC_CORS_DOMAIN`, `RPC_VHOSTS`, `WS_ORIGINS`) are no longer supported. Please update your `.env` file to use the new unified variables listed above.
 
 
 ## Troubleshooting

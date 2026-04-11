@@ -74,27 +74,47 @@ args=(
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
+    --store-reward
 )
 
-# if ENABLE_RPC is true, add RPC related parameters
-if echo "${ENABLE_RPC}" | grep -iq "true"; then
+# RPC and WebSocket configuration - exact match required for security
+if [[ "${ENABLE_RPC}" == "true" ]]; then
     args+=(
-        --rpcaddr "${RPC_ADDR}"
+        --rpc
+        --rpcaddr "${ADDR}"
         --rpcport "${RPC_PORT}"
-        --rpcapi "${RPC_API}"
-        --rpccorsdomain "${RPC_CORS_DOMAIN}"
+        --rpcapi "${API}"
+        --rpccorsdomain "*"
         --rpcvhosts "${RPC_VHOSTS}"
-        --store-reward
-        --wsaddr "${WS_ADDR}"
-        --wsport "${WS_PORT}"
-        --wsapi "${WS_API}"
-        --wsorigins "${WS_ORIGINS}"
     )
 else
-    # RPC disabled - explicitly disable HTTP and WebSocket
+    # When not "true", explicitly disable RPC to avoid unintended exposure
     args+=(
-        --http=false
+        --rpc=false
+        --rpcaddr ""
+        --rpcport ""
+        --rpcapi ""
+        --rpccorsdomain ""
+        --rpcvhosts ""
+    )
+fi
+
+if [[ "${ENABLE_WS}" == "true" ]]; then
+    args+=(
+        --ws
+        --wsaddr "${ADDR}"
+        --wsport "${WS_PORT}"
+        --wsapi "${API}"
+        --wsorigins "${ORIGINS}"
+    )
+else
+    # When not "true", explicitly disable WebSocket to avoid unintended exposure
+    args+=(
         --ws=false
+        --wsaddr ""
+        --wsport ""
+        --wsapi ""
+        --wsorigins ""
     )
 fi
 
