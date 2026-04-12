@@ -84,7 +84,7 @@ if [[ "${ENABLE_RPC}" == "true" ]]; then
         --rpcaddr "${LISTEN_ADDR}"
         --rpcport "${RPC_PORT}"
         --rpcapi "${API}"
-        --rpccorsdomain "*"
+        --rpccorsdomain "${ALLOWED_ORIGINS}"
         --rpcvhosts "${RPC_VHOSTS}"
     )
 else
@@ -105,7 +105,7 @@ if [[ "${ENABLE_WS}" == "true" ]]; then
         --wsaddr "${LISTEN_ADDR}"
         --wsport "${WS_PORT}"
         --wsapi "${API}"
-        --wsorigins "${ORIGINS}"
+        --wsorigins "${ALLOWED_ORIGINS}"
     )
 else
     # When not "true", explicitly disable WebSocket to avoid unintended exposure
