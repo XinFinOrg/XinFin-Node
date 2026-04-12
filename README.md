@@ -409,7 +409,12 @@ All API-related configurations are located in the `.env` file. You can modify th
 - `RPC_PORT`: RPC port (Default: 8545)
 - `WS_PORT`: WebSocket port (Default: 8546)
 
-> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8, the old environment variables (`RPC_API`, `WS_API`, `RPC_ADDR`, `WS_ADDR`, `RPC_CORS_DOMAIN`, `RPC_VHOSTS`, `WS_ORIGINS`) are no longer supported. Please update your `.env` file to use the new unified variables listed above.
+> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8 and want to keep using the old environment variables, you can do so by modifying the start script flags accordingly:
+> - `RPC_API` / `WS_API` (separate APIs) instead of unified `API`
+> - `RPC_ADDR` / `WS_ADDR` instead of unified `LISTEN_ADDR`
+> - `RPC_CORS_DOMAIN` / `WS_ORIGINS` instead of unified `ALLOWED_ORIGINS`
+> - `RPC_PORT` and `WS_PORT` remain unchanged
+> - `RPC_VHOSTS` remains unchanged
 
 
 ## Troubleshooting
