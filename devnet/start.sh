@@ -73,17 +73,17 @@ args=(
 # RPC and WebSocket configuration - exact match required for security
 if [[ "${ENABLE_RPC}" == "true" ]]; then
     args+=(
-        --rpc
-        --rpcaddr "${LISTEN_ADDR}"
-        --rpcport "${RPC_PORT}"
-        --rpcapi "${API}"
-        --rpccorsdomain "${ALLOWED_ORIGINS}"
-        --rpcvhosts "${RPC_VHOSTS}"
+        --http
+        --http-addr "${LISTEN_ADDR}"
+        --http-port "${RPC_PORT}"
+        --http-api "${API}"
+        --http-corsdomain "${ALLOWED_ORIGINS}"
+        --http-vhosts "${RPC_VHOSTS}"
     )
 else
     # When not "true", explicitly disable RPC to avoid unintended exposure
     args+=(
-        --rpc=false
+        --http=false
     )
 fi
 
