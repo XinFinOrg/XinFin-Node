@@ -84,11 +84,6 @@ else
     # When not "true", explicitly disable RPC to avoid unintended exposure
     args+=(
         --rpc=false
-        --rpcaddr ""
-        --rpcport ""
-        --rpcapi ""
-        --rpccorsdomain ""
-        --rpcvhosts ""
     )
 fi
 
@@ -104,10 +99,6 @@ else
     # When not "true", explicitly disable WebSocket to avoid unintended exposure
     args+=(
         --ws=false
-        --wsaddr ""
-        --wsport ""
-        --wsapi ""
-        --wsorigins ""
     )
 fi
 
