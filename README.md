@@ -410,8 +410,25 @@ All API-related configurations are located in the `.env` file. You can modify th
 - `WS_PORT`: WebSocket port (Default: 8546)
 
 > **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8 and want to keep using the old environment variables, you can do so by modifying the start script flags accordingly:
-> - **Environment variables**: `RPC_API` / `WS_API` (separate APIs) instead of unified `API`; `RPC_ADDR` / `WS_ADDR` instead of unified `LISTEN_ADDR`; `RPC_CORS_DOMAIN` / `WS_ORIGINS` instead of unified `ALLOWED_ORIGINS`; `RPC_PORT`, `WS_PORT`, and `RPC_VHOSTS` remain unchanged
-> - **Flag names**: Replace `--http*` with `--rpc*` format (e.g., `--http-addr` → `--rpcaddr`, `--http-api` → `--rpcapi`, `--http-corsdomain` → `--rpccorsdomain`, `--http-vhosts` → `--rpcvhosts`)
+>
+> | Old Environment Variable | New Environment Variable |
+> |--------------------------|--------------------------|
+> | `RPC_API` / `WS_API` | `API` (unified) |
+> | `RPC_ADDR` / `WS_ADDR` | `LISTEN_ADDR` |
+> | `RPC_CORS_DOMAIN` / `WS_ORIGINS` | `ALLOWED_ORIGINS` |
+> | `RPC_PORT`, `WS_PORT` | unchanged |
+> | `RPC_VHOSTS` | unchanged |
+>
+> | Old Flag | New Flag |
+> |----------|----------|
+> | `--rpcaddr` | `--http-addr` |
+> | `--rpcapi` | `--http-api` |
+> | `--rpccorsdomain` | `--http-corsdomain` |
+> | `--rpcvhosts` | `--http-vhosts` |
+> | `--wsaddr` | `--ws-addr` |
+> | `--wsport` | `--ws-port` |
+> | `--wsapi` | `--ws-api` |
+> | `--wsorigins` | `--ws-origins` |
 
 
 ## Troubleshooting

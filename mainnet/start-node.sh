@@ -97,10 +97,10 @@ fi
 if [[ "${ENABLE_WS}" == "true" ]]; then
     args+=(
         --ws
-        --wsaddr "${LISTEN_ADDR}"
-        --wsport "${WS_PORT}"
-        --wsapi "${API}"
-        --wsorigins "${ALLOWED_ORIGINS}"
+        --ws-addr "${LISTEN_ADDR}"
+        --ws-port "${WS_PORT}"
+        --ws-api "${API}"
+        --ws-origins "${ALLOWED_ORIGINS}"
     )
 else
     # When not "true", explicitly disable WebSocket to avoid unintended exposure
