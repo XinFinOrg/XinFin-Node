@@ -81,7 +81,7 @@ args=(
 if [[ "${ENABLE_RPC}" == "true" ]]; then
     args+=(
         --http
-        --http-addr "${LISTEN_ADDR}"
+        --http-addr "0.0.0.0"
         --http-port "${RPC_PORT}"
         --http-api "${API}"
         --http-corsdomain "${ALLOWED_ORIGINS}"
@@ -97,7 +97,7 @@ fi
 if [[ "${ENABLE_WS}" == "true" ]]; then
     args+=(
         --ws
-        --ws-addr "${LISTEN_ADDR}"
+        --ws-addr "0.0.0.0"
         --ws-port "${WS_PORT}"
         --ws-api "${API}"
         --ws-origins "${ALLOWED_ORIGINS}"

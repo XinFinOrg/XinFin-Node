@@ -403,18 +403,20 @@ All API-related configurations are located in the `.env` file. You can modify th
 
 **API Configuration (shared by both RPC and WebSocket)**
 
+> **Note on `RPC_ADDR` / `WS_ADDR`**
+> The address is now hardcoded to `0.0.0.0` directly in the start script (`--http-addr` / `--ws-addr`), and the `RPC_ADDR` / `WS_ADDR` environment variable has been removed.
+
 - `API`: List of APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `LISTEN_ADDR`: Listening address (Default: 0.0.0.0)
 - `ALLOWED_ORIGINS`: Allowed origins (Default: \*)
 - `RPC_PORT`: RPC port (Default: 8545)
 - `WS_PORT`: WebSocket port (Default: 8546)
 
-> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8 and want to keep using the old environment variables, you can do so by modifying the start script flags accordingly:
+> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8 and want to keep using the old environment variables, you can do so by modifying the start script flags accordingly. The following tables show the correspondence between old and new environment variables and CLI flags:
 >
 > | Old Environment Variable | New Environment Variable |
 > |--------------------------|--------------------------|
 > | `RPC_API` / `WS_API` | `API` (unified) |
-> | `RPC_ADDR` / `WS_ADDR` | `LISTEN_ADDR` |
+> | `RPC_ADDR` / `WS_ADDR` | removed  |
 > | `RPC_CORS_DOMAIN` / `WS_ORIGINS` | `ALLOWED_ORIGINS` |
 > | `RPC_PORT`, `WS_PORT` | unchanged |
 > | `RPC_VHOSTS` | unchanged |
