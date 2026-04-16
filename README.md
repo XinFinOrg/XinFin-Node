@@ -392,24 +392,45 @@ By default, RPC is disabled. To enable RPC, follow these steps:
    ENABLE_RPC=true
    ```
 
-### Configure RPC Parameters
+### Configure RPC and WebSocket Parameters
 
-All RPC-related configurations are located in the `.env` file. You can modify the following parameters as needed:
+All API-related configurations are located in the `.env` file. You can modify the following parameters as needed:
 
-**RPC API Configuration**
+**Enable/Disable API Endpoints**
 
-- `RPC_API`: List of RPC APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `RPC_CORS_DOMAIN`: CORS domain settings (Default: \*)
-- `RPC_ADDR`: RPC listening address (Default: 0.0.0.0)
+- `ENABLE_RPC`: Enable RPC endpoint (Default: false)
+- `ENABLE_WS`: Enable WebSocket endpoint (Default: false)
+
+**API Configuration (shared by both RPC and WebSocket)**
+
+> **Note on `RPC_ADDR` / `WS_ADDR`**
+> The address is now hardcoded to `0.0.0.0` directly in the start script (`--http-addr` / `--ws-addr`), and the `RPC_ADDR` / `WS_ADDR` environment variable has been removed.
+
+- `API`: List of APIs (Default: db,eth,net,txpool,web3,XDPoS)
+- `ALLOWED_ORIGINS`: Allowed origins (Default: \*)
 - `RPC_PORT`: RPC port (Default: 8545)
-- `RPC_VHOSTS`: Virtual host settings (Default: \*)
-
-**WebSocket Configuration**
-
-- `WS_API`: List of WebSocket APIs (Default: db,eth,net,txpool,web3,XDPoS)
-- `WS_ADDR`: WebSocket listening address (Default: 0.0.0.0)
-- `WS_ORIGINS`: Allowed WebSocket origins (Default: \*)
 - `WS_PORT`: WebSocket port (Default: 8546)
+
+> **Note for Upgrading from v2.6**: If you are upgrading from a version prior to v2.6.8 and want to keep using the old environment variables, you can do so by modifying the start script flags accordingly. The following tables show the correspondence between old and new environment variables and CLI flags:
+>
+> | Old Environment Variable | New Environment Variable |
+> |--------------------------|--------------------------|
+> | `RPC_API` / `WS_API` | `API` (unified) |
+> | `RPC_ADDR` / `WS_ADDR` | removed  |
+> | `RPC_CORS_DOMAIN` / `WS_ORIGINS` | `ALLOWED_ORIGINS` |
+> | `RPC_PORT`, `WS_PORT` | unchanged |
+> | `RPC_VHOSTS` | unchanged |
+>
+> | Old Flag | New Flag |
+> |----------|----------|
+> | `--rpcaddr` | `--http-addr` |
+> | `--rpcapi` | `--http-api` |
+> | `--rpccorsdomain` | `--http-corsdomain` |
+> | `--rpcvhosts` | `--http-vhosts` |
+> | `--wsaddr` | `--ws-addr` |
+> | `--wsport` | `--ws-port` |
+> | `--wsapi` | `--ws-api` |
+> | `--wsorigins` | `--ws-origins` |
 
 
 ## Troubleshooting
