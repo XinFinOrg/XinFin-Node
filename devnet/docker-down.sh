@@ -1,3 +1,13 @@
 #!/bin/bash
 
-HOSTIP=$(curl https://checkip.amazonaws.com) docker compose -f docker-compose.yml down
+cd "$(dirname "$0")"
+
+
+which docker-compose
+if [[ $? != 0 ]]; then
+    shopt -s expand_aliases
+    alias docker-compose='docker compose'
+fi
+
+docker-compose down devnet1
+

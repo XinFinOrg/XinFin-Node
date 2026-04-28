@@ -1,1 +1,0 @@
-sudo docker exec -it xdcnetwork-mainnet-node XDC attach /work/xdcchain/XDC.ipc

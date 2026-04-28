@@ -1,0 +1,1 @@
+sudo docker exec -it devnet-devnet1-1 XDC attach /work/xdcchain/XDC.ipc

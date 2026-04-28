@@ -1,16 +1,14 @@
 services:
-  xinfinnetwork1:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+  devnet1:
+    image: xinfinorg/devnet:latest
+    # image: xinfinorg/devnet:update-genesis-bd4cd58a5
+    pull_policy: always
     volumes:
-      - "./xdcchain-1:/work/xdcchain"
-      - "./genesis.json:/work/genesis.json"
-      - "./start.sh:/work/start.sh"
-      - "./bootnodes.list:/work/bootnodes.list"
-      - "./.pwd:/work/.pwd"
-      - "/etc/localtime:/etc/localtime:ro"
-    restart: "always"
-    env_file: "./.env"
-    ports:
-      - "30303:30303"
+      - ./xdcchain1:/work/xdcchain
+      - ./genesis.json:/work/genesis.json
+      - ./bootnodes.list:/work/bootnodes.list
+    restart: always
+    env_file:
+      - devnet1.env
+    profiles:
+      - machine1
