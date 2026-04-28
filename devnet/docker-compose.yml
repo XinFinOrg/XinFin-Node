@@ -12,3 +12,5 @@ services:
       - devnet1.env
     profiles:
       - machine1
+    ports:
+      - "8545:8545"
