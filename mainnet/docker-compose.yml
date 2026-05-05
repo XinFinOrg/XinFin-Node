@@ -1,7 +1,7 @@
 services:
   xinfinnetwork:
     container_name: xdcnetwork-mainnet-node
-    image: xinfinorg/xdposchain:v2.6.8
+    image: xinfinorg/xdposchain:v2.7.0
     volumes:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
