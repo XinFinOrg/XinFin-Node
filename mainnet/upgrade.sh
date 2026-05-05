@@ -12,7 +12,6 @@ mv .env.bak .env
 mv .nodekey.bak .nodekey
 
 echo "Upgrading Docker Images"
-sudo docker pull xinfinorg/xdposchain:v2.6.8
 docker compose -f docker-compose.yml down
 git pull
 docker compose -f docker-compose.yml up -d
