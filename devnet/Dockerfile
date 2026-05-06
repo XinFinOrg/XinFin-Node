@@ -1,6 +1,8 @@
-FROM golang:1.23
+FROM golang:1.25
 
 WORKDIR /work
+
+ENV GODEBUG=randseednop=0
 
 RUN apt-get update && apt-get install -y git build-essential
 
