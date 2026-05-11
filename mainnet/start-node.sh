@@ -75,6 +75,7 @@ args=(
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
     --store-reward
+    --nat "extip:${INSTANCE_IP}"
 )
 
 # RPC and WebSocket configuration - exact match required for security
