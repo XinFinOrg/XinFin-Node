@@ -40,8 +40,8 @@
         "allConfigs": {
           "0": {
             "maxMasternodes": 108,
-            "maxProtectorNodes": 10,
-            "maxObserverNodes": 2000,
+            "maxProtectorNodes": 0,
+            "maxObserverNodes": 0,
             "switchRound": 0,
             "minePeriod": 2,
             "timeoutSyncThreshold": 3,
@@ -1001,6 +1001,15 @@
     },
     "b25193378f1ac1f13353a894b77292588f724490": {
       "balance": "0x115eec47f6cf7e35000000"
+    },
+    "cc08002e7e4baec892785887a74d35557e8d2c15": {
+      "balance": "0xc9f2c9cd04674edea40000000"
+    },
+    "d16c20329d391104029d0a850dcdf9ed6e259b60": {
+      "balance": "0xc9f2c9cd04674edea40000000"
+    },
+    "4b1a14a10cb48e4cfddd17c379dfcaa358b011bc": {
+      "balance": "0xc9f2c9cd04674edea40000000"
     }
   },
   "number": "0x0",

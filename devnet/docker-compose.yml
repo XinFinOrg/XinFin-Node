@@ -1,7 +1,7 @@
 services:
   devnet1:
-    image: xinfinorg/devnet:latest
-    # image: xinfinorg/devnet:update-genesis-bd4cd58a5
+    container_name: xdcnetwork-devnet-node
+    image: xinfinorg/devnet:may2026
     pull_policy: always
     volumes:
       - ./xdcchain1:/work/xdcchain
