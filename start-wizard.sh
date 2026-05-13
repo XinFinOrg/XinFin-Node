@@ -205,10 +205,10 @@ fi
 printf "  ${GREEN}${BOLD}Saved!${NC} %s written.\n\n" "$ENVFILE"
 
 # ── restart ───────────────────────────────────────────────────────────────────
-read -rp "  Restart node now? Runs docker-down.sh then docker-up.sh [y/N]: " restart </dev/tty || restart="N"
-restart="${restart:-N}"
+read -rp "  Restart node now? Runs docker-down.sh then docker-up.sh [Y/n]: " restart </dev/tty || restart="Y"
+restart="${restart:-Y}"
 
-if [ "$restart" = "Y" ] || [ "$restart" = "y" ]; then
+if [ "$restart" != "N" ] && [ "$restart" != "n" ]; then
     if [ ! -f "$DIR/docker-down.sh" ] || [ ! -f "$DIR/docker-up.sh" ]; then
         printf "\n  ${RED}Error:${NC} docker-down.sh or docker-up.sh not found in %s\n\n" "$DIR"
         exit 1
