@@ -112,61 +112,77 @@ clear
 printf "\n"
 printf "  ${BOLD}${BLUE}XinFin Node — Config Wizard (%s)${NC}\n" "$ENV_NAME"
 printf "  %s\n" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
 if [ -f "$ENVFILE" ]; then
     printf "  ${GREEN}Found existing${NC} %s — values pre-loaded.\n" "$ENVFILE"
 else
     printf "  ${YELLOW}No .env found${NC} — defaults from %s will be used.\n" "$EXAMPLE"
 fi
 printf "\n"
-printf "  Press ${BOLD}Enter${NC} to keep the shown value, or type a replacement.\n"
-printf "\n"
-read -rp "  Press Enter to start…" _ </dev/tty || true
+read -rp "  Review and update .env values? [Y/n]: " do_verify </dev/tty || do_verify="Y"
+do_verify="${do_verify:-Y}"
 
-# ── collect values ────────────────────────────────────────────────────────────
-while IFS= read -r line; do
-    if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
-        key="${BASH_REMATCH[1]}"
-        ask "$key" "$(current_val "$key")"
+if [ "$do_verify" != "Y" ] && [ "$do_verify" != "y" ]; then
+    printf "  ${YELLOW}Skipping .env review.${NC}\n"
+    # Load current values into TMPFILE so the write step has something to work with
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
+            key="${BASH_REMATCH[1]}"
+            printf '%s=%s\n' "$key" "$(current_val "$key")" >> "$TMPFILE"
+        fi
+    done < "$EXAMPLE"
+else
+    printf "\n"
+    printf "  Press ${BOLD}Enter${NC} to keep the shown value, or type a replacement.\n"
+    printf "\n"
+    read -rp "  Press Enter to start…" _ </dev/tty || true
+
+    # ── collect values ────────────────────────────────────────────────────────
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
+            key="${BASH_REMATCH[1]}"
+            ask "$key" "$(current_val "$key")"
+        fi
+    done < "$EXAMPLE"
+
+    # ── preview ───────────────────────────────────────────────────────────────
+    printf "\n\n"
+    printf "  ${BOLD}${BLUE}Preview — %s/.env${NC}\n" "$ENV_NAME"
+    printf "  %s\n" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
+            key="${BASH_REMATCH[1]}"
+            printf "  ${CYAN}%-20s${NC}= ${GREEN}%s${NC}\n" "$key" "$(collected_val "$key")"
+        elif [[ "$line" =~ ^# ]]; then
+            printf "  ${DIM}%s${NC}\n" "$line"
+        else
+            printf "\n"
+        fi
+    done < "$EXAMPLE"
+
+    # Repeat API warning in preview so it's visible before the save prompt
+    api_val=$(collected_val "API")
+    dangerous=""
+    for ns in admin debug personal miner; do
+        if printf '%s' "$api_val" | grep -qiE "(^|,)[[:space:]]*${ns}[[:space:]]*(,|$)"; then
+            dangerous="${dangerous} ${ns}"
+        fi
+    done
+    if [ -n "$dangerous" ]; then
+        printf "\n  ${BOLD}${RED}WARNING:${NC} API contains dangerous namespace(s):${RED}%s${NC}\n" "$dangerous"
+        printf "  ${YELLOW}These expose node management and sensitive tracing methods.\n"
+        printf "  Never enable them with ALLOWED_ORIGINS=* or on a public-facing node.${NC}\n"
     fi
-done < "$EXAMPLE"
 
-# ── preview ───────────────────────────────────────────────────────────────────
-printf "\n\n"
-printf "  ${BOLD}${BLUE}Preview — %s/.env${NC}\n" "$ENV_NAME"
-printf "  %s\n" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    printf "\n"
+    read -rp "  Save to $ENVFILE? [Y/n]: " confirm </dev/tty || confirm="Y"
+    confirm="${confirm:-Y}"
 
-while IFS= read -r line; do
-    if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
-        key="${BASH_REMATCH[1]}"
-        printf "  ${CYAN}%-20s${NC}= ${GREEN}%s${NC}\n" "$key" "$(collected_val "$key")"
-    elif [[ "$line" =~ ^# ]]; then
-        printf "  ${DIM}%s${NC}\n" "$line"
-    else
-        printf "\n"
+    if [ "$confirm" != "Y" ] && [ "$confirm" != "y" ]; then
+        printf "\n  ${YELLOW}Aborted.${NC} No changes written.\n\n"
+        exit 0
     fi
-done < "$EXAMPLE"
-
-# Repeat API warning in preview so it's visible before the save prompt
-api_val=$(collected_val "API")
-dangerous=""
-for ns in admin debug personal miner; do
-    if printf '%s' "$api_val" | grep -qiE "(^|,)[[:space:]]*${ns}[[:space:]]*(,|$)"; then
-        dangerous="${dangerous} ${ns}"
-    fi
-done
-if [ -n "$dangerous" ]; then
-    printf "\n  ${BOLD}${RED}WARNING:${NC} API contains dangerous namespace(s):${RED}%s${NC}\n" "$dangerous"
-    printf "  ${YELLOW}These expose node management and sensitive tracing methods.\n"
-    printf "  Never enable them with ALLOWED_ORIGINS=* or on a public-facing node.${NC}\n"
-fi
-
-printf "\n"
-read -rp "  Save to $ENVFILE? [Y/n]: " confirm </dev/tty || confirm="Y"
-confirm="${confirm:-Y}"
-
-if [ "$confirm" != "Y" ] && [ "$confirm" != "y" ]; then
-    printf "\n  ${YELLOW}Aborted.${NC} No changes written.\n\n"
-    exit 0
 fi
 
 # ── write ─────────────────────────────────────────────────────────────────────
