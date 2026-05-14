@@ -96,8 +96,8 @@ ask() {
         printf "\n  ${BOLD}${RED}WARNING:${NC} SYNC_MODE=fast is currently broken and not supported.\n"
         printf "  ${YELLOW}Forcing SYNC_MODE=full.${NC}\n"
         chosen="full"
-        # Overwrite the last line in TMPFILE with the corrected value
-        sed -i '' '$d' "$TMPFILE"
+        # Overwrite the collected value with the corrected one
+        grep -v "^SYNC_MODE=" "$TMPFILE" > "${TMPFILE}.tmp" && mv "${TMPFILE}.tmp" "$TMPFILE"
         printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
     fi
 
