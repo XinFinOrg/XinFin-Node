@@ -38,7 +38,7 @@ cp env.example .env
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `ENABLE_RPC` | No | `false` | Set to `true` to enable the HTTP-RPC server. Any other value disables it. |
-| `RPC_PORT` | No | `8545` | Internal container port for HTTP-RPC (mapped to host port `8989` in docker-compose) |
+| `RPC_PORT` | No | `8545` | Host port the HTTP-RPC server listens |
 | `API` | No | `db,eth,net,txpool,web3,XDPoS` | Comma-separated list of API namespaces exposed over RPC and WebSocket |
 | `ALLOWED_ORIGINS` | No | `*` | CORS allowed origins for RPC/WS requests. Use a specific domain in production. |
 | `RPC_VHOSTS` | No | `*` | Allowed virtual hostnames for the RPC server (`--http-vhosts`). Use a specific hostname in production. |
@@ -48,7 +48,7 @@ cp env.example .env
 | Variable | Required | Default | Description |
 |---|---|---|---|
 | `ENABLE_WS` | No | `false` | Set to `true` to enable the WebSocket server. Any other value disables it. |
-| `WS_PORT` | No | `8546` | Internal container port for WebSocket (mapped to host port `8888` in docker-compose) |
+| `WS_PORT` | No | `8546` | Host port the WebSocket server listens on |
 
 ---
 
