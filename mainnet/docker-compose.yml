@@ -12,5 +12,4 @@ services:
     restart: "always"
     env_file:
       - .env
-    ports:
-      - "30303:30303"
+    network_mode: "host"

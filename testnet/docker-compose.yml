@@ -4,7 +4,12 @@ services:
     image: xinfinorg/xdposchain:v2.7.0-testnet
     volumes:
       - "./xdcchain-testnet:/work/xdcchain"
+      - "./genesis.json:/work/genesis.json"
       - "./start-apothem.sh:/work/start.sh"
+      - "./bootnodes.list:/work/bootnodes.list"
+      - "./.pwd:/work/.pwd"
+      - "/etc/localtime:/etc/localtime:ro"
     restart: "always"
-    env_file: .env
+    env_file:
+      - .env
     network_mode: "host"
