@@ -40,14 +40,7 @@ fi
 DATE="$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
-# Set sync_mode from SYNC_MODE env or default to 'full'
 sync_mode=full
-if test -z "$SYNC_MODE"; then
-    echo "SYNC_MODE not set, default to full" # full or fast
-else
-    echo "SYNC_MODE found, set to $SYNC_MODE"
-    sync_mode=$SYNC_MODE
-fi
 
 # Set gc_mode from GC_MODE env or default to 'archive'
 gc_mode=archive

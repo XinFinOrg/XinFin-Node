@@ -61,7 +61,7 @@ desc_of() {
         CONTACT_DETAILS) printf 'Operator email address' ;;
         NETWORK)         printf 'Network identifier (informational)' ;;
         LOG_LEVEL)       printf 'Log verbosity  [0 silent → 5 detail]' ;;
-        SYNC_MODE)       printf 'Blockchain sync strategy  [full | fast]' ;;
+        SYNC_MODE)       printf 'Blockchain sync strategy  [full]' ;;
         GC_MODE)         printf 'State history  [archive = keep all | full = prune]' ;;
         ENABLE_RPC)      printf 'Enable HTTP-RPC server  [true | false]' ;;
         ENABLE_WS)       printf 'Enable WebSocket server  [true | false]' ;;
@@ -90,6 +90,16 @@ ask() {
     read -r input </dev/tty || input=""
     local chosen="${input:-$current}"
     printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
+
+    # Warn and force full if fast sync mode is set
+    if [ "$key" = "SYNC_MODE" ] && [ "$chosen" = "fast" ]; then
+        printf "\n  ${BOLD}${RED}WARNING:${NC} SYNC_MODE=fast is currently broken and not supported.\n"
+        printf "  ${YELLOW}Forcing SYNC_MODE=full.${NC}\n"
+        chosen="full"
+        # Overwrite the last line in TMPFILE with the corrected value
+        sed -i '' '$d' "$TMPFILE"
+        printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
+    fi
 
     # Warn about dangerous API namespaces
     if [ "$key" = "API" ]; then
@@ -160,6 +170,12 @@ else
             printf "\n"
         fi
     done < "$EXAMPLE"
+
+    # Repeat SYNC_MODE warning in preview
+    if [ "$(collected_val "SYNC_MODE")" = "fast" ]; then
+        printf "\n  ${BOLD}${RED}WARNING:${NC} SYNC_MODE=fast is currently broken and not supported.\n"
+        printf "  ${YELLOW}Forcing SYNC_MODE=full.${NC}\n"
+    fi
 
     # Repeat API warning in preview so it's visible before the save prompt
     api_val=$(collected_val "API")

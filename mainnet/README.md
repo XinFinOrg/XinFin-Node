@@ -28,7 +28,7 @@ cp env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `SYNC_MODE` | No | `full` | Blockchain sync mode: `full` or `fast` |
+| `SYNC_MODE` | No | `full` | Blockchain sync mode: `full` |
 | `GC_MODE` | No | `archive` | Garbage-collection mode: `archive` (keeps all state) or `full` (prunes old state) |
 
 > Use `GC_MODE=archive` if you need to query historical state (e.g. for an explorer or analytics node). `GC_MODE=full` saves significant disk space for a standard validator or relay node.
@@ -74,7 +74,7 @@ These flags are passed to the `XDC` binary by `start-node.sh`. Most are derived 
 |---|---|---|
 | `--ethstats` | `INSTANCE_NAME` + stats server | Reports node status to the XinFin stats dashboard |
 | `--bootnodes` | `bootnodes.list` | Comma-separated enode URLs used for initial peer discovery |
-| `--syncmode` | `SYNC_MODE` | Blockchain sync strategy (`full` or `fast`) |
+| `--syncmode` | `SYNC_MODE` | Blockchain sync strategy (`full`) |
 | `--gcmode` | `GC_MODE` | State trie garbage-collection mode (`archive` or `full`) |
 | `--datadir` | `/work/xdcchain` | Directory for chain data and keystore |
 | `--XDCx.datadir` | `/work/xdcchain/XDCx` | Directory for XDCx (DEX) data |
