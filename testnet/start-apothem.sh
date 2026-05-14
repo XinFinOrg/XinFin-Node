@@ -42,6 +42,15 @@ LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
 sync_mode=full
 
+# Set store_reward from STORE_REWARD env or default to 'true'
+store_reward=false
+if test -z "$STORE_REWARD"; then
+    echo "STORE_REWARD not set, default to false"
+else
+    echo "STORE_REWARD found, set to $STORE_REWARD"
+    store_reward=$STORE_REWARD
+fi
+
 # Set gc_mode from GC_MODE env or default to 'archive'
 gc_mode=archive
 if test -z "$GC_MODE"; then
@@ -70,8 +79,11 @@ args=(
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
-    --store-reward
 )
+
+if [[ "${store_reward}" == "true" ]]; then
+    args+=(--store-reward)
+fi
 
 # RPC and WebSocket configuration - exact match required for security
 if [[ "${ENABLE_RPC}" == "true" ]]; then
