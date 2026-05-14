@@ -123,6 +123,33 @@ printf "\n"
 printf "  ${BOLD}${BLUE}XinFin Node — Config Wizard (%s)${NC}\n" "$ENV_NAME"
 printf "  %s\n" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
+# ── git update check ──────────────────────────────────────────────────────────
+if git -C "$REPO_ROOT" rev-parse --is-inside-work-tree &>/dev/null; then
+    printf "\n  Checking for remote updates…\n"
+    if git -C "$REPO_ROOT" fetch --quiet 2>/dev/null; then
+        BEHIND=$(git -C "$REPO_ROOT" rev-list --count HEAD..@{u} 2>/dev/null || echo 0)
+        if [ "$BEHIND" -gt 0 ] 2>/dev/null; then
+            printf "  ${YELLOW}${BOLD}%s new commit(s) available from remote.${NC}\n" "$BEHIND"
+            read -rp "  Pull latest changes? [Y/n]: " do_pull </dev/tty || do_pull="Y"
+            do_pull="${do_pull:-Y}"
+            if [ "$do_pull" != "N" ] && [ "$do_pull" != "n" ]; then
+                printf "  Pulling latest changes…\n"
+                if git -C "$REPO_ROOT" pull; then
+                    printf "  ${GREEN}${BOLD}Updated successfully.${NC}\n"
+                else
+                    printf "  ${RED}git pull failed. Continuing without update.${NC}\n"
+                fi
+            else
+                printf "  ${YELLOW}Skipping update.${NC}\n"
+            fi
+        else
+            printf "  ${GREEN}Already up to date.${NC}\n"
+        fi
+    else
+        printf "  ${DIM}Could not reach remote — skipping update check.${NC}\n"
+    fi
+fi
+
 if [ -f "$ENVFILE" ]; then
     printf "  ${GREEN}Found existing${NC} %s — values pre-loaded.\n" "$ENVFILE"
 else
