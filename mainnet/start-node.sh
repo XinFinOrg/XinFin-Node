@@ -39,7 +39,7 @@ LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
 sync_mode=full
 
-# Set store_reward from STORE_REWARD env or default to 'true'
+# Set store_reward from STORE_REWARD env or default to 'false'
 store_reward=false
 if test -z "$STORE_REWARD"; then
     echo "STORE_REWARD not set, default to false"
