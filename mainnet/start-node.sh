@@ -76,6 +76,8 @@ args=(
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
+    --store-reward
+    --nat "extip:${INSTANCE_IP}"
 )
 
 if [[ "${store_reward}" == "true" ]]; then

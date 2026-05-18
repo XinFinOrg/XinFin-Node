@@ -1,6 +1,6 @@
 #!/bin/bash
 container_name="xdcnetwork-mainnet-node"
-filename="enode.txt"
+filename="bootnodes.list"
 
 while IFS= read -r line || [[ -n "$line" ]]; do
   echo $line
