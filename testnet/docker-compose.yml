@@ -9,6 +9,7 @@ services:
       - "./bootnodes.list:/work/bootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
+    pull_policy: always
     restart: "always"
     env_file:
       - .env
