@@ -38,6 +38,12 @@ DATE="$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
 sync_mode=full
+if test -z "$SYNC_MODE"; then
+    echo "SYNC_MODE not set, default to $sync_mode" # full or fast
+else
+    echo "SYNC_MODE found, set to $SYNC_MODE"
+    sync_mode=$SYNC_MODE
+fi
 
 # Set store_reward from STORE_REWARD env or default to 'false'
 store_reward=false
@@ -55,6 +61,23 @@ if test -z "$GC_MODE"; then
 else
     echo "GC_MODE found, set to $GC_MODE"
     gc_mode=$GC_MODE
+fi
+
+# Set fast sync pivot args - all three must be provided together
+fastsync_args=()
+if test -n "$FASTSYNC_PIVOT_NUMBER" || test -n "$FASTSYNC_PIVOT_HASH" || test -n "$FASTSYNC_PIVOT_ROOT"; then
+    if test -z "$FASTSYNC_PIVOT_NUMBER" || test -z "$FASTSYNC_PIVOT_HASH" || test -z "$FASTSYNC_PIVOT_ROOT"; then
+        echo "Error: FASTSYNC_PIVOT_NUMBER, FASTSYNC_PIVOT_HASH, and FASTSYNC_PIVOT_ROOT must all be set together."
+        exit 1
+    fi
+    echo "FASTSYNC_PIVOT_NUMBER found, set to $FASTSYNC_PIVOT_NUMBER"
+    echo "FASTSYNC_PIVOT_HASH found, set to $FASTSYNC_PIVOT_HASH"
+    echo "FASTSYNC_PIVOT_ROOT found, set to $FASTSYNC_PIVOT_ROOT"
+    fastsync_args=(
+        --fastsyncpivotnumber "${FASTSYNC_PIVOT_NUMBER}"
+        --fastsyncpivothash "${FASTSYNC_PIVOT_HASH}"
+        --fastsyncpivotroot "${FASTSYNC_PIVOT_ROOT}"
+    )
 fi
 
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
@@ -83,6 +106,9 @@ args=(
 if [[ "${store_reward}" == "true" ]]; then
     args+=(--store-reward)
 fi
+
+# Append fast sync pivot args if provided
+args+=("${fastsync_args[@]}")
 
 # RPC and WebSocket configuration - exact match required for security
 if [[ "${ENABLE_RPC}" == "true" ]]; then
