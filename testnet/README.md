@@ -28,10 +28,28 @@ cp env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `SYNC_MODE` | No | `full` | Blockchain sync mode: `full` |
+| `SYNC_MODE` | No | `full` | Blockchain sync mode: `full` (replay every block) or `fast` (download state at a pivot and replay from there). `fast` requires the `FASTSYNC_PIVOT_*` variables below. |
 | `GC_MODE` | No | `archive` | Garbage-collection mode: `archive` (keeps all state) or `full` (prunes old state) |
 
 > Use `GC_MODE=archive` if you need to query historical state. `GC_MODE=full` saves significant disk space for a standard validator or relay node.
+
+### Fast Sync Pivot
+
+Required only when `SYNC_MODE=fast`. All three variables must be set together — `start-apothem.sh` will refuse to start if only some are provided.
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `FASTSYNC_PIVOT_NUMBER` | If `SYNC_MODE=fast` | — | Block number to fast-sync to (the pivot). Passed as `--fastsyncpivotnumber`. |
+| `FASTSYNC_PIVOT_HASH` | If `SYNC_MODE=fast` | — | Hash of the pivot block. Passed as `--fastsyncpivothash`. |
+| `FASTSYNC_PIVOT_ROOT` | If `SYNC_MODE=fast` | — | State root of the pivot block. Passed as `--fastsyncpivotroot`. |
+
+> Run `bash get_pivot_for_fast_sync.sh` to extract a fresh pivot (block number, hash, and state root) from a public Apothem RPC node. The script prints the values in `.env` format, so you can append the output directly:
+>
+> ```bash
+> bash get_pivot_for_fast_sync.sh >> .env
+> ```
+>
+> The script defaults to `https://earpc.apothem.network` and can be pointed at another endpoint with `RPC_URL=... bash get_pivot_for_fast_sync.sh`. It requires `jq` and `curl`.
 
 ### HTTP-RPC (JSON-RPC)
 
@@ -74,8 +92,11 @@ These flags are passed to the `XDC` binary by `start-apothem.sh`. Most are deriv
 |---|---|---|
 | `--ethstats` | `NODE_NAME` + stats server | Reports node status to the Apothem stats dashboard |
 | `--bootnodes` | `bootnodes.list` | Comma-separated enode URLs used for initial peer discovery |
-| `--syncmode` | `SYNC_MODE` | Blockchain sync strategy (`full`) |
+| `--syncmode` | `SYNC_MODE` | Blockchain sync strategy (`full` or `fast`) |
 | `--gcmode` | `GC_MODE` | State trie garbage-collection mode (`archive` or `full`) |
+| `--fastsyncpivotnumber` | `FASTSYNC_PIVOT_NUMBER` | Pivot block number for `SYNC_MODE=fast` |
+| `--fastsyncpivothash` | `FASTSYNC_PIVOT_HASH` | Pivot block hash for `SYNC_MODE=fast` |
+| `--fastsyncpivotroot` | `FASTSYNC_PIVOT_ROOT` | Pivot block state root for `SYNC_MODE=fast` |
 | `--datadir` | `/work/xdcchain` | Directory for chain data and keystore |
 | `--XDCx.datadir` | `/work/xdcchain/XDCx` | Directory for XDCx (DEX) data |
 | `--networkid` | `51` | XinFin Apothem testnet chain ID |
