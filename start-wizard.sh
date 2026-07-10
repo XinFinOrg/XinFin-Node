@@ -199,7 +199,7 @@ else
 
         if [ "$ENV_NAME" = "mainnet" ]; then
             _default_rpc="https://rpc.xinfin.network"
-        else if [ "$ENV_NAME" = "testnet" ]; then
+        elif [ "$ENV_NAME" = "testnet" ]; then
             _default_rpc="https://erpc.apothem.network"
         fi
         _pivot_script="$REPO_ROOT/tools/get_pivot.sh"
