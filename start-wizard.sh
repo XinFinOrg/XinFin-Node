@@ -61,8 +61,11 @@ desc_of() {
         CONTACT_DETAILS) printf 'Operator email address' ;;
         NETWORK)         printf 'Network identifier (informational)' ;;
         LOG_LEVEL)       printf 'Log verbosity  [0 silent → 5 detail]' ;;
-        SYNC_MODE)       printf 'Blockchain sync strategy  [full]' ;;
-        GC_MODE)         printf 'State history  [archive = keep all | full = prune]' ;;
+        SYNC_MODE)             printf 'Blockchain sync strategy  [full | fast]' ;;
+        FASTSYNC_PIVOT_NUMBER) printf 'Fast-sync pivot block number (auto-set when SYNC_MODE=fast)' ;;
+        FASTSYNC_PIVOT_HASH)   printf 'Fast-sync pivot block hash (auto-set when SYNC_MODE=fast)' ;;
+        FASTSYNC_PIVOT_ROOT)   printf 'Fast-sync pivot state root (auto-set when SYNC_MODE=fast)' ;;
+        GC_MODE)               printf 'State history  [archive = keep all | full = prune]' ;;
         ENABLE_RPC)      printf 'Enable HTTP-RPC server  [true | false]' ;;
         ENABLE_WS)       printf 'Enable WebSocket server  [true | false]' ;;
         RPC_PORT)        printf 'HTTP-RPC listening port (host network)' ;;
@@ -90,16 +93,6 @@ ask() {
     read -r input </dev/tty || input=""
     local chosen="${input:-$current}"
     printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
-
-    # Warn and force full if fast sync mode is set
-    if [ "$key" = "SYNC_MODE" ] && [ "$chosen" = "fast" ]; then
-        printf "\n  ${BOLD}${RED}WARNING:${NC} SYNC_MODE=fast is currently broken and not supported.\n"
-        printf "  ${YELLOW}Forcing SYNC_MODE=full.${NC}\n"
-        chosen="full"
-        # Overwrite the collected value with the corrected one
-        grep -v "^SYNC_MODE=" "$TMPFILE" > "${TMPFILE}.tmp" && mv "${TMPFILE}.tmp" "$TMPFILE"
-        printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
-    fi
 
     # Warn about dangerous API namespaces
     if [ "$key" = "API" ]; then
@@ -178,9 +171,73 @@ else
     while IFS= read -r line; do
         if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
             key="${BASH_REMATCH[1]}"
+            # Fast sync pivot vars are auto-computed; skip interactive prompts
+            [[ "$key" == FASTSYNC_PIVOT_* ]] && continue
             ask "$key" "$(current_val "$key")"
         fi
     done < "$EXAMPLE"
+
+    # ── fast sync pivot ───────────────────────────────────────────────────────
+    _set_pivot_vals() {
+        local num="$1" hash="$2" root="$3"
+        for _k in FASTSYNC_PIVOT_NUMBER FASTSYNC_PIVOT_HASH FASTSYNC_PIVOT_ROOT; do
+            grep -v "^${_k}=" "$TMPFILE" > "${TMPFILE}.tmp" && mv "${TMPFILE}.tmp" "$TMPFILE"
+        done
+        printf 'FASTSYNC_PIVOT_NUMBER=%s\n' "$num"  >> "$TMPFILE"
+        printf 'FASTSYNC_PIVOT_HASH=%s\n'   "$hash" >> "$TMPFILE"
+        printf 'FASTSYNC_PIVOT_ROOT=%s\n'   "$root" >> "$TMPFILE"
+    }
+
+    if [ "$(collected_val "SYNC_MODE")" = "fast" ]; then
+        printf "\n\n"
+        printf "  ${BOLD}${BLUE}Fast Sync — Fetching Pivot Point${NC}\n"
+        printf "  %s\n" "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        printf "\n"
+        printf "  A trusted pivot block is required for fast sync.\n"
+        printf "  The wizard will query a public RPC endpoint to compute it.\n"
+        printf "\n"
+
+        if [ "$ENV_NAME" = "mainnet" ]; then
+            _default_rpc="https://rpc.xinfin.network"
+            _pivot_script="$REPO_ROOT/tools/get_pivot.sh"
+            _pivot_genesis=""
+        else
+            _default_rpc="https://devnetstats.hashlabs.apothem.network/rpc2/"
+            _pivot_script="$REPO_ROOT/tools/get_pivot_more.sh"
+            _pivot_genesis="$DIR/genesis.json"
+        fi
+
+        printf "  RPC endpoint [${GREEN}%s${NC}] or enter new: " "$_default_rpc"
+        read -r _rpc_input </dev/tty || _rpc_input=""
+        _pivot_rpc="${_rpc_input:-$_default_rpc}"
+
+        printf "\n  Fetching pivot from %s…\n" "$_pivot_rpc"
+        if [ -n "$_pivot_genesis" ]; then
+            _pivot_out=$(RPC_URL="$_pivot_rpc" bash "$_pivot_script" "$_pivot_genesis" 2>/dev/null)
+        else
+            _pivot_out=$(RPC_URL="$_pivot_rpc" bash "$_pivot_script" 2>/dev/null)
+        fi
+        _pivot_rc=$?
+
+        if [ $_pivot_rc -ne 0 ] || ! printf '%s' "$_pivot_out" | grep -q '^FASTSYNC_PIVOT_NUMBER='; then
+            printf "\n  ${RED}${BOLD}Error:${NC} Failed to fetch pivot point from %s\n" "$_pivot_rpc"
+            printf "  ${YELLOW}Falling back to SYNC_MODE=full.${NC}\n"
+            grep -v "^SYNC_MODE=" "$TMPFILE" > "${TMPFILE}.tmp" && mv "${TMPFILE}.tmp" "$TMPFILE"
+            printf 'SYNC_MODE=full\n' >> "$TMPFILE"
+            _set_pivot_vals "" "" ""
+        else
+            _pnum=$(printf '%s' "$_pivot_out" | grep '^FASTSYNC_PIVOT_NUMBER=' | cut -d'=' -f2-)
+            _phash=$(printf '%s' "$_pivot_out" | grep '^FASTSYNC_PIVOT_HASH='   | cut -d'=' -f2-)
+            _proot=$(printf '%s' "$_pivot_out" | grep '^FASTSYNC_PIVOT_ROOT='   | cut -d'=' -f2-)
+            printf "\n  ${GREEN}${BOLD}Pivot fetched successfully:${NC}\n"
+            printf "  ${CYAN}FASTSYNC_PIVOT_NUMBER${NC} = ${GREEN}%s${NC}\n" "$_pnum"
+            printf "  ${CYAN}FASTSYNC_PIVOT_HASH${NC}   = ${GREEN}%s${NC}\n" "$_phash"
+            printf "  ${CYAN}FASTSYNC_PIVOT_ROOT${NC}   = ${GREEN}%s${NC}\n" "$_proot"
+            _set_pivot_vals "$_pnum" "$_phash" "$_proot"
+        fi
+    else
+        _set_pivot_vals "" "" ""
+    fi
 
     # ── preview ───────────────────────────────────────────────────────────────
     printf "\n\n"
@@ -190,19 +247,13 @@ else
     while IFS= read -r line; do
         if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
             key="${BASH_REMATCH[1]}"
-            printf "  ${CYAN}%-20s${NC}= ${GREEN}%s${NC}\n" "$key" "$(collected_val "$key")"
+            printf "  ${CYAN}%-22s${NC}= ${GREEN}%s${NC}\n" "$key" "$(collected_val "$key")"
         elif [[ "$line" =~ ^# ]]; then
             printf "  ${DIM}%s${NC}\n" "$line"
         else
             printf "\n"
         fi
     done < "$EXAMPLE"
-
-    # Repeat SYNC_MODE warning in preview
-    if [ "$(collected_val "SYNC_MODE")" = "fast" ]; then
-        printf "\n  ${BOLD}${RED}WARNING:${NC} SYNC_MODE=fast is currently broken and not supported.\n"
-        printf "  ${YELLOW}Forcing SYNC_MODE=full.${NC}\n"
-    fi
 
     # Repeat API warning in preview so it's visible before the save prompt
     api_val=$(collected_val "API")

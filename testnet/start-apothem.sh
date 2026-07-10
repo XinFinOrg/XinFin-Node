@@ -40,7 +40,22 @@ fi
 DATE="$(date +%Y%m%d-%H%M%S)"
 LOG_FILE="/work/xdcchain/xdc-${DATE}.log"
 
-sync_mode=full
+sync_mode="${SYNC_MODE:-full}"
+echo "Sync mode: $sync_mode"
+
+# Build pivot args for fast sync
+pivot_args=()
+if [[ "${sync_mode}" == "fast" ]]; then
+    if [[ -z "${FASTSYNC_PIVOT_NUMBER}" || -z "${FASTSYNC_PIVOT_HASH}" || -z "${FASTSYNC_PIVOT_ROOT}" ]]; then
+        echo "ERROR: SYNC_MODE=fast requires FASTSYNC_PIVOT_NUMBER, FASTSYNC_PIVOT_HASH, and FASTSYNC_PIVOT_ROOT to be set."
+        exit 1
+    fi
+    pivot_args=(
+        --pivot-number "${FASTSYNC_PIVOT_NUMBER}"
+        --pivot-hash "${FASTSYNC_PIVOT_HASH}"
+        --pivot-root "${FASTSYNC_PIVOT_ROOT}"
+    )
+fi
 
 # Set store_reward from STORE_REWARD env or default to 'false'
 store_reward=false
@@ -83,6 +98,10 @@ args=(
 
 if [[ "${store_reward}" == "true" ]]; then
     args+=(--store-reward)
+fi
+
+if [[ ${#pivot_args[@]} -gt 0 ]]; then
+    args+=("${pivot_args[@]}")
 fi
 
 # RPC and WebSocket configuration - exact match required for security
