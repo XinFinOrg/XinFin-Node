@@ -51,9 +51,9 @@ if [[ "${sync_mode}" == "fast" ]]; then
         exit 1
     fi
     pivot_args=(
-        --pivot-number "${FASTSYNC_PIVOT_NUMBER}"
-        --pivot-hash "${FASTSYNC_PIVOT_HASH}"
-        --pivot-root "${FASTSYNC_PIVOT_ROOT}"
+        --fastsyncpivotnumber "${FASTSYNC_PIVOT_NUMBER}"
+        --fastsyncpivothash "${FASTSYNC_PIVOT_HASH}"
+        --fastsyncpivotroot "${FASTSYNC_PIVOT_ROOT}"
     )
 fi
 

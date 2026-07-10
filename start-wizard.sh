@@ -66,6 +66,7 @@ desc_of() {
         FASTSYNC_PIVOT_HASH)   printf 'Fast-sync pivot block hash (auto-set when SYNC_MODE=fast)' ;;
         FASTSYNC_PIVOT_ROOT)   printf 'Fast-sync pivot state root (auto-set when SYNC_MODE=fast)' ;;
         GC_MODE)               printf 'State history  [archive = keep all | full = prune]' ;;
+        STORE_REWARD)    printf 'Store block reward info  [true | false]' ;;
         ENABLE_RPC)      printf 'Enable HTTP-RPC server  [true | false]' ;;
         ENABLE_WS)       printf 'Enable WebSocket server  [true | false]' ;;
         RPC_PORT)        printf 'HTTP-RPC listening port (host network)' ;;
