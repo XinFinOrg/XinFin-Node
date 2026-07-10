@@ -199,24 +199,17 @@ else
 
         if [ "$ENV_NAME" = "mainnet" ]; then
             _default_rpc="https://rpc.xinfin.network"
-            _pivot_script="$REPO_ROOT/tools/get_pivot.sh"
-            _pivot_genesis=""
-        else
-            _default_rpc="https://devnetstats.hashlabs.apothem.network/rpc2/"
-            _pivot_script="$REPO_ROOT/tools/get_pivot_more.sh"
-            _pivot_genesis="$DIR/genesis.json"
+        else if [ "$ENV_NAME" = "testnet" ]; then
+            _default_rpc="https://erpc.apothem.network"
         fi
+        _pivot_script="$REPO_ROOT/tools/get_pivot.sh"
 
         printf "  RPC endpoint [${GREEN}%s${NC}] or enter new: " "$_default_rpc"
         read -r _rpc_input </dev/tty || _rpc_input=""
         _pivot_rpc="${_rpc_input:-$_default_rpc}"
 
         printf "\n  Fetching pivot from %s…\n" "$_pivot_rpc"
-        if [ -n "$_pivot_genesis" ]; then
-            _pivot_out=$(RPC_URL="$_pivot_rpc" bash "$_pivot_script" "$_pivot_genesis" 2>/dev/null)
-        else
-            _pivot_out=$(RPC_URL="$_pivot_rpc" bash "$_pivot_script" 2>/dev/null)
-        fi
+        _pivot_out=$(RPC_URL="$_pivot_rpc" bash "$_pivot_script" 2>/dev/null)
         _pivot_rc=$?
 
         if [ $_pivot_rc -ne 0 ] || ! printf '%s' "$_pivot_out" | grep -q '^FASTSYNC_PIVOT_NUMBER='; then
