@@ -4,43 +4,34 @@ Scripts to compute the fast-sync pivot point for an XDC node.
 
 ## Scripts
 
-### `get_pivot.sh`
+### `get_pivot_for_fast_sync.sh`
 
-Computes the fast-sync pivot from the **latest V2 epoch** using `XDPoS_getMasternodesByNumber` and `XDPoS_getBlockInfoByV2EpochNum`.
+Computes the fast-sync pivot for the given network from the **latest V2 epoch** by calculating the current epoch from the latest round. Uses `XDPoS_getMasternodesByNumber` and `XDPoS_getBlockInfoByEpochNum`.
 
-Use this for networks running XDPoS v2.
+Use this for networks running XDPoS v2. The round returned by `XDPoS_getMasternodesByNumber` is a V2 round, so the epoch it yields is offset by the network's `switchEpoch` — the epoch at which the chain switched from V1 to V2 — to give an absolute epoch number.
 
-```bash
-./get_pivot.sh
-```
-
-### `get_pivot_more.sh`
-
-Computes the fast-sync pivot by reading epoch parameters from a local `genesis.json` file and calculating the current epoch from the latest round. Uses `XDPoS_getBlockInfoByEpochNum`.
-
-Use this when you need to derive the epoch from genesis config (e.g. for V1/V2 boundary networks).
+The network argument selects that network's epoch parameters (`epoch` and `switchEpoch`) and default RPC endpoint, and defaults to `mainnet`.
 
 ```bash
-./get_pivot_more.sh [genesis.json]
+./get_pivot_for_fast_sync.sh [mainnet|testnet]
 ```
-
-The genesis file argument defaults to `genesis.json` in the current directory.
 
 ## Environment Variables
 
 | Variable  | Default                                                   | Description              |
 |-----------|-----------------------------------------------------------|--------------------------|
-| `RPC_URL` | `https://devnetstats.hashlabs.apothem.network/rpc2/`     | JSON-RPC endpoint to use |
+| `NETWORK` | `mainnet`                                                 | Network to use when no argument is given |
+| `RPC_URL` | `https://erpc.xinfin.network` (mainnet)<br>`https://earpc.apothem.network` (testnet) | JSON-RPC endpoint to use |
 
 ### Example
 
 ```bash
-RPC_URL=http://localhost:8545 ./get_pivot.sh
+RPC_URL=http://localhost:8545 ./get_pivot_for_fast_sync.sh
 ```
 
 ## Output
 
-Both scripts print the pivot values as environment variable assignments:
+The script prints the pivot values as environment variable assignments:
 
 ```
 FASTSYNC_PIVOT_NUMBER=<block number>
