@@ -1,6 +1,16 @@
-# Devnet
+# Devnet (18 validators, chainId 551)
 
-Deploy devnet XDC node.
+Deploy an external Docker node that joins the 18-devnet cluster.
+
+| | |
+|--|--|
+| Chain ID / network ID | **551** |
+| Validators | 18 (hybrid seats after round 50000) |
+| Image | `anunayxin/devnet:devnetsetup-82484975c` |
+| Public bootnode | `enode://03e59…@158.220.83.243:30301` |
+| Stats UI | http://158.220.83.243:32018 |
+
+Genesis matches `XDPoSChain/genesis/devnet.json` and `k8-devnet/18-devnet`.
 
 ## Usage
 
@@ -30,5 +40,5 @@ After attaching, the console prints the build commit:
 ╰─ ./attach.sh
 Welcome to the XDC JavaScript console!
 
-instance: XDC/v2.7.0-devnet-0227ca9b/linux-amd64/go1.25.9
+instance: XDC/v2.9.0-devnet-<hash>/linux-amd64/go1.25.x
 ```

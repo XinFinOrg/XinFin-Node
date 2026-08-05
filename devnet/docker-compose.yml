@@ -1,8 +1,8 @@
 services:
   devnet1:
     container_name: xdcnetwork-devnet-node
-    image: xinfinorg/devnet:may2026
-    pull_policy: always
+    image: anunayxin/devnet:devnetsetup-82484975c
+    pull_policy: if_not_present
     volumes:
       - ./xdcchain1:/work/xdcchain
       - ./genesis.json:/work/genesis.json
@@ -15,3 +15,6 @@ services:
       - machine1
     ports:
       - "8545:8545"
+      - "8555:8555"
+      - "30303:30303"
+      - "30303:30303/udp"
