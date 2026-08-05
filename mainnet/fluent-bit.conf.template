@@ -1,0 +1,29 @@
+[SERVICE]
+    Flush        5
+    Log_Level    info
+    Daemon       off
+
+[INPUT]
+    Name              tail
+    Tag               xdc.log
+    Path              /logs/xdc-*.log
+    Path_Key          filename
+    Read_from_Head    On
+    Refresh_Interval  10
+    DB                /tmp/fluent-bit-tail.db
+    Mem_Buf_Limit     5MB
+    Skip_Long_Lines   On
+
+[OUTPUT]
+    Name                s3
+    Match               *
+    bucket              ${S3_LOG_BUCKET}
+    region              ${AWS_DEFAULT_REGION}
+    store_dir           /tmp/fluent-bit-s3
+    total_file_size     10M
+    upload_timeout      10m
+    use_put_object      On
+    compression         gzip
+    json_date_key       false
+    log_key             log
+    s3_key_format       /${NETWORK}/${INSTANCE_NAME}/%Y/%m/%d/%H-%M-%S-$UUID.gz

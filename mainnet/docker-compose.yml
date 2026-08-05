@@ -14,3 +14,23 @@ services:
     env_file:
       - .env
     network_mode: "host"
+
+  log-uploader:
+    container_name: xdcnetwork-mainnet-log-uploader
+    image: amazon/aws-for-fluent-bit:stable
+    profiles:
+      - s3-logs
+    volumes:
+      - "./xdcchain:/logs:ro"
+      - "./fluent-bit.conf.template:/fluent-bit/etc/fluent-bit.conf.template:ro"
+      - "./log-uploader.sh:/log-uploader.sh:ro"
+      - "fluent-bit-state:/tmp"
+    env_file:
+      - .env
+    entrypoint: ["/bin/sh", "/log-uploader.sh"]
+    restart: "always"
+    depends_on:
+      - xinfinnetwork
+
+volumes:
+  fluent-bit-state:
