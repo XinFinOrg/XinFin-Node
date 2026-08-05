@@ -307,6 +307,7 @@ Type 'Y' or 'y' to continue:
 **Requirements**:
 - Docker Engine 24.0+ (includes Docker Compose v2)
 - Docker Compose v2.20+
+- `curl` and `jq` (required by the fast-sync pivot script): `sudo apt install -y curl jq`
 
 Should be facing internet directly with **public IP** & **without NAT**
 
