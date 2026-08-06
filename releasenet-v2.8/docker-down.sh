@@ -9,5 +9,5 @@ if [[ $? != 0 ]]; then
     alias docker-compose='docker compose'
 fi
 
-docker-compose down devnet1
+docker-compose down releasenet1
 

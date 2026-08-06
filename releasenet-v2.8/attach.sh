@@ -1,0 +1,1 @@
+sudo docker exec -it releasenet-releasenet1-1 XDC attach /work/xdcchain/XDC.ipc

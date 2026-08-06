@@ -1,16 +1,16 @@
-# Devnet
+# Releasenet
 
-Deploy devnet XDC node.
+Deploy releasenet XDC node.
 
 ## Usage
 
-Start the devnet:
+Start the releasenet:
 
 ```sh
 ./docker-up.sh
 ```
 
-Shut down the devnet:
+Shut down the releasenet:
 
 ```sh
 ./docker-down.sh
@@ -30,5 +30,5 @@ After attaching, the console prints the build commit:
 ╰─ ./attach.sh
 Welcome to the XDC JavaScript console!
 
-instance: XDC/v2.7.0-devnet-0227ca9b/linux-amd64/go1.25.9
+instance: XDC/v2.7.0-releasenet-0227ca9b/linux-amd64/go1.25.9
 ```

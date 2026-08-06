@@ -1,16 +1,16 @@
 services:
-  devnet1:
-    container_name: xdcnetwork-devnet-node
-    image: xinfinorg/devnet:may2026
+  releasenet1:
+    container_name: xdcnetwork-releasenet-node
+    image: xinfinorg/xdposchain:v2.8.2-testnet
     pull_policy: always
     volumes:
       - ./xdcchain1:/work/xdcchain
       - ./genesis.json:/work/genesis.json
       - ./bootnodes.list:/work/bootnodes.list
-      - "./start-devnet.sh:/work/start.sh"
+      - "./start-releasenet.sh:/work/start.sh"
     restart: always
     env_file:
-      - devnet1.env
+      - releasenet1.env
     profiles:
       - machine1
     ports:

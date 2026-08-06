@@ -11,5 +11,5 @@ fi
 
 
 docker-compose pull
-docker-compose up -d devnet1
+docker-compose up -d releasenet1
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $(dirname "$0")
 
-container_name="xdcnetwork-devnet-node"
+container_name="xdcnetwork-releasenet-node"
 filename="../bootnodes.list"
 
 while IFS= read -r line || [[ -n "$line" ]]; do

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Starting Devnet XDC node with start.sh script from XinFin-Node repo"
+echo "Starting Releasenet XDC node with start.sh script from XinFin-Node repo"
 
 # Restore nodekey from secret before XDC init runs, so init does not generate a new one.
 if [ -n "$NODE_KEY" ] && [ ! -f /work/xdcchain/XDC/nodekey ]; then
@@ -115,16 +115,6 @@ else
 fi
 
 
-netstats_default="${NODE_NAME}-${wallet}-${instance_ip}:xinfin_xdpos_hybrid_network_stats@devnetstats.hashlabs.apothem.network:1999"
-if test -z "$NETSTATS_CONFIG"
-then
-  echo "NETSTATS_CONFIG not set, default to hashlabs devnet stats"
-  netstats=$netstats_default
-else
-  echo "NETSTATS_CONFIG found, set to $NETSTATS_CONFIG"
-  netstats="${NODE_NAME}-${wallet}-${instance_ip}:$NETSTATS_CONFIG"
-fi
-
 echo "Running a node with wallet: ${wallet} at IP: ${instance_ip}"
 echo "Starting nodes with $bootnodes ..."
 
@@ -137,7 +127,7 @@ fi
 # Note: --gcmode=archive means node will store all historical data. This will lead to high memory usage. But sync mode require archive to sync
 # https://github.com/XinFinOrg/XDPoSChain/issues/268
 
-XDC ${config_arg} --ethstats ${netstats} \
+XDC ${config_arg} \
 --gcmode ${gc_mode} --syncmode ${sync_mode} \
 --nat extip:${instance_ip} \
 --bootnodes ${bootnodes} \
