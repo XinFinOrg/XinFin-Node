@@ -1,8 +1,8 @@
 services:
   devnet1:
     container_name: xdcnetwork-devnet-node
-    image: anunayxin/devnet:devnetsetup-82484975c
-    pull_policy: if_not_present
+    image: xinfinorg/devnet:latest
+    pull_policy: always
     volumes:
       - ./xdcchain1:/work/xdcchain
       - ./genesis.json:/work/genesis.json

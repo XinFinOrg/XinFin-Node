@@ -6,7 +6,7 @@ Deploy an external Docker node that joins the 18-devnet cluster.
 |--|--|
 | Chain ID / network ID | **551** |
 | Validators | 18 (hybrid seats after round 50000) |
-| Image | `anunayxin/devnet:devnetsetup-82484975c` |
+| Image | `xinfinorg/devnet:latest` |
 | Public bootnode | `enode://03e59…@158.220.83.243:30301` |
 | Stats UI | http://158.220.83.243:32018 |
 
