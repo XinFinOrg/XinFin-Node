@@ -25,7 +25,7 @@ fi
 
 input="/work/bootnodes.list"
 bootnodes=""
-while IFS= read -r line
+while IFS= read -r line || [ -n "$line" ]
 do
     if [ -z "${bootnodes}" ]
     then
@@ -34,13 +34,6 @@ do
         bootnodes="${bootnodes},$line"
     fi
 done < "$input"
-#check last line since it's not included in "read" command https://stackoverflow.com/questions/12916352/shell-script-read-missing-last-line
-if [ -z "${bootnodes}" ]
-then
-    bootnodes=$line
-else
-    bootnodes="${bootnodes},$line"
-fi
 
 log_level=3
 if test -z "$LOG_LEVEL"
@@ -105,6 +98,24 @@ else
   gc_mode=$GC_MODE
 fi
 
+fastsync_args=()
+if test -n "$FASTSYNC_PIVOT_NUMBER" || test -n "$FASTSYNC_PIVOT_HASH" || test -n "$FASTSYNC_PIVOT_ROOT"
+then
+  if test -z "$FASTSYNC_PIVOT_NUMBER" || test -z "$FASTSYNC_PIVOT_HASH" || test -z "$FASTSYNC_PIVOT_ROOT"
+  then
+    echo "Error: FASTSYNC_PIVOT_NUMBER, FASTSYNC_PIVOT_HASH, and FASTSYNC_PIVOT_ROOT must all be set together."
+    exit 1
+  fi
+  echo "FASTSYNC_PIVOT_NUMBER found, set to $FASTSYNC_PIVOT_NUMBER"
+  echo "FASTSYNC_PIVOT_HASH found, set to $FASTSYNC_PIVOT_HASH"
+  echo "FASTSYNC_PIVOT_ROOT found, set to $FASTSYNC_PIVOT_ROOT"
+  fastsync_args=(
+    --fastsyncpivotnumber "${FASTSYNC_PIVOT_NUMBER}"
+    --fastsyncpivothash "${FASTSYNC_PIVOT_HASH}"
+    --fastsyncpivotroot "${FASTSYNC_PIVOT_ROOT}"
+  )
+fi
+
 miner_gaslimit=50000000
 if test -z "$MINER_GASLIMIT"
 then
@@ -128,20 +139,23 @@ fi
 echo "Running a node with wallet: ${wallet} at IP: ${instance_ip}"
 echo "Starting nodes with $bootnodes ..."
 
-config_arg=""
-if [ -f /work/config.toml ]; then
-  echo "config.toml found, using static peers from --config /work/config.toml"
-  config_arg="--config /work/config.toml"
+# Discovery-only: no config.toml / StaticNodes. Peers come from --bootnodes.
+bootnodes_args=()
+if [ -n "${bootnodes}" ]; then
+  bootnodes_args=(--bootnodes "${bootnodes}")
+  echo "Using discovery bootnodes: ${bootnodes}"
+else
+  echo "bootnodes.list empty; no --bootnodes flag"
 fi
 
 # Note: --gcmode=archive means node will store all historical data. This will lead to high memory usage. But sync mode require archive to sync
 # https://github.com/XinFinOrg/XDPoSChain/issues/268
 
-XDC ${config_arg} --ethstats ${netstats} \
+XDC --ethstats ${netstats} \
 --gcmode ${gc_mode} --syncmode ${sync_mode} \
 --nat extip:${instance_ip} \
---bootnodes ${bootnodes} \
---datadir /work/xdcchain --networkid 5551 \
+"${bootnodes_args[@]}" \
+--datadir /work/xdcchain --networkid 551 \
 --port $port --http --http-corsdomain "*" --http-addr 0.0.0.0 \
 --http-port $rpc_port \
 --http-api db,eth,net,txpool,web3,XDPoS \
@@ -149,5 +163,6 @@ XDC ${config_arg} --ethstats ${netstats} \
 --miner-gasprice "1" --miner-gaslimit "${miner_gaslimit}" --verbosity ${log_level} \
 --debugdatadir /work/xdcchain \
 --store-reward \
+"${fastsync_args[@]}" \
 --ws --ws-addr=0.0.0.0 --ws-port $ws_port \
 --ws-origins "*" 2>&1 >>/work/xdcchain/xdc.log | tee -a /work/xdcchain/xdc.log
