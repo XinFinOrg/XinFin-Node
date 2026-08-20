@@ -51,14 +51,21 @@ function configureXinFinNode(){
     echo "Docker and Docker Compose v2 installed successfully"
 
     echo "Clone Xinfin Node"
-    git clone https://github.com/XinFinOrg/XinFin-Node && cd XinFin-Node/$Network
+    git clone https://github.com/XinFinOrg/XinFin-Node || exit 1
+    cd "XinFin-Node/$Network" || exit 1
+
+    if [ ! -f env.example ]; then
+        echo "Environment template not found: $(pwd)/env.example"
+        exit 1
+    fi
+    cp env.example .env
     
     echo "Generating Private Key and Wallet Address into keys.json"
     docker build -t address-creator ../address-creator/ && docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator 
 
     PRIVATE_KEY=$(jq -r '.key0.PrivateKey' keys.json)
     sed -i "s/PRIVATE_KEY=xxxx/PRIVATE_KEY=${PRIVATE_KEY}/g" .env
-    sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}/g" .env
+    sed -i "s/^INSTANCE_NAME=.*/INSTANCE_NAME=${MasterNodeName}/" .env
 
     echo ""
     echo "Starting Xinfin Node ..."
