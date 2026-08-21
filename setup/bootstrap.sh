@@ -1,8 +1,10 @@
 #!/bin/bash
 
+set -euo pipefail
+
 
 function configureXinFinNode(){
-    read -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
+    read -r -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
 
     if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
             echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
@@ -11,14 +13,14 @@ function configureXinFinNode(){
     echo "Your running network is ${Network}"
     echo ""
 
-    read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
+    read -r -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
     echo "Your Masternode Name is ${MasterNodeName}"
     echo ""
     
     echo "Generate new private key and wallet address."
     echo "If you have your own key, you can change after this and restart the node"
 
-    read -p "Type 'Y' or 'y' to continue: " ans
+    read -r -p "Type 'Y' or 'y' to continue: " ans
 
     if [[ "$ans" != [Yy] ]]; then
         echo "Exiting."
@@ -58,14 +60,27 @@ function configureXinFinNode(){
         echo "Environment template not found: $(pwd)/env.example"
         exit 1
     fi
-    cp env.example .env
+    install -m 600 env.example .env
     
     echo "Generating Private Key and Wallet Address into keys.json"
-    docker build -t address-creator ../address-creator/ && docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator 
+    docker build -t address-creator ../address-creator/
+    docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator
 
-    PRIVATE_KEY=$(jq -r '.key0.PrivateKey' keys.json)
+    chmod 600 keys.json
+    PRIVATE_KEY=$(jq -er '.key0.PrivateKey // empty' keys.json)
+    rm -f keys.json
     sed -i "s/PRIVATE_KEY=xxxx/PRIVATE_KEY=${PRIVATE_KEY}/g" .env
-    sed -i "s/^INSTANCE_NAME=.*/INSTANCE_NAME=${MasterNodeName}/" .env
+
+    case "${Network}" in
+        mainnet) node_name_variable="INSTANCE_NAME" ;;
+        testnet) node_name_variable="NODE_NAME" ;;
+        *)
+            echo "Unsupported network: ${Network}"
+            exit 1
+            ;;
+    esac
+    escaped_master_node_name=$(printf '%s' "${MasterNodeName}" | sed 's/[\/&|\\]/\\&/g')
+    sed -i "s|^${node_name_variable}=.*|${node_name_variable}=${escaped_master_node_name}|" .env
 
     echo ""
     echo "Starting Xinfin Node ..."
