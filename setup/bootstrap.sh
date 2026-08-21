@@ -1,24 +1,26 @@
 #!/bin/bash
 
+set -euo pipefail
+
 
 function configureXinFinNode(){
-    read -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
+    read -r -p "Please enter your XinFin Network (mainnet/testnet) :- " Network
 
-    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
-            echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
+    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ]; then
+            echo "The network ${Network} is not one of mainnet/testnet. Please check your spelling."
             return
     fi
     echo "Your running network is ${Network}"
     echo ""
 
-    read -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
+    read -r -p "Please enter your XinFin MasterNode Name :- " MasterNodeName
     echo "Your Masternode Name is ${MasterNodeName}"
     echo ""
     
     echo "Generate new private key and wallet address."
     echo "If you have your own key, you can change after this and restart the node"
 
-    read -p "Type 'Y' or 'y' to continue: " ans
+    read -r -p "Type 'Y' or 'y' to continue: " ans
 
     if [[ "$ans" != [Yy] ]]; then
         echo "Exiting."
@@ -51,14 +53,37 @@ function configureXinFinNode(){
     echo "Docker and Docker Compose v2 installed successfully"
 
     echo "Clone Xinfin Node"
-    git clone https://github.com/XinFinOrg/XinFin-Node && cd XinFin-Node/$Network
+    git clone https://github.com/XinFinOrg/XinFin-Node || exit 1
+    cd "XinFin-Node/$Network" || exit 1
+
+    if [ ! -f env.example ]; then
+        echo "Environment template not found: $(pwd)/env.example"
+        exit 1
+    fi
+    install -m 600 env.example .env
     
     echo "Generating Private Key and Wallet Address into keys.json"
-    docker build -t address-creator ../address-creator/ && docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator 
+    docker build -t address-creator ../address-creator/
+    key_file="$(pwd)/keys.json"
+    trap 'rm -f -- "${key_file:-}"' EXIT
+    docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator
 
-    PRIVATE_KEY=$(jq -r '.key0.PrivateKey' keys.json)
+    chmod 600 "$key_file"
+    PRIVATE_KEY=$(jq -er '.key0.PrivateKey // empty' "$key_file")
+    rm -f -- "$key_file"
+    trap - EXIT
     sed -i "s/PRIVATE_KEY=xxxx/PRIVATE_KEY=${PRIVATE_KEY}/g" .env
-    sed -i "s/INSTANCE_NAME=XF_MasterNode/INSTANCE_NAME=${MasterNodeName}/g" .env
+
+    case "${Network}" in
+        mainnet) node_name_variable="INSTANCE_NAME" ;;
+        testnet) node_name_variable="NODE_NAME" ;;
+        *)
+            echo "Unsupported network: ${Network}"
+            exit 1
+            ;;
+    esac
+    escaped_master_node_name=$(printf '%s' "${MasterNodeName}" | sed 's/[\/&|\\]/\\&/g')
+    sed -i "s|^${node_name_variable}=.*|${node_name_variable}=${escaped_master_node_name}|" .env
 
     echo ""
     echo "Starting Xinfin Node ..."
