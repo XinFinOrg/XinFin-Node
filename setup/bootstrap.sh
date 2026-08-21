@@ -4,10 +4,10 @@ set -euo pipefail
 
 
 function configureXinFinNode(){
-    read -r -p "Please enter your XinFin Network (mainnet/testnet/devnet) :- " Network
+    read -r -p "Please enter your XinFin Network (mainnet/testnet) :- " Network
 
-    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ] && [ "${Network}" != "devnet" ]; then
-            echo "The network ${Network} is not one of mainnet/testnet/devnet. Please check your spelling."
+    if [ "${Network}" != "mainnet" ] && [ "${Network}" != "testnet" ]; then
+            echo "The network ${Network} is not one of mainnet/testnet. Please check your spelling."
             return
     fi
     echo "Your running network is ${Network}"
@@ -64,11 +64,14 @@ function configureXinFinNode(){
     
     echo "Generating Private Key and Wallet Address into keys.json"
     docker build -t address-creator ../address-creator/
+    key_file="$(pwd)/keys.json"
+    trap 'rm -f -- "${key_file:-}"' EXIT
     docker run -e NUMBER_OF_KEYS=1 -e FILE=true -v "$(pwd):/work/output" -it address-creator
 
-    chmod 600 keys.json
-    PRIVATE_KEY=$(jq -er '.key0.PrivateKey // empty' keys.json)
-    rm -f keys.json
+    chmod 600 "$key_file"
+    PRIVATE_KEY=$(jq -er '.key0.PrivateKey // empty' "$key_file")
+    rm -f -- "$key_file"
+    trap - EXIT
     sed -i "s/PRIVATE_KEY=xxxx/PRIVATE_KEY=${PRIVATE_KEY}/g" .env
 
     case "${Network}" in
