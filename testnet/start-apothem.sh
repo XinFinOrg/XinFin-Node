@@ -75,6 +75,15 @@ else
     gc_mode=$GC_MODE
 fi
 
+# Set chain_config_mismatch_policy from CHAIN_CONFIG_MISMATCH_POLICY env or default to 'update-config-only'
+chain_config_mismatch_policy=update-config-only
+if test -z "$CHAIN_CONFIG_MISMATCH_POLICY"; then
+    echo "CHAIN_CONFIG_MISMATCH_POLICY not set, default to update-config-only" # exit, rewind-and-update, update-config-only or ignore-mismatch
+else
+    echo "CHAIN_CONFIG_MISMATCH_POLICY found, set to $CHAIN_CONFIG_MISMATCH_POLICY"
+    chain_config_mismatch_policy=$CHAIN_CONFIG_MISMATCH_POLICY
+fi
+
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
@@ -84,6 +93,7 @@ args=(
     --bootnodes "${bootnodes}"
     --syncmode "${sync_mode}"
     --gcmode "${gc_mode}"
+    --chain-config-mismatch-policy "${chain_config_mismatch_policy}"
     --datadir /work/xdcchain
     --XDCx.datadir /work/xdcchain/XDCx
     --networkid 51
