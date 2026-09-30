@@ -27,6 +27,49 @@ while IFS= read -r line; do
     fi
 done <"$input"
 
+# Peer whitelist: when /work/whitelist.list lists enodes, only talk to those peers
+whitelist_args=()
+whitelist_file="/work/whitelist.list"
+if [[ "${PEER_WHITELIST:-true}" != "false" && -f "${whitelist_file}" ]]; then
+    whitelist=()
+    netrestrict=""
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        line="${line%%#*}"
+        line="$(echo "$line" | tr -d '[:space:]')"
+        [[ -z "$line" ]] && continue
+        if [[ ! "$line" =~ ^enode://[0-9a-fA-F]{128}@([0-9]{1,3}(\.[0-9]{1,3}){3}):[0-9]+$ ]]; then
+            echo "ERROR: invalid whitelist entry, expected enode://<node id>@<IPv4>:<port>: $line"
+            exit 1
+        fi
+        whitelist+=("$line")
+        netrestrict="${netrestrict:+${netrestrict}, }\"${BASH_REMATCH[1]}/32\""
+    done <"${whitelist_file}"
+    if [[ ${#whitelist[@]} -gt 0 ]]; then
+        whitelist_toml=$(printf '"%s", ' "${whitelist[@]}")
+        whitelist_toml="[${whitelist_toml%, }]"
+        whitelist_config=/work/xdcchain/p2p-whitelist.toml
+        {
+            echo "[Node.P2P]"
+            echo "StaticNodes = ${whitelist_toml}"
+            echo "TrustedNodes = ${whitelist_toml}"
+            # The hub accepts inbound peers from any IP, so it gets no NetRestrict.
+            # --netrestrict is not exposed as an XDC flag, so set it in the config file.
+            if [[ "${PEER_WHITELIST_HUB}" != "true" ]]; then
+                echo "NetRestrict = [${netrestrict}]"
+            fi
+        } >"${whitelist_config}"
+        if [[ "${PEER_WHITELIST_HUB}" == "true" ]]; then
+            echo "Peer whitelist enabled in hub mode with ${#whitelist[@]} peers, no netrestrict"
+        else
+            echo "Peer whitelist enabled with ${#whitelist[@]} peers, netrestrict [${netrestrict}]"
+        fi
+        whitelist_args=(
+            --config "${whitelist_config}"
+            --nodiscover
+        )
+    fi
+fi
+
 log_level=2
 if test -z "$LOG_LEVEL"
 then
@@ -112,6 +155,10 @@ fi
 
 if [[ ${#pivot_args[@]} -gt 0 ]]; then
     args+=("${pivot_args[@]}")
+fi
+
+if [[ ${#whitelist_args[@]} -gt 0 ]]; then
+    args+=("${whitelist_args[@]}")
 fi
 
 # RPC and WebSocket configuration - exact match required for security
