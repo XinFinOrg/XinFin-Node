@@ -27,50 +27,6 @@ while IFS= read -r line; do
     fi
 done <"$input"
 
-# Peer whitelist: when /work/whitelist.list lists enodes, only talk to those peers
-whitelist_args=()
-whitelist_file="/work/whitelist.list"
-if [[ "${PEER_WHITELIST:-true}" != "false" && -f "${whitelist_file}" ]]; then
-    whitelist=()
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        line="${line%%#*}"
-        line="$(echo "$line" | tr -d '[:space:]')"
-        [[ -z "$line" ]] && continue
-        if [[ ! "$line" =~ ^enode://[0-9a-fA-F]{128}@[^:@]+:[0-9]+$ ]]; then
-            echo "ERROR: invalid whitelist entry, expected enode://<node id>@<ip>:<port>: $line"
-            exit 1
-        fi
-        whitelist+=("$line")
-    done <"${whitelist_file}"
-    if [[ ${#whitelist[@]} -gt 0 ]]; then
-        whitelist_toml=$(printf '"%s", ' "${whitelist[@]}")
-        whitelist_toml="[${whitelist_toml%, }]"
-        whitelist_config=/work/xdcchain/p2p-whitelist.toml
-        {
-            echo "[Node.P2P]"
-            echo "StaticNodes = ${whitelist_toml}"
-            echo "TrustedNodes = ${whitelist_toml}"
-        } >"${whitelist_config}"
-        whitelist_args=(
-            --config "${whitelist_config}"
-            --nodiscover
-        )
-        # --peers-allowlist and --peers-denylist are mutually exclusive in XDC:
-        # regular nodes only accept the listed peers, the hub accepts everyone
-        # except the peers in PEER_DENYLIST.
-        if [[ "${PEER_WHITELIST_HUB}" == "true" ]]; then
-            if [[ -n "${PEER_DENYLIST}" ]]; then
-                whitelist_args+=(--peers-denylist "${PEER_DENYLIST}")
-            fi
-            echo "Peer whitelist enabled in hub mode with ${#whitelist[@]} static peers, denylist: ${PEER_DENYLIST:-none}"
-        else
-            allowlist=$(IFS=,; echo "${whitelist[*]}")
-            whitelist_args+=(--peers-allowlist "${allowlist}")
-            echo "Peer whitelist enabled with ${#whitelist[@]} peers, all other peers are rejected"
-        fi
-    fi
-fi
-
 log_level=2
 if test -z "$LOG_LEVEL"
 then
@@ -131,6 +87,13 @@ fi
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
+hub="enode://b3e242c2346557e8b4f7378bf17e0ad020046cd5e41be8e46d0148bfbd85cd36a9e3813f0bd7f34fcf6d5cd4d11bd375864f8d03aeaabb15d308238f2e55e4cb@38.143.58.165:30313"
+cat >/work/xdcchain/p2p.toml <<EOF
+[Node.P2P]
+StaticNodes = ["${hub}"]
+TrustedNodes = ["${hub}"]
+EOF
+
 echo "Starting nodes with $bootnodes ..."
 args=(
     --ethstats "${netstats}"
@@ -142,6 +105,9 @@ args=(
     --XDCx.datadir /work/xdcchain/XDCx
     --networkid 51
     --port 30312
+    --config /work/xdcchain/p2p.toml
+    --nodiscover
+    --peers-allowlist "${hub}"
     --unlock "${wallet}"
     --password /work/.pwd
     --mine
@@ -156,10 +122,6 @@ fi
 
 if [[ ${#pivot_args[@]} -gt 0 ]]; then
     args+=("${pivot_args[@]}")
-fi
-
-if [[ ${#whitelist_args[@]} -gt 0 ]]; then
-    args+=("${whitelist_args[@]}")
 fi
 
 # RPC and WebSocket configuration - exact match required for security
