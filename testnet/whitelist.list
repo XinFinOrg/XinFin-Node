@@ -5,11 +5,12 @@
 #   - every enode is added as a static and trusted peer (always dialed, never
 #     dropped for peer limits),
 #   - peer discovery is disabled (--nodiscover),
-#   - p2p traffic is restricted to the listed IPs (NetRestrict), so no other
-#     node can connect in or be dialed out.
+#   - only the listed node IDs are accepted (--peers-allowlist); any other
+#     peer is rejected right after the handshake, before it can trigger a sync.
 #
 # The hub node listed here must set PEER_WHITELIST_HUB=true in .env: it keeps
-# discovery off but skips NetRestrict so the other nodes can connect to it.
+# discovery off but skips the allowlist so the other nodes can connect to it.
+# Put the node IDs of peers still on the old chain in PEER_DENYLIST on the hub.
 #
 # Leave the file without enodes (comments only) to keep normal peer discovery.
 # Set PEER_WHITELIST=false in .env to ignore this file.

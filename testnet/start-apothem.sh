@@ -32,17 +32,15 @@ whitelist_args=()
 whitelist_file="/work/whitelist.list"
 if [[ "${PEER_WHITELIST:-true}" != "false" && -f "${whitelist_file}" ]]; then
     whitelist=()
-    netrestrict=""
     while IFS= read -r line || [[ -n "$line" ]]; do
         line="${line%%#*}"
         line="$(echo "$line" | tr -d '[:space:]')"
         [[ -z "$line" ]] && continue
-        if [[ ! "$line" =~ ^enode://[0-9a-fA-F]{128}@([0-9]{1,3}(\.[0-9]{1,3}){3}):[0-9]+$ ]]; then
-            echo "ERROR: invalid whitelist entry, expected enode://<node id>@<IPv4>:<port>: $line"
+        if [[ ! "$line" =~ ^enode://[0-9a-fA-F]{128}@[^:@]+:[0-9]+$ ]]; then
+            echo "ERROR: invalid whitelist entry, expected enode://<node id>@<ip>:<port>: $line"
             exit 1
         fi
         whitelist+=("$line")
-        netrestrict="${netrestrict:+${netrestrict}, }\"${BASH_REMATCH[1]}/32\""
     done <"${whitelist_file}"
     if [[ ${#whitelist[@]} -gt 0 ]]; then
         whitelist_toml=$(printf '"%s", ' "${whitelist[@]}")
@@ -52,21 +50,24 @@ if [[ "${PEER_WHITELIST:-true}" != "false" && -f "${whitelist_file}" ]]; then
             echo "[Node.P2P]"
             echo "StaticNodes = ${whitelist_toml}"
             echo "TrustedNodes = ${whitelist_toml}"
-            # The hub accepts inbound peers from any IP, so it gets no NetRestrict.
-            # --netrestrict is not exposed as an XDC flag, so set it in the config file.
-            if [[ "${PEER_WHITELIST_HUB}" != "true" ]]; then
-                echo "NetRestrict = [${netrestrict}]"
-            fi
         } >"${whitelist_config}"
-        if [[ "${PEER_WHITELIST_HUB}" == "true" ]]; then
-            echo "Peer whitelist enabled in hub mode with ${#whitelist[@]} peers, no netrestrict"
-        else
-            echo "Peer whitelist enabled with ${#whitelist[@]} peers, netrestrict [${netrestrict}]"
-        fi
         whitelist_args=(
             --config "${whitelist_config}"
             --nodiscover
         )
+        # --peers-allowlist and --peers-denylist are mutually exclusive in XDC:
+        # regular nodes only accept the listed peers, the hub accepts everyone
+        # except the peers in PEER_DENYLIST.
+        if [[ "${PEER_WHITELIST_HUB}" == "true" ]]; then
+            if [[ -n "${PEER_DENYLIST}" ]]; then
+                whitelist_args+=(--peers-denylist "${PEER_DENYLIST}")
+            fi
+            echo "Peer whitelist enabled in hub mode with ${#whitelist[@]} static peers, denylist: ${PEER_DENYLIST:-none}"
+        else
+            allowlist=$(IFS=,; echo "${whitelist[*]}")
+            whitelist_args+=(--peers-allowlist "${allowlist}")
+            echo "Peer whitelist enabled with ${#whitelist[@]} peers, all other peers are rejected"
+        fi
     fi
 fi
 
