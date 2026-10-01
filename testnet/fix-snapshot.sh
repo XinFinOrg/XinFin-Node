@@ -12,6 +12,8 @@ fi
 
 image=$(docker inspect -f '{{.Config.Image}}' "$container_name")
 datadir="$PWD/xdcchain-testnet"
+head=$(docker exec "$container_name" XDC attach --exec "eth.blockNumber" /work/xdcchain/XDC.ipc)
+echo "current block: $head"
 
 docker stop -t 120 "$container_name"
 
@@ -20,6 +22,14 @@ while read -r key value; do
     docker run --rm --network none -v "${datadir}:/work/xdcchain" --entrypoint XDC "$image" \
         db put --datadir /work/xdcchain "$key" "$value"
 done <"$list"
+
+[[ "$head" -lt 83599997 ]] && for key in \
+    0x620000000004fba27d3f4ca3575dd5308ed566c9f47c445a23541ddfce7e63203324e469b8f109cfb8 \
+    0x620000000004fba27e153bd922f9d18311eaf8ae0781b2bcf0d55f8339a64302e5d8614b496b18ff8c \
+    0x620000000004fba27fdcd5e66dd062cfcfc4a4a5eb69fb6470ae600063d01293851ac8eade8ad79c7c; do
+    docker run --rm --network none -v "${datadir}:/work/xdcchain" --entrypoint XDC "$image" \
+        db delete --datadir /work/xdcchain "$key" || true
+done
 
 ./docker-up.sh
 
