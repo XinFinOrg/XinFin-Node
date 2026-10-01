@@ -12,7 +12,7 @@ fi
 
 image=$(docker inspect -f '{{.Config.Image}}' "$container_name")
 datadir="$PWD/xdcchain-testnet"
-head=$(docker exec "$container_name" XDC attach --exec "eth.blockNumber" /work/xdcchain/XDC.ipc)
+head=$(docker exec "$container_name" XDC attach --exec "eth.getBlock(\"latest\").number" /work/xdcchain/XDC.ipc)
 echo "current block: $head"
 
 docker stop -t 120 "$container_name"
