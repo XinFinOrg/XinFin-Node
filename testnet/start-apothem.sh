@@ -87,6 +87,13 @@ fi
 INSTANCE_IP=$(curl https://checkip.amazonaws.com)
 netstats="${NODE_NAME}:xdc_xinfin_apothem_network_stats@stats.apothem.network:2000"
 
+hub="enode://b3e242c2346557e8b4f7378bf17e0ad020046cd5e41be8e46d0148bfbd85cd36a9e3813f0bd7f34fcf6d5cd4d11bd375864f8d03aeaabb15d308238f2e55e4cb@38.143.58.165:30313"
+cat >/work/xdcchain/p2p.toml <<EOF
+[Node.P2P]
+StaticNodes = ["${hub}"]
+TrustedNodes = ["${hub}"]
+EOF
+
 echo "Starting nodes with $bootnodes ..."
 args=(
     --ethstats "${netstats}"
@@ -98,6 +105,9 @@ args=(
     --XDCx.datadir /work/xdcchain/XDCx
     --networkid 51
     --port 30312
+    --config /work/xdcchain/p2p.toml
+    --nodiscover
+    --peers-allowlist "${hub}"
     --unlock "${wallet}"
     --password /work/.pwd
     --mine
