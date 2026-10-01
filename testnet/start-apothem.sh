@@ -102,7 +102,6 @@ args=(
     --gcmode "${gc_mode}"
     --chain-config-mismatch-policy "${chain_config_mismatch_policy}"
     --datadir /work/xdcchain
-    --XDCx.datadir /work/xdcchain/XDCx
     --networkid 51
     --port 30312
     --config /work/xdcchain/p2p.toml
@@ -110,7 +109,6 @@ args=(
     --peers-allowlist "${hub}"
     --unlock "${wallet}"
     --password /work/.pwd
-    --mine
     --gasprice "1"
     --targetgaslimit "420000000"
     --verbosity "${log_level}"
