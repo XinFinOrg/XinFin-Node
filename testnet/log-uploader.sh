@@ -2,6 +2,7 @@
 # Renders fluent-bit.conf from template + .env on the host.
 # The official fluent/fluent-bit image has no /bin/sh, so config must be
 # generated before the container starts.
+# Testnet identifies the node with NODE_NAME; that value is the Loki instance label.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -14,7 +15,7 @@ if [ -f .env ]; then
     set +a
 fi
 
-required_vars="LOKI_HOST INSTANCE_NAME NETWORK"
+required_vars="LOKI_HOST NODE_NAME NETWORK"
 for var in $required_vars; do
     if [ -z "${!var:-}" ]; then
         echo "Missing required environment variable: $var" >&2
@@ -30,7 +31,7 @@ NODE_VERSION="${NODE_VERSION:-unknown}"
 NODE_COMMIT="${NODE_COMMIT:-unknown}"
 
 # Loki label values cannot contain spaces/commas/quotes
-for var in INSTANCE_NAME NETWORK NODE_VERSION NODE_COMMIT; do
+for var in NODE_NAME NETWORK NODE_VERSION NODE_COMMIT; do
     val="${!var}"
     if [[ "$val" =~ [[:space:],\"\'=] ]]; then
         echo "Invalid characters in $var='$val' (no spaces/commas/quotes for Loki labels)" >&2
@@ -58,7 +59,7 @@ sed \
     -e "s|\${LOKI_URI}|${LOKI_URI}|g" \
     -e "s|\${LOKI_TLS_VERIFY}|${LOKI_TLS_VERIFY}|g" \
     -e "s|\${LOKI_TLS}|${LOKI_TLS}|g" \
-    -e "s|\${INSTANCE_NAME}|${INSTANCE_NAME}|g" \
+    -e "s|\${INSTANCE_NAME}|${NODE_NAME}|g" \
     -e "s|\${NETWORK}|${NETWORK}|g" \
     -e "s|\${NODE_VERSION}|${NODE_VERSION}|g" \
     -e "s|\${NODE_COMMIT}|${NODE_COMMIT}|g" \

@@ -8,8 +8,8 @@ if [ -f .env ]; then
 fi
 
 compose_args=(-f docker-compose.yml)
-if [ "${ENABLE_S3_LOGS:-false}" = "true" ]; then
-    compose_args+=(--profile s3-logs)
+if [ "${ENABLE_LOKI_LOGS:-false}" = "true" ]; then
+    compose_args+=(--profile loki-logs)
 fi
 
 docker compose "${compose_args[@]}" down

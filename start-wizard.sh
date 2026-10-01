@@ -60,7 +60,18 @@ desc_of() {
         NODE_NAME)       printf 'Node name shown on stats.apothem.network' ;;
         CONTACT_DETAILS) printf 'Operator email address' ;;
         NETWORK)         printf 'Network identifier (informational)' ;;
+        NODE_VERSION)    printf 'XDPoSChain image tag sent to Loki' ;;
+        NODE_COMMIT)     printf 'Git commit of the running node binary' ;;
         LOG_LEVEL)       printf 'Log verbosity  [0 silent → 5 detail]' ;;
+        ENABLE_LOKI_LOGS) printf 'Ship node logs to Loki  [true | false]' ;;
+        LOKI_HOST)       printf 'Loki hostname or IP (no scheme)' ;;
+        LOKI_PORT)       printf 'Loki HTTP port' ;;
+        LOKI_URI)        printf 'Loki push API path' ;;
+        LOKI_TLS)        printf 'Use HTTPS to Loki  [on | off]' ;;
+        LOKI_TLS_VERIFY) printf 'Verify Loki TLS certificates  [on | off]' ;;
+        LOKI_USER)       printf 'Loki basic-auth username' ;;
+        LOKI_PASSWORD)   printf 'Loki basic-auth password' ;;
+        AIOPS_SERVICE_URL) printf 'AIOps base URL; records a deployment on docker-up' ;;
         SYNC_MODE)             printf 'Blockchain sync strategy  [full | fast]' ;;
         FASTSYNC_PIVOT_NUMBER) printf 'Fast-sync pivot block number (auto-set when SYNC_MODE=fast)' ;;
         FASTSYNC_PIVOT_HASH)   printf 'Fast-sync pivot block hash (auto-set when SYNC_MODE=fast)' ;;

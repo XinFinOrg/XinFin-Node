@@ -24,19 +24,31 @@ cp env.example .env
 |---|---|---|---|
 | `LOG_LEVEL` | No | `2` | Verbosity level passed to `--verbosity`. Range: `0` (silent) – `5` (detail) |
 
-### S3 log upload (optional)
+### Loki log shipping (optional)
 
-When `ENABLE_S3_LOGS=true`, a Fluent Bit sidecar tails `./xdcchain/xdc-*.log` and uploads compressed chunks to S3.
+When `ENABLE_LOKI_LOGS=true`, a Fluent Bit sidecar tails `./xdcchain/xdc-*.log` and ships lines to Loki.
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `ENABLE_S3_LOGS` | No | `false` | Set to `true` to start the `log-uploader` sidecar |
-| `S3_LOG_BUCKET` | If S3 enabled | — | Target S3 bucket name |
-| `AWS_ACCESS_KEY_ID` | If S3 enabled | — | IAM access key with `s3:PutObject` on the bucket |
-| `AWS_SECRET_ACCESS_KEY` | If S3 enabled | — | IAM secret key |
-| `AWS_DEFAULT_REGION` | If S3 enabled | — | AWS region of the bucket (e.g. `ap-south-1`) |
+| `ENABLE_LOKI_LOGS` | No | `false` | Set to `true` to start the `log-uploader` sidecar |
+| `LOKI_HOST` | If Loki enabled | — | Loki hostname or IP (no scheme) |
+| `LOKI_PORT` | No | `3100` | Loki HTTP port (`443` for Grafana Cloud) |
+| `LOKI_URI` | No | `/loki/api/v1/push` | Push API path |
+| `LOKI_TLS` | No | `off` | Set to `on` for HTTPS |
+| `LOKI_TLS_VERIFY` | No | `on` | Verify TLS certificates when `LOKI_TLS=on` |
+| `LOKI_USER` | No | — | Optional basic-auth username (Grafana Cloud instance ID) |
+| `LOKI_PASSWORD` | No | — | Optional basic-auth password / API token |
+| `AIOPS_SERVICE_URL` | No | — | Base URL of the AIOps service. When set, `./docker-up.sh` POSTs once to `/api/deployments` |
 
-Objects are stored under `s3://<bucket>/<NETWORK>/<INSTANCE_NAME>/YYYY/MM/DD/`. Use an S3 lifecycle rule to expire old logs and stay within the free tier.
+Streams are labeled with `job`, `service_name`, `network`, `instance`, `version`, and `commit`.
+Set `NETWORK` to `mainnet`, `testnet`, or `devnet`. Set `NODE_VERSION` / `NODE_COMMIT` to the
+running XDPoSChain image tag and git SHA. When `AIOPS_SERVICE_URL` is set, startup records
+this node via `POST /api/deployments` (image, commit, timestamp).
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `NODE_VERSION` | No | `unknown` | Version/tag label (e.g. `v2.7.0`) |
+| `NODE_COMMIT` | No | `unknown` | Git commit SHA of the running node binary |
 
 ### Sync & Storage
 
@@ -115,44 +127,35 @@ These flags are passed to the `XDC` binary by `start-node.sh`. Most are derived 
 
 ---
 
-## S3 log upload setup
+## Loki log shipping setup
 
-The optional `log-uploader` sidecar uses [Fluent Bit](https://fluentbit.io/) to tail local node logs and stream gzip-compressed chunks to S3.
+The optional `log-uploader` sidecar uses [Fluent Bit](https://fluentbit.io/) to tail local node logs and push them to a Loki instance.
 
-### 1. Create AWS resources
+### 1. Configure `.env`
 
-1. Create a private S3 bucket (e.g. `xinfin-node-logs-yourname`).
-2. Create an IAM user with this policy (replace the bucket name):
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": ["s3:PutObject", "s3:ListBucket"],
-      "Resource": [
-        "arn:aws:s3:::xinfin-node-logs-yourname",
-        "arn:aws:s3:::xinfin-node-logs-yourname/*"
-      ]
-    }
-  ]
-}
-```
-
-3. Create an access key for that user.
-
-### 2. Configure `.env`
+XinFin devnet (HTTPS via nginx):
 
 ```bash
-ENABLE_S3_LOGS=true
-S3_LOG_BUCKET=xinfin-node-logs-yourname
-AWS_ACCESS_KEY_ID=AKIA...
-AWS_SECRET_ACCESS_KEY=...
-AWS_DEFAULT_REGION=ap-south-1
+ENABLE_LOKI_LOGS=true
+LOKI_HOST=loki.devnet.xinfin.org
+LOKI_PORT=443
+LOKI_TLS=on
+LOKI_TLS_VERIFY=on
+AIOPS_SERVICE_URL=https://aiops.devnet.xinfin.org
 ```
 
-### 3. Start the node with S3 upload
+Grafana Cloud (or any HTTPS Loki with basic auth):
+
+```bash
+ENABLE_LOKI_LOGS=true
+LOKI_HOST=logs-prod-us-central1.grafana.net
+LOKI_PORT=443
+LOKI_TLS=on
+LOKI_USER=123456
+LOKI_PASSWORD=glc_...
+```
+
+### 2. Start the node with Loki shipping
 
 ```bash
 ./docker-up.sh
@@ -161,20 +164,21 @@ AWS_DEFAULT_REGION=ap-south-1
 Or manually:
 
 ```bash
-docker compose -f docker-compose.yml --profile s3-logs up -d
+docker compose -f docker-compose.yml --profile loki-logs up -d
 ```
 
-### 4. Verify
+### 3. Verify
 
 ```bash
 # Sidecar logs
 docker logs -f xdcnetwork-mainnet-log-uploader
-
-# Objects in S3
-aws s3 ls s3://xinfin-node-logs-yourname/mainnet/YOUR_NODE_NAME/ --recursive
 ```
 
-Uploaded files appear roughly every 10 minutes or when a 10 MB chunk is full. Add an S3 lifecycle rule to delete logs older than 30–90 days to control free-tier usage.
+In Grafana Explore (Loki), query:
+
+```logql
+{job="xinfin-node", network="mainnet", instance="YOUR_NODE_NAME"}
+```
 
 ---
 
@@ -184,4 +188,4 @@ Uploaded files appear roughly every 10 minutes or when a 10 MB chunk is full. Ad
 - When enabling RPC/WS, restrict `ALLOWED_ORIGINS` and `RPC_VHOSTS` to known domains rather than leaving them as `*`.
 - The container uses `network_mode: host` — there is no Docker port mapping layer. Host-level firewall rules are the only protection for RPC/WS ports.
 - Port `30303` should be open to the internet for proper peer connectivity.
-- **Do not commit `.env` with AWS credentials.** Restrict the IAM user to a single bucket with `PutObject` only.
+- **Do not commit `.env` with Loki credentials.** Prefer TLS and restrict who can write to your Loki tenant.
