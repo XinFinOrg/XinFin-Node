@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # POST this node's deployment to the AIOps API once at startup.
-# Called from docker-up.sh when AIOPS_SERVICE_URL is set.
+# Called from docker-up.sh when ENABLE_LOKI_LOGS=true and AIOPS_SERVICE_URL is set.
 #
 # Required:
 #   AIOPS_SERVICE_URL  e.g. https://aiops.devnet.xinfin.org
@@ -115,8 +115,11 @@ fi
 URL="${AIOPS_SERVICE_URL%/}/api/deployments"
 echo "==> POST $URL"
 
+RESP_FILE="$(mktemp)"
+trap 'rm -f "$RESP_FILE"' EXIT
+
 HTTP_CODE="$(
-  curl -sS -o /tmp/aiops-deploy-resp.txt -w '%{http_code}' \
+  curl -sS -o "$RESP_FILE" -w '%{http_code}' \
     -X POST "$URL" \
     -H "Content-Type: application/json" \
     -d "$PAYLOAD"
@@ -124,11 +127,11 @@ HTTP_CODE="$(
 
 if [[ "$HTTP_CODE" -lt 200 || "$HTTP_CODE" -ge 300 ]]; then
   echo "ERROR: AIOps returned HTTP $HTTP_CODE" >&2
-  cat /tmp/aiops-deploy-resp.txt >&2 || true
+  cat "$RESP_FILE" >&2 || true
   echo >&2
   exit 1
 fi
 
 echo "==> recorded OK (HTTP $HTTP_CODE)"
-cat /tmp/aiops-deploy-resp.txt
+cat "$RESP_FILE"
 echo

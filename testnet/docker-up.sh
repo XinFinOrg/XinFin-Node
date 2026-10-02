@@ -15,7 +15,11 @@ fi
 
 docker compose "${compose_args[@]}" up -d --build --force-recreate
 
-if [ -n "${AIOPS_SERVICE_URL:-}" ]; then
-    chmod +x record-deployment.sh
-    ./record-deployment.sh || echo "WARN: deployment not recorded" >&2
+if [ "${ENABLE_LOKI_LOGS:-false}" = "true" ]; then
+    if [ -n "${AIOPS_SERVICE_URL:-}" ]; then
+        chmod +x record-deployment.sh
+        ./record-deployment.sh || echo "WARN: deployment not recorded" >&2
+    else
+        echo "AIOPS_SERVICE_URL is not given; deployment not recorded" >&2
+    fi
 fi

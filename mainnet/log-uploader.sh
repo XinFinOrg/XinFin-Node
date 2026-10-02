@@ -66,6 +66,7 @@ sed \
 
 OUT=fluent-bit.conf
 : >"$OUT"
+chmod 600 "$OUT"
 while IFS= read -r line || [ -n "$line" ]; do
     case "$line" in
         *'${LOKI_AUTH_BLOCK}'*)

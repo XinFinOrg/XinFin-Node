@@ -71,7 +71,7 @@ desc_of() {
         LOKI_TLS_VERIFY) printf 'Verify Loki TLS certificates  [on | off]' ;;
         LOKI_USER)       printf 'Loki basic-auth username' ;;
         LOKI_PASSWORD)   printf 'Loki basic-auth password' ;;
-        AIOPS_SERVICE_URL) printf 'AIOps base URL; records a deployment on docker-up' ;;
+        AIOPS_SERVICE_URL) printf 'AIOps base URL; records a deployment when Loki logs are enabled' ;;
         SYNC_MODE)             printf 'Blockchain sync strategy  [full | fast]' ;;
         FASTSYNC_PIVOT_NUMBER) printf 'Fast-sync pivot block number (auto-set when SYNC_MODE=fast)' ;;
         FASTSYNC_PIVOT_HASH)   printf 'Fast-sync pivot block hash (auto-set when SYNC_MODE=fast)' ;;
@@ -99,11 +99,22 @@ ask() {
     printf "  ${BOLD}${CYAN}%-20s${NC}" "$key"
     [ -n "$desc" ] && printf "  ${DIM}%s${NC}" "$desc"
     printf "\n"
-    printf "  Keep [${GREEN}%s${NC}] or enter new value: " "$current"
 
-    local input
-    read -r input </dev/tty || input=""
-    local chosen="${input:-$current}"
+    local input chosen
+    if [ "$key" = "LOKI_PASSWORD" ]; then
+        if [ -n "$current" ]; then
+            printf "  Enter a new password (hidden); press Enter to keep the current one: "
+        else
+            printf "  Enter password (hidden): "
+        fi
+        read -rs input </dev/tty || input=""
+        printf "\n"
+        chosen="${input:-$current}"
+    else
+        printf "  Keep [${GREEN}%s${NC}] or enter new value: " "$current"
+        read -r input </dev/tty || input=""
+        chosen="${input:-$current}"
+    fi
     printf '%s=%s\n' "$key" "$chosen" >> "$TMPFILE"
 
     # Warn about dangerous API namespaces
@@ -252,7 +263,11 @@ else
     while IFS= read -r line; do
         if [[ "$line" =~ ^([A-Z_][A-Z_0-9]*)= ]]; then
             key="${BASH_REMATCH[1]}"
-            printf "  ${CYAN}%-22s${NC}= ${GREEN}%s${NC}\n" "$key" "$(collected_val "$key")"
+            val="$(collected_val "$key")"
+            if [ "$key" = "LOKI_PASSWORD" ] && [ -n "$val" ]; then
+                val="********"
+            fi
+            printf "  ${CYAN}%-22s${NC}= ${GREEN}%s${NC}\n" "$key" "$val"
         elif [[ "$line" =~ ^# ]]; then
             printf "  ${DIM}%s${NC}\n" "$line"
         else

@@ -38,12 +38,12 @@ When `ENABLE_LOKI_LOGS=true`, a Fluent Bit sidecar tails `./xdcchain/xdc-*.log` 
 | `LOKI_TLS_VERIFY` | No | `on` | Verify TLS certificates when `LOKI_TLS=on` |
 | `LOKI_USER` | No | — | Optional basic-auth username (Grafana Cloud instance ID) |
 | `LOKI_PASSWORD` | No | — | Optional basic-auth password / API token |
-| `AIOPS_SERVICE_URL` | No | — | Base URL of the AIOps service. When set, `./docker-up.sh` POSTs once to `/api/deployments` |
+| `AIOPS_SERVICE_URL` | No | — | Base URL of the AIOps service. When this is set and `ENABLE_LOKI_LOGS=true`, `./docker-up.sh` POSTs once to `/api/deployments` |
 
 Streams are labeled with `job`, `service_name`, `network`, `instance`, `version`, and `commit`.
 Set `NETWORK` to `mainnet`, `testnet`, or `devnet`. Set `NODE_VERSION` / `NODE_COMMIT` to the
-running XDPoSChain image tag and git SHA. When `AIOPS_SERVICE_URL` is set, startup records
-this node via `POST /api/deployments` (image, commit, timestamp).
+running XDPoSChain image tag and git SHA. When `ENABLE_LOKI_LOGS=true` and `AIOPS_SERVICE_URL`
+is set, startup records this node via `POST /api/deployments` (image, commit, timestamp).
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
@@ -164,7 +164,7 @@ LOKI_PASSWORD=glc_...
 Or manually:
 
 ```bash
-docker compose -f docker-compose.yml --profile loki-logs up -d
+./log-uploader.sh && docker compose -f docker-compose.yml --profile loki-logs up -d
 ```
 
 ### 3. Verify
