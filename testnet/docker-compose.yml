@@ -7,6 +7,7 @@ services:
       - "./genesis.json:/work/genesis.json"
       - "./start-apothem.sh:/work/start.sh"
       - "./bootnodes.list:/work/bootnodes.list"
+      - "./peers.list:/work/peers.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
     pull_policy: always
