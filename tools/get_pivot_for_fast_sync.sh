@@ -108,9 +108,21 @@ if [ -z "$state_root" ] || [ "$state_root" = "null" ]; then
     exit 1
 fi
 
+# Total difficulty is only needed by the Nethermind client, so a missing value is not fatal
+total_difficulty_hex=$(echo "$block_details" | jq -r '.result.totalDifficulty // empty')
+total_difficulty=""
+if [ -n "$total_difficulty_hex" ]; then
+    total_difficulty=$((total_difficulty_hex))
+else
+    echo "Warning: RPC did not return totalDifficulty; FASTSYNC_PIVOT_TOTAL_DIFFICULTY left out" >&2
+fi
+
 # Output in the requested format
 cat << EOF
 FASTSYNC_PIVOT_NUMBER=$block_number
 FASTSYNC_PIVOT_HASH=$block_hash
 FASTSYNC_PIVOT_ROOT=$state_root
 EOF
+if [ -n "$total_difficulty" ]; then
+    echo "FASTSYNC_PIVOT_TOTAL_DIFFICULTY=$total_difficulty"
+fi

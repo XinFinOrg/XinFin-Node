@@ -20,8 +20,19 @@ Stop it with `bash docker-down.sh`.
 | `NETHERMIND_LOG_LEVEL` | No | `info` | One of `trace`, `debug`, `info`, `warn`, `error` |
 | `EC_DATA_DIR` | Yes | `./execution-data` | Host directory for chain data |
 | `RPC_PORT` | Yes | `8515` | JSON-RPC port, published on the host |
+| `SYNC_MODE` | No | `fast` | `fast` starts from a pivot block (`--Sync.FastSync=true`); `full` executes every block from genesis |
+| `FASTSYNC_PIVOT_NUMBER` | No | — | Fast-sync pivot block number (`--Sync.PivotNumber`) |
+| `FASTSYNC_PIVOT_HASH` | No | — | Fast-sync pivot block hash (`--Sync.PivotHash`) |
+| `FASTSYNC_PIVOT_TOTAL_DIFFICULTY` | No | — | Total difficulty at the pivot block (`--Sync.PivotTotalDifficulty`) |
+| `GC_MODE` | No | `full` | `full` prunes old state (`--Pruning.Mode=Hybrid`); `archive` keeps it (`--Pruning.Mode=None`) |
 
 `start.sh` builds the Nethermind flags from these variables and launches the node, the same way the XDC client's start script does. Add any other Nethermind setting as a `--Section.Key=value` entry in its `args` list.
+
+The pivot variables must be set together or all left blank. Blank uses the pivot built into the image. Get current values with `../tools/get_pivot_for_fast_sync.sh mainnet`, which prints `FASTSYNC_PIVOT_TOTAL_DIFFICULTY` alongside the XDC client's values. Unlike the XDC client, Nethermind needs the pivot's total difficulty rather than its state root.
+
+With `SYNC_MODE=fast`, `GC_MODE=archive` keeps full state only from the pivot onward; use `SYNC_MODE=full` as well for an archive from genesis. Sync and GC settings only take effect on an empty data directory.
+
+The XDC client's `STORE_REWARD` and `CHAIN_CONFIG_MISMATCH_POLICY` have no Nethermind equivalent and are not used here.
 
 ## Ports
 
