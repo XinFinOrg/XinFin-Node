@@ -1,5 +1,5 @@
 services:
-  xdc-testnet:
+  xdc-nethermind-testnet:
     tty: true
     image: ${EC_IMAGE_VERSION}
     volumes:
@@ -12,7 +12,6 @@ services:
     environment:
     - TERM=xterm-256color
     - COLORTERM=truecolor
-    - MALLOC_ARENA_MAX=4
     ports:
     - 30306:30306/tcp
     - 30306:30306/udp

@@ -20,6 +20,7 @@ Stop it with `bash docker-down.sh`.
 | `NETHERMIND_LOG_LEVEL` | No | `info` | One of `trace`, `debug`, `info`, `warn`, `error` |
 | `EC_DATA_DIR` | Yes | `./execution-data` | Host directory for chain data |
 | `RPC_PORT` | Yes | `8505` | JSON-RPC port, published on the host |
+| `RPC_MODULES` | No | `Eth,Net,Web3,Xdc,Health` | JSON-RPC namespaces to enable. See `env.example` for the full list; avoid `Parity`, `Evm`, `Admin`, `Personal`, `Trace` and `Debug` on a public port. Add `Rpc` to use the XDC console (`XDC attach`) |
 | `SYNC_MODE` | No | `fast` | `fast` starts from a pivot block (`--Sync.FastSync=true`); `full` executes every block from genesis |
 | `FASTSYNC_PIVOT_NUMBER` | No | — | Fast-sync pivot block number (`--Sync.PivotNumber`) |
 | `FASTSYNC_PIVOT_HASH` | No | — | Fast-sync pivot block hash (`--Sync.PivotHash`) |

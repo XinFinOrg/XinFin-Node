@@ -1,5 +1,5 @@
 services:
-  xdc-mainnet:
+  xdc-nethermind-mainnet:
     tty: true
     image: ${EC_IMAGE_VERSION}
     volumes:

@@ -3,7 +3,8 @@
 network="${NETWORK:-xdc}"
 log_level="${NETHERMIND_LOG_LEVEL:-info}"
 rpc_port="${RPC_PORT:-8515}"
-echo "Network: $network, log level: $log_level, RPC port: $rpc_port"
+rpc_modules="${RPC_MODULES:-Eth,Net,Web3,Xdc,Health}"
+echo "Network: $network, log level: $log_level, RPC port: $rpc_port, RPC modules: $rpc_modules"
 
 # Build a comma-separated bootnode list from the mounted bootnodes.list
 input="/nethermind/bootnodes.list"
@@ -75,11 +76,10 @@ args=(
     --JsonRpc.Enabled=true
     --JsonRpc.Host=0.0.0.0
     --JsonRpc.Port="${rpc_port}"
-    --JsonRpc.EnabledModules=Eth,Health,Net,Parity,Proof,Rpc,Subscribe,Trace,TxPool,Web3,debug,Xdc
+    --JsonRpc.EnabledModules="${rpc_modules}"
     --JsonRpc.JwtSecretFile=/tmp/jwt/jwtsecret
     --Network.DiscoveryPort=30301
     --Network.P2PPort=30301
-    --Network.FilterPeersByRecentIp=false
     --HealthChecks.Enabled=true
     "${sync_args[@]}"
     --Pruning.Mode="${pruning_mode}"
