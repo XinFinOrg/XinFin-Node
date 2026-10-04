@@ -37,7 +37,10 @@ The script prints the pivot values as environment variable assignments:
 FASTSYNC_PIVOT_NUMBER=<block number>
 FASTSYNC_PIVOT_HASH=<block hash>
 FASTSYNC_PIVOT_ROOT=<state root>
+FASTSYNC_PIVOT_TOTAL_DIFFICULTY=<total difficulty>
 ```
+
+`FASTSYNC_PIVOT_TOTAL_DIFFICULTY` is used by the Nethermind client (`nethermind-*/`). It is left out, with a warning on stderr, if the RPC endpoint does not return `totalDifficulty`.
 
 These can be sourced directly or passed to your node's fast-sync configuration.
 

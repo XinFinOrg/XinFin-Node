@@ -73,7 +73,7 @@ These flags are passed to the `XDC` binary by `start-apothem.sh`. Most are deriv
 | Flag | Value / Source | Description |
 |---|---|---|
 | `--ethstats` | `NODE_NAME` + stats server | Reports node status to the Apothem stats dashboard |
-| `--bootnodes` | `bootnodes.list` | Comma-separated enode URLs used for initial peer discovery |
+| `--bootnodes` | `../bootnodes/testnet.list` | Comma-separated enode URLs used for initial peer discovery |
 | `--syncmode` | `SYNC_MODE` | Blockchain sync strategy (`full`) |
 | `--gcmode` | `GC_MODE` | State trie garbage-collection mode (`archive` or `full`) |
 | `--datadir` | `/work/xdcchain` | Directory for chain data and keystore |
