@@ -1,0 +1,26 @@
+services:
+  xdc-testnet:
+    tty: true
+    image: ${EC_IMAGE_VERSION}
+    volumes:
+    - ${EC_DATA_DIR}:/nethermind/data
+    - ./start.sh:/nethermind/start.sh
+    - ../bootnodes/testnet.list:/nethermind/bootnodes.list
+    entrypoint: ["bash", "/nethermind/start.sh"]
+    env_file:
+    - .env
+    environment:
+    - TERM=xterm-256color
+    - COLORTERM=truecolor
+    - MALLOC_ARENA_MAX=4
+    ports:
+    - 30306:30306/tcp
+    - 30306:30306/udp
+    - ${RPC_PORT}:${RPC_PORT}
+    stop_grace_period: 30s
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "10"

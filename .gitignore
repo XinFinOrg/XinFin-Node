@@ -1,16 +1,5 @@
 xdcchain*
 NodeName
-subnet/bootnodes.list
-subnet/.env
-subnet/.env.bootnode
-subnet/.env.stats
-subnet/genesis.json
-subnet/puppeth
-subnet/bootnodes/*
-subnet/logs
-subnet/relayer
-subnet/stats-service
-subnet/deployment-generator/script/gen.env*
 .DS_Store
 XDC-Subnet
 keys.json
@@ -20,3 +9,4 @@ generated
 *.env*
 **temp
 .nodekey
+execution-data
