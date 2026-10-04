@@ -6,7 +6,7 @@ services:
       - "./xdcchain:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
       - "./start-node.sh:/work/start.sh"
-      - "./bootnodes.list:/work/bootnodes.list"
+      - "../bootnodes/mainnet.list:/work/bootnodes.list"
       - "./.pwd:/work/.pwd"
       - "/etc/localtime:/etc/localtime:ro"
     pull_policy: always
