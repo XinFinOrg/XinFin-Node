@@ -14,3 +14,20 @@ services:
     env_file:
       - .env
     network_mode: "host"
+
+  log-uploader:
+    container_name: xdcnetwork-mainnet-log-uploader
+    image: fluent/fluent-bit:3.2
+    profiles:
+      - loki-logs
+    volumes:
+      - "./xdcchain:/logs:ro"
+      - "./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro"
+      - "fluent-bit-state:/tmp"
+    command: ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+    restart: "always"
+    depends_on:
+      - xinfinnetwork
+
+volumes:
+  fluent-bit-state:
