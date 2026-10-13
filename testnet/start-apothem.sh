@@ -146,4 +146,5 @@ else
     )
 fi
 
-XDC "${args[@]}" 2>&1 >>"${LOG_FILE}" | tee -a "${LOG_FILE}"
+# exec so XDC becomes PID 1 and receives SIGTERM from docker stop directly
+exec XDC "${args[@]}" >>"${LOG_FILE}" 2> >(tee -a "${LOG_FILE}" >&2)

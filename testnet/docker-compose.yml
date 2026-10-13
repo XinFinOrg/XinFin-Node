@@ -11,6 +11,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
     pull_policy: always
     restart: "always"
+    stop_grace_period: 5m
     env_file:
       - .env
     network_mode: "host"
