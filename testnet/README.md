@@ -24,6 +24,32 @@ cp env.example .env
 |---|---|---|---|
 | `LOG_LEVEL` | No | `2` | Verbosity level passed to `--verbosity`. Range: `0` (silent) – `5` (detail) |
 
+### Loki log shipping (optional)
+
+When `ENABLE_LOKI_LOGS=true`, a Fluent Bit sidecar tails `./xdcchain-testnet/xdc-*.log` and ships lines to Loki.
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `ENABLE_LOKI_LOGS` | No | `false` | Set to `true` to start the `log-uploader` sidecar |
+| `LOKI_HOST` | If Loki enabled | — | Loki hostname or IP (no scheme) |
+| `LOKI_PORT` | No | `3100` | Loki HTTP port (`443` for Grafana Cloud) |
+| `LOKI_URI` | No | `/loki/api/v1/push` | Push API path |
+| `LOKI_TLS` | No | `off` | Set to `on` for HTTPS |
+| `LOKI_TLS_VERIFY` | No | `on` | Verify TLS certificates when `LOKI_TLS=on` |
+| `LOKI_USER` | No | — | Optional basic-auth username (Grafana Cloud instance ID) |
+| `LOKI_PASSWORD` | No | — | Optional basic-auth password / API token |
+| `AIOPS_SERVICE_URL` | No | — | Base URL of the AIOps service. When this is set and `ENABLE_LOKI_LOGS=true`, `./docker-up.sh` POSTs once to `/api/deployments` |
+
+Streams are labeled with `job`, `service_name`, `network`, `instance`, `version`, and `commit`.
+The `instance` label is `NODE_NAME`. Set `NETWORK` to `testnet`. Set `NODE_VERSION` / `NODE_COMMIT` to the
+running XDPoSChain image tag and git SHA. When `ENABLE_LOKI_LOGS=true` and `AIOPS_SERVICE_URL`
+is set, startup records this node via `POST /api/deployments` (image, commit, timestamp).
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `NODE_VERSION` | No | `unknown` | Version/tag label (e.g. `v2.9.1-testnet`) |
+| `NODE_COMMIT` | No | `unknown` | Git commit SHA of the running node binary |
+
 ### Sync & Storage
 
 | Variable | Required | Default | Description |
@@ -101,9 +127,65 @@ These flags are passed to the `XDC` binary by `start-apothem.sh`. Most are deriv
 
 ---
 
+## Loki log shipping setup
+
+The optional `log-uploader` sidecar uses [Fluent Bit](https://fluentbit.io/) to tail local node logs and push them to a Loki instance.
+
+### 1. Configure `.env`
+
+XinFin devnet (HTTPS via nginx):
+
+```bash
+ENABLE_LOKI_LOGS=true
+LOKI_HOST=loki.devnet.xinfin.org
+LOKI_PORT=443
+LOKI_TLS=on
+LOKI_TLS_VERIFY=on
+AIOPS_SERVICE_URL=https://aiops.devnet.xinfin.org
+```
+
+Grafana Cloud (or any HTTPS Loki with basic auth):
+
+```bash
+ENABLE_LOKI_LOGS=true
+LOKI_HOST=logs-prod-us-central1.grafana.net
+LOKI_PORT=443
+LOKI_TLS=on
+LOKI_USER=123456
+LOKI_PASSWORD=glc_...
+```
+
+### 2. Start the node with Loki shipping
+
+```bash
+./docker-up.sh
+```
+
+Or manually:
+
+```bash
+./log-uploader.sh && docker compose -f docker-compose.yml --profile loki-logs up -d
+```
+
+### 3. Verify
+
+```bash
+# Sidecar logs
+docker logs -f xdcnetwork-testnet-log-uploader
+```
+
+In Grafana Explore (Loki), query:
+
+```logql
+{job="xinfin-node", network="testnet", instance="XF_MasterNode"}
+```
+
+---
+
 ## Security Notes
 
 - **RPC and WebSocket are disabled by default.** Enable them only if your use case requires external API access.
 - When enabling RPC/WS, restrict `ALLOWED_ORIGINS` and `RPC_VHOSTS` to known domains rather than leaving them as `*`.
 - The container uses `network_mode: host` — there is no Docker port mapping layer. Host-level firewall rules are the only protection for RPC/WS ports.
 - Port `30312` should be open to the internet for proper peer connectivity.
+- **Do not commit `.env` with Loki credentials.** Prefer TLS and restrict who can write to your Loki tenant.
