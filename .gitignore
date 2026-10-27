@@ -18,5 +18,7 @@ node_modules
 package-lock.json
 generated
 *.env*
+mainnet/fluent-bit.conf
+testnet/fluent-bit.conf
 **temp
 .nodekey
