@@ -1,7 +1,7 @@
 services:
   xinfinnetwork:
     container_name: xdcnetwork-testnet-node
-    image: xinfinorg/xdposchain:v3.0.0-testnet-1
+    image: xinfinorg/xdposchain:v3.0.0-testnet-2
     volumes:
       - "./xdcchain-testnet:/work/xdcchain"
       - "./genesis.json:/work/genesis.json"
