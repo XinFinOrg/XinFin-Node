@@ -1,0 +1,27 @@
+[SERVICE]
+    Flush        5
+    Log_Level    info
+    Daemon       off
+
+[INPUT]
+    Name              tail
+    Tag               xdc.log
+    Path              /logs/xdc-*.log
+    Path_Key          filename
+    Read_from_Head    On
+    Refresh_Interval  10
+    DB                /tmp/fluent-bit-tail.db
+    Mem_Buf_Limit     5MB
+    Skip_Long_Lines   On
+
+[OUTPUT]
+    Name        loki
+    Match       *
+    Host        ${LOKI_HOST}
+    Port        ${LOKI_PORT}
+    Uri         ${LOKI_URI}
+    tls         ${LOKI_TLS}
+    tls.verify  ${LOKI_TLS_VERIFY}
+    Labels      job=xinfin-node, service_name=xinfin-node, network=${NETWORK}, instance=${INSTANCE_NAME}, version=${NODE_VERSION}, commit=${NODE_COMMIT}
+    Line_Format key_value
+${LOKI_AUTH_BLOCK}
