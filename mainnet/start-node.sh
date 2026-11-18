@@ -2,7 +2,7 @@
 
 if [ ! -d /work/xdcchain/XDC/chaindata ]; then
     wallet=$(XDC account new --password /work/.pwd --datadir /work/xdcchain | awk -F '[{}]' '{print $2}')
-    echo "Initalizing Genesis Block"
+    echo "Initializing Genesis Block"
     coinbaseaddr="$wallet"
     coinbasefile=/work/xdcchain/coinbase.txt
     touch $coinbasefile
